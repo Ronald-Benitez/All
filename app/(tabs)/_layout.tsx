@@ -1,55 +1,55 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable, useColorScheme } from 'react-native';
+import { Tabs } from "expo-router";
+import { AntDesign } from "@expo/vector-icons";
+import { Octicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
-import Colors from '@/constants/Colors';
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+export default () => {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-      }}>
+        tabBarStyle: {
+          backgroundColor: "white",
+          borderRadius: 20,
+        },
+        headerStyle: {
+          backgroundColor: "#f3e7e7",
+        },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
+          title: "Home",
+          tabBarLabel: "",
+          tabBarIcon: () => <AntDesign name="home" size={28} color="black" />,
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="Giveaways"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Giveaways",
+          tabBarLabel: "",
+          tabBarIcon: () => <AntDesign name="gift" size={28} color="black" />,
+        }}
+      />
+        <Tabs.Screen
+         name="Days"
+         options={{
+           title: "Days",
+           tabBarLabel: "",
+           tabBarIcon: () => <Ionicons name="ios-today-outline" size={24} color="black" />,
+          
+         }}
+       />
+      <Tabs.Screen
+        name="Configs"
+        options={{
+          title: "Configs",
+          tabBarLabel: "",
+          tabBarIcon: () => <Octicons name="gear" size={24} color="black" />,
+         
         }}
       />
     </Tabs>
   );
-}
+};

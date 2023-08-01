@@ -1,0 +1,80 @@
+{
+  "general": {
+    "name": {
+      "value": "General",
+      "type": "string"
+    },
+    "description": {
+      "value": "General settings",
+      "type": "string"
+    }
+  },
+  "colors": {
+    "name": {
+      "value": "Colors",
+      "type": "string"
+    },
+    "primaryColor": {
+      "value": "#936997",
+      "type": "color"
+    },
+    "secondaryColor": {
+      "value": "#99AAB5",
+      "type": "color"
+    },
+    "primaryTextColor": {
+      "value": "#FFFFFF",
+      "type": "color"
+    },
+    "secondaryTextColor": {
+      "value": "#000000",
+      "type": "color"
+    },
+    "buttonBgButton": {
+      "value": "#99AAB5",
+      "type": "color"
+    },
+    "buttonTextColor": {
+      "value": "#000",
+      "type": "color"
+    },
+    "inputBorderColor": {
+      "value": "#936997",
+      "type": "color"
+    },
+    "inputBackgroundColor": {
+      "value": "#FFFFFF",
+      "type": "color"
+    },
+    "inputTextColor": {
+      "value": "#000000",
+      "type": "color"
+    },
+    "backgroundColor": {
+      "value": "#FFFFFF",
+      "type": "color"
+    }
+  },
+  "days": {
+    "name": {
+      "value": "Days",
+      "type": "string"
+    },
+    "unasigned": {
+      "value": "#D3D3D3",
+      "type": "color"
+    },
+    "equal": {
+      "value": "#4CAF50",
+      "type": "color"
+    },
+    "better": {
+      "value": "#2196F3",
+      "type": "color"
+    },
+    "worse": {
+      "value": "#F44336",
+      "type": "color"
+    }
+  }
+}

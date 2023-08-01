@@ -4,8 +4,9 @@
  */
 
 import { Text as DefaultText, useColorScheme, View as DefaultView } from 'react-native';
+import {Link as DefaultLink} from 'expo-router';
 
-import Colors from '@/constants/Colors';
+import Colors from '../constants/Colors';
 
 type ThemeProps = {
   lightColor?: string;
