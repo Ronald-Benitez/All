@@ -17,7 +17,7 @@ export default OptionPicker = ({ value, onChange, options, color }) => {
 
   useEffect(() => {
     setSelectedValue(options[value]?.label || "");
-  }, [value]);
+  }, [value, options]);
 
   const togglePicker = () => {
     setIsPickerVisible(!isPickerVisible);
@@ -26,7 +26,7 @@ export default OptionPicker = ({ value, onChange, options, color }) => {
   const handleOptionPress = (option) => {
     setSelectedValue(options[option].label);
     setIsPickerVisible(false);
-    onChange(option);
+    onChange(options[option].value);
   };
 
   return (
@@ -43,10 +43,10 @@ export default OptionPicker = ({ value, onChange, options, color }) => {
       <Modal visible={isPickerVisible} transparent>
         <TouchableOpacity style={styles.modalBackdrop} onPress={togglePicker}>
           <View style={styles.modalContent}>
-            {options.map((option) => (
+            {options.map((option,key) => (
               <TouchableOpacity
                 key={option.value}
-                onPress={() => handleOptionPress(option.value)}
+                onPress={() => handleOptionPress(key)}
               >
                 <Text style={styles.optionText}>{option.label}</Text>
               </TouchableOpacity>

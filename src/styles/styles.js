@@ -3,6 +3,7 @@ import { getConfigs } from "../helpers/files";
 
 export default async function getStyles() {
   let configs = await getConfigs();
+
   return StyleSheet.create({
     container: {
       alignItems: "center",
@@ -55,6 +56,15 @@ export default async function getStyles() {
       fontSize: 15,
     },
 
+    buttonBordered: {
+      backgroundColor: "transparent",
+      borderRadius: 5,
+      padding: 10,
+      margin: 5,
+      borderColor: configs.colors.primaryColor.value || "black",
+      borderWidth: 1,
+    },
+
     buttonPrimary: {
       backgroundColor: configs.colors.primaryColor.value || "white",
       borderRadius: 5,
@@ -62,6 +72,11 @@ export default async function getStyles() {
       margin: 5,
       justifyContent: "center",
       alignItems: "center",
+    },
+
+    buttonPrimaryText: {
+      color: configs.colors.primaryTextColor.value || "black",
+      fontWeight: "bold",
     },
 
     buttonSecondary: {
@@ -223,6 +238,78 @@ export default async function getStyles() {
       textAlign: "center",
       marginVertical: 10,
     },
+
+    colorPreview: {
+      width: 100,
+      height: 30,
+      margin: 2,
+      borderWidth: 0.5,
+      borderColor: "black",
+      marginEnd: 12,
+    },
+
+    picker: {
+      width: "90%",
+      height: "50%",
+      backgroundColor: "#FFFFFF",
+      borderRadius: 10,
+      padding: 20,
+    },
+    colorItem: {
+      width: 50,
+      height: 50,
+      margin: 5,
+      borderWidth: 1,
+      borderColor: "black",
+    },
+
+    detailsBlock: {
+      padding: 10,
+      borderColor: "black",
+      borderWidth: 1,
+      minHeight: 50,
+      minWidth: "33%",
+      justifyContent: "center",
+      alignItems: "center",
+      margin: 5,
+      borderRadius: 5,
+    },
+
+    income: {
+      color: configs.finances.incomes.value || "#4CAF50",
+      borderColor: configs.finances.incomes.value || "#4CAF50",
+    },
+
+    expense: {
+      color: configs.finances.expenses.value || "#F44336",
+      borderColor: configs.finances.expenses.value || "#F44336",
+    },
+
+    goal: {
+      color: configs.finances.goal.value || "#2196F3",
+      borderColor: configs.finances.goal.value || "#2196F3",
+    },
+
+    registerBlock: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      width: "90%",
+      marginVertical: 10,
+      borderWidth: 0.5,
+      padding: 7,
+      borderRadius: 5,
+    },
+
+    verticalText: {
+      transform: [{ rotate: "-90deg" }],
+    },
+
+    dateVerticalSmall: {
+      transform: [{ rotate: "-90deg" }],
+      fontSize: 10,
+      fontWeight: "300",
+    },
   });
 }
 
@@ -279,5 +366,15 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 20,
     margin: 5,
+  },
+
+  registersList: {
+    padding: 0,
+    width: "100%",
+    overflow: "hidden",
+  },
+
+  verticalText: {
+    transform: [{ rotate: "-90deg" }],
   },
 });

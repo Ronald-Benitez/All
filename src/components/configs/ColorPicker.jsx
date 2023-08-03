@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, TouchableOpacity, Modal, Text, StyleSheet } from "react-native";
 import Picker from "react-native-wheel-color-picker";
+
+import getStyles from "@/src/styles/styles";
 
 const ColorPicker = ({ base, setNewElement, newElement }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedColor, setSelectedColor] = useState(base);
+  const [styles, setStyles] = useState({});
 
   const handleColorSelect = (color) => {
     setSelectedColor(color);
@@ -12,8 +15,17 @@ const ColorPicker = ({ base, setNewElement, newElement }) => {
       ...newElement,
       value: color,
     });
-    // Aquí puedes manejar la lógica cuando se selecciona un color
   };
+
+  useEffect(() => {
+    getStyles().then((data) => {
+      setStyles(data);
+    });
+  }, []);
+
+  useEffect(() => {
+    setSelectedColor(base);
+  }, [base]);
 
   return (
     <View>
@@ -24,62 +36,27 @@ const ColorPicker = ({ base, setNewElement, newElement }) => {
       </TouchableOpacity>
 
       <Modal animationType="slide" transparent visible={modalVisible}>
-        <View style={styles.modalContainer}>
-          <View style={styles.picker}>
+        <TouchableOpacity
+          style={styles.modalBackdrop}
+          onPress={() => setModalVisible(!modalVisible)}
+        >
+          <View
+            style={[
+              styles.modalContent,
+              {
+                height: "50%",
+              },
+            ]}
+          >
             <Picker
               onColorChangeComplete={handleColorSelect}
               color={newElement.value}
             />
           </View>
-
-          <TouchableOpacity onPress={() => setModalVisible(false)}>
-            <Text style={styles.closeButton}>Cerrar</Text>
-          </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
       </Modal>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  colorPreview: {
-    width: 100,
-    height: 30,
-    margin: 2,
-    borderWidth: 0.5,
-    borderColor: "black",
-    marginEnd: 12,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  picker: {
-    width: "90%",
-    height: "50%",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 10,
-    padding: 20,
-  },
-  colorItem: {
-    width: 50,
-    height: 50,
-    margin: 5,
-    borderWidth: 1,
-    borderColor: "black",
-  },
-  closeButton: {
-    marginTop: 20,
-    fontSize: 18,
-    color: "black",
-    backgroundColor: "white",
-    padding: 10,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: "black",
-  },
-});
 
 export default ColorPicker;

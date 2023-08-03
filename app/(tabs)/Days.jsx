@@ -3,8 +3,6 @@ import {
   View,
   TouchableOpacity,
   SafeAreaView,
-  RefreshControl,
-  TextInput,
   ScrollView,
 } from "react-native";
 import { useState, useEffect } from "react";

@@ -38,18 +38,25 @@ export default () => {
            title: "Days",
            tabBarLabel: "",
            tabBarIcon: () => <Ionicons name="ios-today-outline" size={24} color="black" />,
-          
          }}
        />
+       <Tabs.Screen
+        name="Finances"
+        options={{
+          title: "Finances",
+          tabBarLabel: "",
+          tabBarIcon: () => <Ionicons name="wallet-outline" size={24} color="black" />,
+        }}
+      />
       <Tabs.Screen
         name="Configs"
         options={{
           title: "Configs",
           tabBarLabel: "",
           tabBarIcon: () => <Octicons name="gear" size={24} color="black" />,
-         
         }}
       />
     </Tabs>
+    
   );
 };

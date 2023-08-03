@@ -68,7 +68,7 @@ export default function StadisticsContainer({ day, reload }) {
     <View style={styles.container}>
       <View style={styles.row}>
         <Text style={styles.title}>
-          Stadistics {moment(day, "YYYY/MM/DD").format("MMMM YYYY")}
+          {moment(day, "YYYY/MM/DD").format("MMMM YYYY")} statistics
         </Text>
       </View>
       <View style={styles.row}>

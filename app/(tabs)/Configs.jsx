@@ -12,6 +12,7 @@ import {
   getConfigs,
   setConfigs as fileSet,
   deleteConfigs,
+  resetConfigs,
 } from "../../src/helpers/files";
 import getStyles from "../../src/styles/styles";
 import ColorPicker from "../../src/components/configs/ColorPicker";
@@ -28,18 +29,13 @@ const Configs = () => {
     getStyles().then((data) => {
       setComponentStyles(data);
     });
-
-    // setComponentStyles(styles);
-    // deleteConfigs();
-  }, [reload]);
-
-  useEffect(() => {
     getConfigs().then((configs) => {
       setConfigs(configs);
     });
-  }, []);
+    // deleteConfigs();
+  }, [reload]);
 
-  const handleLocalConfig = (key, key2, value) => {
+  const handleLocalConfig = async (key, key2, value) => {
     const newConfig = { ...configs };
     newConfig[key][key2].value = value;
     setConfigs(newConfig);
@@ -48,11 +44,15 @@ const Configs = () => {
   };
 
   const handleReset = async (key) => {
-    const newConfig = { ...configs };
-    newConfig[key] = baseConfigs[key];
-    setConfigs(newConfig);
-    fileSet(configs);
-    setReload(!reload);
+    resetConfigs(key).then(() => {
+      setReload(!reload);
+    });
+  };
+
+  const handleDelete = async (key) => {
+    deleteConfigs().then(() => {
+      setReload(!reload);
+    });
   };
 
   useEffect(() => {
@@ -64,6 +64,16 @@ const Configs = () => {
   return (
     <ScrollView>
       <View style={componentStyles.container}>
+        <View style={componentStyles.row}>
+          <TouchableOpacity
+            style={[componentStyles.buttonPrimary, { padding: 10 }]}
+            onPress={() => handleDelete()}
+          >
+            <Text style={componentStyles.buttonPrimaryText}>
+              Reset to default
+            </Text>
+          </TouchableOpacity>
+        </View>
         {Object.keys(configs).map((key) => (
           <View key={key} style={componentStyles.block}>
             <Text style={componentStyles.title}>{configs[key].name.value}</Text>
@@ -103,7 +113,7 @@ const Configs = () => {
             })}
             <View style={componentStyles.row}>
               <TouchableOpacity
-                style={[componentStyles.buttonSecondary, { padding: 10 }]}
+                style={[componentStyles.buttonPrimary, { padding: 10 }]}
                 onPress={() => handleReset(key)}
               >
                 <SimpleLineIcons name="refresh" size={18} color="black" />

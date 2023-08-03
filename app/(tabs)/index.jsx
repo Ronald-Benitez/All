@@ -20,7 +20,7 @@ export default function TabOneScreen() {
       </View>
       <View style={styles.row}>
         <Cards title="Days" route="Days" />
-        <Cards title="Configs" route="Configs" />
+        <Cards title="Finances" route="Finances" />
       </View>
       <StatusBar style="auto" />
     </View>

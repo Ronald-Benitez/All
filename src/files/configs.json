@@ -76,5 +76,23 @@
       "value": "#F44336",
       "type": "color"
     }
+  },
+  "finances": {
+    "name": {
+      "value": "Finances",
+      "type": "string"
+    },
+    "incomes": {
+      "value": "#4CAF50",
+      "type": "color"
+    },
+    "expenses": {
+      "value": "#F44336",
+      "type": "color"
+    },
+    "goal": {
+      "value": "#2196F3",
+      "type": "color"
+    }
   }
 }
