@@ -45,15 +45,31 @@ export default function DataContainer({
       <View style={[styles.container]}>
         <Text style={[styles.dayDetailsTitle, color]}>Expected</Text>
         <TextInput
-          style={[styles.input, color]}
+          style={[
+            styles.input,
+            color,
+            {
+              minHeight: 50,
+              width: "90%",
+            },
+          ]}
           onChangeText={handleExpectedChange}
           value={expected}
+          multiline={true}
         />
         <Text style={[styles.dayDetailsTitle, color]}>Real</Text>
         <TextInput
-          style={[styles.input, color]}
+          style={[
+            styles.input,
+            color,
+            {
+              minHeight: 50,
+              width: "90%",
+            },
+          ]}
           onChangeText={handleRealChange}
           value={real}
+          multiline={true}
         />
       </View>
     );

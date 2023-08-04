@@ -134,14 +134,7 @@ export default async function getStyles() {
       borderColor: "#BE9FE1",
       borderWidth: 1,
     },
-    card: {
-      backgroundColor: configs.colors.backgroundColor.value || "white",
-      borderRadius: 20,
-      borderColor: "black",
-      padding: 20,
-      margin: 5,
-      flex: 1,
-    },
+
     day: {
       fontSize: 20,
       fontFamily: "Roboto",
@@ -309,6 +302,25 @@ export default async function getStyles() {
       transform: [{ rotate: "-90deg" }],
       fontSize: 10,
       fontWeight: "300",
+    },
+
+    petImage: {
+      width: 350,
+      height: 350,
+      borderRadius: 175,
+    },
+
+    petMessageText: {
+      fontSize: 20,
+      textAlign: "center",
+      fontFamily: "Roboto",
+      fontWeight: "100",
+    },
+
+    cardText: {
+      fontSize: 15,
+      textAlign: "center",
+      fontWeight: "100",
     },
   });
 }

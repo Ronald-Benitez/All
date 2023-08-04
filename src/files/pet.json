@@ -1,0 +1,38 @@
+{
+    "default": {
+      "message": "Something went wrong, please try again",
+      "img": "default",
+      "route": ""
+    },
+    "askExpected": {
+      "message": "Tell me what you plan to do today?",
+      "img": "askExpected",
+      "route": "/Days"
+    },
+    "askReal": {
+      "message": "Tell me what you did today?",
+      "img": "askReal",
+      "route": "/Days"
+    },
+    "askDiff": {
+      "message": "Tell me, regarding what you expected how do you think your day was?",
+      "img": "askDiff",
+      "route": "/Days"
+    },
+    "equalDay": {
+      "message": "You did what you planned to do today, good job!",
+      "img": "equalDay",
+      "route": "/Days"
+    },
+    "betterDay": {
+      "message": "You did more than you planned to do today, good job!",
+      "img": "betterDay",
+      "route": "/Days"
+    },
+    "worseDay": {
+      "message": "You did less than you planned to do today, but that's ok, tomorrow is a new day!",
+      "img": "worseDay",
+      "route": "/Days"
+    }
+  }
+  

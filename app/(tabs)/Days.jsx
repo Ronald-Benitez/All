@@ -144,7 +144,29 @@ export default function Days() {
         )}
       </ScrollView>
       <View style={[styles.row]}>
+        <TouchableOpacity
+          onPress={() => {
+            setDate(
+              moment(date, "YYYY/MM/DD")
+                .subtract(1, "days")
+                .format("YYYY/MM/DD")
+            );
+          }}
+          style={[styles.button]}
+        >
+          <AntDesign name="left" size={18} color="black" />
+        </TouchableOpacity>
         <DatePicker value={date} onChange={setDate} />
+        <TouchableOpacity
+          onPress={() => {
+            setDate(
+              moment(date, "YYYY/MM/DD").add(1, "days").format("YYYY/MM/DD")
+            );
+          }}
+          style={[styles.button]}
+        >
+          <AntDesign name="right" size={18} color="black" />
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
