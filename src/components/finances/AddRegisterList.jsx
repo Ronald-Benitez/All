@@ -4,21 +4,28 @@ import { Feather } from "@expo/vector-icons";
 import moment from "moment/moment";
 
 import getStyles from "@/src/styles/styles";
-import db from "@/src/db/registersListTable.js";
-import dbGroup from "@/src/db/registersGroupTable.js";
+// import db from "@/src/db/registersListTable.js";
+// import dbGroup from "@/src/db/registersGroupTable.js";
 import DatePicker from "@/src/components/configs/DatePicker.jsx";
+import ListHandler from "../../db/listTables";
+import GroupHandler from "../../db/groupTables";
 
 export default function AddRegisterList({
   group,
   actualRegister,
   handleReload,
   setRegister,
+  savingsFlag,
 }) {
   const [styles, setStyles] = useState({});
   const [name, setName] = useState("");
   const [value, setValue] = useState("");
   const [type, setType] = useState("expense");
   const [date, setDate] = useState(moment().format("YYYY/MM/DD"));
+
+  const db = new ListHandler(savingsFlag ? "savingsList" : "registerList");
+  const dbGroup = new GroupHandler(savingsFlag ? "savingsGroup" : "registerGroup");
+
 
   useEffect(() => {
     getStyles().then((data) => {

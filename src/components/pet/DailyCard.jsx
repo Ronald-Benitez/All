@@ -5,16 +5,16 @@ import { Link } from "expo-router";
 
 import getStyles from "@/src/styles/styles";
 import db from "@/src/db/daysTable.js";
-import pet from "@/src/files/pet.json";
+import { getPet } from "@/src/helpers/files";
 
 export default function DayCard() {
   const [styles, setStyles] = useState({});
   const [today, setToday] = useState(moment().format("YYYY/MM/DD"));
   const [petData, setPetData] = useState({});
   const [source, setSource] = useState(null);
+  const [pet, setPet] = useState({});
 
   useEffect(() => {
-    setPetData(pet.default);
     getStyles().then((data) => {
       setStyles(data);
     });
@@ -22,48 +22,61 @@ export default function DayCard() {
   }, []);
 
   const handleReload = () => {
-    db.getItem(today).then((data) => {
-      handleDay(data);
+    getPet().then((data) => {
+      setPet(data);
+      setPetData(data.askExpected);
+      db.getItem(today)
+        .then((dayData) => {
+          handleDay(dayData, data);
+        })
+        .catch((err) => {
+          handleDay({ expected: "", real: "", difference: "" }, data);
+        });
     });
   };
 
-  const handleDay = async (day) => {
-    if (!day || day.expected === "") {
-      setPetData(pet.askExpected);
+  const handleDay = async (day, data) => {
+    if (day.expected === "") {
+      setPetData(data.askExpected);
       return;
     }
 
     if (day.real === "") {
-      setPetData(pet.askReal);
+      setPetData(data.askReal);
       return;
     }
 
-    if (day.difference === "" || day.difference === "0") {
-      setPetData(pet.askDiff);
+    if (
+      day.difference === "" ||
+      day.difference === "0" ||
+      day.difference === "0.0"
+    ) {
+      setPetData(data.askDiff);
       return;
     }
 
     if (day.difference === "1") {
-      setPetData(pet.equalDay);
+      setPetData(data.equalDay);
       return;
     }
 
     if (day.difference === "2") {
-      setPetData(pet.betterDay);
+      setPetData(data.betterDay);
       return;
     }
 
     if (day.difference === "3") {
-      setPetData(pet.worseDay);
+      setPetData(data.worseDay);
       return;
     }
   };
 
   useEffect(() => {
+    if (!petData) return;
     if (petData.img) {
       switch (petData.img) {
         case "default":
-          setSource(require(`src/images/pet/default.jpg`));
+          setSource((prevSource) => require(`src/images/pet/default.jpg`));
           break;
         case "askExpected":
           setSource(require(`src/images/pet/askExpected.jpg`));
@@ -93,6 +106,7 @@ export default function DayCard() {
   const handlePetting = () => {
     const actual = source;
     setSource(require(`src/images/pet/petting.jpg`));
+    setPetData(pet.petted);
 
     setTimeout(() => {
       setSource(require(`src/images/pet/petted.jpg`));
@@ -105,7 +119,11 @@ export default function DayCard() {
 
   return (
     <View>
-      {petData && (
+      {!petData ? (
+        <View style={styles.container}>
+          <Text style={styles.petMessageText}>Loading...</Text>
+        </View>
+      ) : (
         <View style={styles.container}>
           <Link
             href={petData.route || ""}
@@ -116,7 +134,12 @@ export default function DayCard() {
               },
             ]}
           >
-            <Text style={styles.petMessageText}>{petData.message}</Text>
+            <Text style={styles.petMessageText}>
+              {petData.message &&
+                petData.message[
+                  Math.floor(Math.random() * petData.message.length)
+                ]}
+            </Text>
           </Link>
           <TouchableOpacity onPress={handlePetting}>
             {source && <Image style={styles.petImage} source={source} />}

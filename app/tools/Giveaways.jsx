@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import getStyles from "../../src/styles/styles";
+import getStyles from "@/src/styles/styles";
 
 const Giveaways = () => {
   const [participants, setParticipants] = useState([]);

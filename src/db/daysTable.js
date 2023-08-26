@@ -7,6 +7,7 @@ db.transaction((tx) => {
   tx.executeSql(
     "create table if not exists days (date text, expected text, real text, difference text)"
   );
+  // tx.executeSql("delete from days");
 });
 
 const getItem = (date) => {
@@ -81,6 +82,30 @@ const getMonth = (date) => {
   });
 };
 
+const getMonthDifference = (date) => {
+  const firstDay = moment(date, "YYYY/MM/DD")
+    .startOf("month")
+    .format("YYYY/MM/DD");
+  const lastDay = moment(date, "YYYY/MM/DD")
+    .endOf("month")
+    .format("YYYY/MM/DD");
+
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "select date, difference from days where date between ? and ?",
+        [firstDay, lastDay],
+        (_, { rows: { _array } }) => {
+          resolve(_array);
+        },
+        (_, error) => {
+          reject(null);
+        }
+      );
+    });
+  });
+};
+
 const deleteByDate = (date) => {
   db.transaction((tx) => {
     tx.executeSql(
@@ -100,6 +125,7 @@ const database = {
   updateDifference,
   getMonth,
   deleteByDate,
+  getMonthDifference,
 };
 
 export default database;

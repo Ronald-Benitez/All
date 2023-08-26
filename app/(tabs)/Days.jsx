@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import getStyles from "@/src/styles/styles";
 import OptionPicker from "@/src/components/configs/OptionPicker";
-import DatePicker from "@/src/components/configs/DatePicker";
+import CustomCalendar from "@/src/components/configs/CustomCalendar";
 import db from "@/src/db/daysTable";
 import DataContainer from "@/src/components/Days/DataContainer";
 import StadisticsContainer from "@/src/components/Days/StadisticsContainer";
@@ -156,7 +156,7 @@ export default function Days() {
         >
           <AntDesign name="left" size={18} color="black" />
         </TouchableOpacity>
-        <DatePicker value={date} onChange={setDate} />
+        <CustomCalendar value={date} onChange={setDate} />
         <TouchableOpacity
           onPress={() => {
             setDate(

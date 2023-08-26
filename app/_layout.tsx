@@ -2,9 +2,12 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
-import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
+import { useState, useEffect } from "react";
 
+import {
+  getConfigs,
+} from "@/src/helpers/files";
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -42,13 +45,69 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
+interface Configs {
+  headers: {
+    expenseadder: { value: string };
+    savings: { value: string };
+    earnings: { value: string };
+    giveaways: { value: string };
+  };
+}
+
 function RootLayoutNav() {
+  const [configs, setConfigs] = useState<Configs | null>(null);
+
+  useEffect(() => {
+    getConfigs().then((data) => {
+      setConfigs(data);
+    });
+  }, []);
+
   const colorScheme = useColorScheme();
 
   return (
     <ThemeProvider value={DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+        name="finances/ExpenseAdder"
+        options={{
+          headerTitle: 'Expense adder',
+          headerStyle: {
+            backgroundColor: configs?.headers.expenseadder.value || "#f3e7e7",
+          },  
+        }}
+        />
+         <Stack.Screen
+        name="finances/Savings"
+        options={{
+          headerTitle: 'Savings',
+          headerStyle: {
+            backgroundColor: configs?.headers.savings.value || "#f3e7e7",
+          }, 
+        }}
+        />
+        <Stack.Screen
+        name="finances/Earnings"
+        options={{
+          headerTitle: 'Earnings',
+          headerStyle: {
+            backgroundColor: configs?.headers.earnings.value || "#f3e7e7",
+          }, 
+        }}
+        />
+        <Stack.Screen
+        name="tools/Giveaways"
+        options={{
+          headerTitle: 'Giveaways',
+          headerStyle: {
+            backgroundColor: configs?.headers.giveaways.value || "#f3e7e7",
+          }, 
+        }}
+
+        />
+       
+        
       </Stack>
     </ThemeProvider>
   );

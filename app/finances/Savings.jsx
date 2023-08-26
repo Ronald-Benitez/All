@@ -2,18 +2,17 @@ import React, { useState, useEffect } from "react";
 import { View, TouchableOpacity, Modal } from "react-native";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import moment from "moment/moment";
-
 import getStyles from "@/src/styles/styles";
 import AddRegister from "@/src/components/finances/AddRegister";
 import AddRegisterList from "@/src/components/finances/AddRegisterList";
 import OptionPicker from "@/src/components/configs/OptionPicker";
 import RegisterCard from "@/src/components/finances/RegisterCard";
 import RegistersListCard from "@/src/components/finances/RegistersList";
-import GroupsHandler from "../../src/db/groupTables";
+import GroupsHandler from "@/src/db/groupTables";
 
-const db = new GroupsHandler("registerGroup");
+const db = new GroupsHandler("savingsGroup");
 
-export default function Finances() {
+const Savings = () => {
   const [styles, setStyles] = useState({});
   const [actualRegister, setActualRegister] = useState("");
   const [seeAdd, setSeeAdd] = useState(false);
@@ -158,6 +157,7 @@ export default function Finances() {
             isDown={isCard}
             setIsDown={setIsCard}
             setRegister={setRegister}
+            savingsFlag={true}
           />
         </View>
 
@@ -170,6 +170,7 @@ export default function Finances() {
             handleReload={handleReloadActual}
             isDown={isList}
             setIsDown={setIsList}
+            savingsFlag={true}
           />
         </View>
 
@@ -184,6 +185,7 @@ export default function Finances() {
                 setReload={setReload}
                 year={year}
                 month={month}
+                savingsFlag={true}
               />
             </View>
           </TouchableOpacity>
@@ -195,11 +197,17 @@ export default function Finances() {
             onPress={() => setSeeAddRegister(false)}
           >
             <View style={styles.modalContent}>
-              <AddRegisterList group={register} setRegister={setRegister} />
+              <AddRegisterList
+                group={register}
+                setRegister={setRegister}
+                savingsFlag={true}
+              />
             </View>
           </TouchableOpacity>
         </Modal>
       </View>
     </>
   );
-}
+};
+
+export default Savings;

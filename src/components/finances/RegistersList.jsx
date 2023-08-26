@@ -4,17 +4,28 @@ import { Feather } from "@expo/vector-icons";
 import moment from "moment/moment";
 
 import getStyles from "@/src/styles/styles";
-import db from "@/src/db/registersListTable.js";
-import dbGroup from "@/src/db/registersGroupTable.js";
 import Confirm from "@/src/components/configs/Confirm";
 import AddRegisterList from "./AddRegisterList";
+import ListHandler from "../../db/listTables";
+import GroupHandler from "../../db/groupTables";
 
-export default function RegistersListCard({ group, setGroup, handleReload, isDown, setIsDown }) {
+export default function RegistersListCard({
+  group,
+  savingsFlag,
+  setGroup,
+  handleReload,
+  isDown,
+  setIsDown,
+}) {
   const [styles, setStyles] = useState({});
   const [list, setList] = useState([]);
   const [confirm, setConfirm] = useState(false);
   const [selected, setSelected] = useState(null);
   const [edit, setEdit] = useState(false);
+  const db = new ListHandler(savingsFlag ? "savingsList" : "registerList");
+  const dbGroup = new GroupHandler(
+    savingsFlag ? "savingsGroup" : "registerGroup"
+  );
 
   useEffect(() => {
     getStyles().then((data) => {

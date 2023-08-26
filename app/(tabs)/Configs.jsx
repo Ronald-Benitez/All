@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -5,61 +6,82 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { useState, useEffect } from "react";
 import { SimpleLineIcons } from "@expo/vector-icons";
-
 import {
   getConfigs,
   setConfigs as fileSet,
-  deleteConfigs,
   resetConfigs,
+  deleteConfigs,
+  getPet,
+  deletePet,
+  updatePet,
 } from "../../src/helpers/files";
 import getStyles from "../../src/styles/styles";
-import ColorPicker from "../../src/components/configs/ColorPicker";
 import { convertCamelCase } from "../../src/helpers/stringsHelper";
-import baseConfigs from "../../src/files/configs";
+import Dropdown from "@/src/components/configs/Dropdown";
+import Confirm from "@/src/components/configs/Confirm";
+import PetMessages from "@/src/components/pet/PetMessages";
+import ColorPicker from "../../src/components/configs/ColorPicker";
 
 const Configs = () => {
   const [configs, setConfigs] = useState({});
+  const [pet, setPet] = useState({});
   const [reload, setReload] = useState(false);
   const [componentStyles, setComponentStyles] = useState({});
-  const [newColor, setNewColor] = useState({});
+  const [newData, setNewData] = useState({});
+  const [colorModal, setColorModal] = useState(false);
+  const [PickerData, setPickerData] = useState({});
+  const [confirmData, setConfirmData] = useState({});
+  const [openConfirm, setOpenConfirm] = useState(false);
 
   useEffect(() => {
-    getStyles().then((data) => {
-      setComponentStyles(data);
-    });
-    getConfigs().then((configs) => {
-      setConfigs(configs);
-    });
+    Promise.all([getStyles(), getConfigs(), getPet()]).then(
+      ([data, configsData, petData]) => {
+        setComponentStyles(data);
+        setConfigs(configsData);
+        setPet(petData);
+      }
+    );
     // deleteConfigs();
   }, [reload]);
 
   const handleLocalConfig = async (key, key2, value) => {
     const newConfig = { ...configs };
     newConfig[key][key2].value = value;
+
     setConfigs(newConfig);
-    fileSet(configs);
+    await fileSet(newConfig);
+    setNewData({});
     setReload(!reload);
   };
 
-  const handleReset = async (key) => {
-    resetConfigs(key).then(() => {
-      setReload(!reload);
-    });
+  const handlePetUpdate = (key, value) => {
+    const newPet = { ...pet };
+    newPet[key] = value;
+    setPet(newPet);
+    updatePet(newPet);
+    setNewData({});
   };
 
-  const handleDelete = async (key) => {
-    deleteConfigs().then(() => {
-      setReload(!reload);
-    });
+  const handleReset = async (key) => {
+    await resetConfigs(key);
+    setReload(!reload);
+  };
+
+  const handleDelete = async () => {
+    await deletePet();
+    setReload(!reload);
   };
 
   useEffect(() => {
-    if (Object.keys(newColor).length > 0) {
-      handleLocalConfig(newColor.key, newColor.key2, newColor.value);
+    if (Object.keys(newData).length > 0) {
+      if (newData.type === "pet") {
+        handlePetUpdate(newData.key, newData.value);
+      } else {
+        handleLocalConfig(newData.key, newData.key2, newData.value);
+      }
     }
-  }, [newColor]);
+  }, [newData]);
 
   return (
     <ScrollView>
@@ -67,61 +89,193 @@ const Configs = () => {
         <View style={componentStyles.row}>
           <TouchableOpacity
             style={[componentStyles.buttonPrimary, { padding: 10 }]}
-            onPress={() => handleDelete()}
+            onPress={() => {
+              setConfirmData({
+                title: "Reset configs?",
+                message:
+                  "Are you sure you want to reset your configs to default?",
+                confirmText: "Reset",
+                cancelText: "Cancel",
+                onConfirm: () => {
+                  deleteConfigs();
+                  setReload(!reload);
+                },
+              });
+              setOpenConfirm(true);
+            }}
           >
             <Text style={componentStyles.buttonPrimaryText}>
-              Reset to default
+              Reset configs to default
             </Text>
           </TouchableOpacity>
         </View>
-        {Object.keys(configs).map((key) => (
-          <View key={key} style={componentStyles.block}>
-            <Text style={componentStyles.title}>{configs[key].name.value}</Text>
-            {Object.keys(configs[key]).map((key2) => {
-              const configValue = configs[key][key2].value;
-              const configType = configs[key][key2].type;
+        {configs &&
+          Object.keys(configs).map((key) => (
+            <Dropdown
+              key={"configs" + key}
+              title={configs[key]?.name.value}
+              render={() => (
+                <View style={componentStyles.block}>
+                  {Object.keys(configs[key]).map((key2) => {
+                    const configValue = configs[key][key2].value;
+                    const configType = configs[key][key2].type;
 
-              return (
+                    return (
+                      <View
+                        key={key2}
+                        style={[
+                          componentStyles.row,
+                          { justifyContent: "space-between" },
+                        ]}
+                      >
+                        <Text style={componentStyles.sideLabel}>
+                          {convertCamelCase(key2)}
+                        </Text>
+                        {configType === "color" ? (
+                          <TouchableOpacity
+                            onPress={() => {
+                              setColorModal(true);
+                              setPickerData({ key, key2, value: configValue });
+                            }}
+                          >
+                            <View
+                              style={[
+                                componentStyles.colorPreview,
+                                { backgroundColor: configValue },
+                              ]}
+                            />
+                          </TouchableOpacity>
+                        ) : (
+                          <TextInput
+                            style={[componentStyles.input, { minWidth: 150 }]}
+                            onChangeText={(value) =>
+                              setNewData({
+                                type: "config",
+                                key,
+                                key2,
+                                value,
+                              })
+                            }
+                            value={configValue}
+                            placeholder={key2}
+                          />
+                        )}
+                      </View>
+                    );
+                  })}
+                  <View style={componentStyles.row}>
+                    <TouchableOpacity
+                      style={[componentStyles.buttonPrimary, { padding: 10 }]}
+                      onPress={() => {
+                        setConfirmData({
+                          title: "Reset config?",
+                          message:
+                            "Are you sure you want to reset this config to default?",
+                          confirmText: "Reset",
+                          cancelText: "Cancel",
+                          onConfirm: () => handleReset(key),
+                        });
+                        setOpenConfirm(true);
+                      }}
+                    >
+                      <SimpleLineIcons name="refresh" size={18} color="white" />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
+            />
+          ))}
+        <View style={componentStyles.row}>
+          <TouchableOpacity
+            style={[componentStyles.buttonPrimary, { padding: 10 }]}
+            onPress={() => {
+              setConfirmData({
+                title: "Reset pet?",
+                message: "Are you sure you want to reset your pet?",
+                confirmText: "Delete",
+                cancelText: "Cancel",
+                onConfirm: () => handleDelete(),
+              });
+              setOpenConfirm(true);
+            }}
+          >
+            <Text style={componentStyles.buttonPrimaryText}>
+              Reset pet to default
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {pet && (
+          <Dropdown
+            key="pet"
+            title={pet.main?.name || "Pet"}
+            render={() => (
+              <View style={componentStyles.block}>
                 <View
-                  key={key2}
                   style={[
                     componentStyles.row,
                     { justifyContent: "space-between" },
                   ]}
                 >
-                  <Text style={componentStyles.sideLabel}>
-                    {convertCamelCase(key2)}
-                  </Text>
-                  {configType === "color" ? (
-                    <ColorPicker
-                      base={configValue}
-                      setNewElement={setNewColor.bind(this)}
-                      newElement={{ key, key2, value: configValue }}
-                    />
-                  ) : (
-                    <TextInput
-                      style={[componentStyles.input, { minWidth: 150 }]}
-                      onChangeText={(value) =>
-                        handleLocalConfig(key, key2, value)
-                      }
-                      value={String(configValue)}
-                      placeholder={key2}
-                    />
-                  )}
+                  <Text style={componentStyles.sideLabel}>Name</Text>
+                  <TextInput
+                    style={[componentStyles.input, { minWidth: 150 }]}
+                    onChangeText={(value) =>
+                      setNewData({
+                        type: "pet",
+                        key: "main",
+                        value: { ...pet.main, name: value },
+                      })
+                    }
+                    value={pet.main?.name}
+                    placeholder="Name"
+                  />
                 </View>
-              );
-            })}
-            <View style={componentStyles.row}>
-              <TouchableOpacity
-                style={[componentStyles.buttonPrimary, { padding: 10 }]}
-                onPress={() => handleReset(key)}
-              >
-                <SimpleLineIcons name="refresh" size={18} color="black" />
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
+                {Object.keys(pet).map(
+                  (key) =>
+                    key !== "main" && (
+                      <PetMessages
+                        key={key}
+                        data={pet[key]}
+                        onChange={(value) =>
+                          setNewData({
+                            type: "pet",
+                            key,
+                            value,
+                          })
+                        }
+                      />
+                    )
+                )}
+              </View>
+            )}
+          />
+        )}
       </View>
+
+      <Confirm
+        title={confirmData.title}
+        message={confirmData.message}
+        confirmText={confirmData.confirmText}
+        cancelText={confirmData.cancelText}
+        visible={openConfirm}
+        setVisible={setOpenConfirm}
+        onConfirm={() => {
+          confirmData.onConfirm();
+          setOpenConfirm(false);
+        }}
+        onCancel={() => {
+          setOpenConfirm(false);
+        }}
+      />
+      <ColorPicker
+        newElement={PickerData}
+        styles={componentStyles}
+        visible={colorModal}
+        setVisible={setColorModal}
+        onColorChange={(value) =>
+          handleLocalConfig(PickerData.key, PickerData.key2, value)
+        }
+      />
     </ScrollView>
   );
 };

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, Modal } from "react-native";
 import Date from "react-native-modern-datepicker";
 import moment from "moment/moment";
 

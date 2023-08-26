@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Cards from "../../src/components/Index/Cards";
 import getStyles from "@/src/styles/styles";
@@ -10,6 +11,7 @@ import DailyCard from "@/src/components/pet/DailyCard";
 
 export default function TabOneScreen() {
   const [styles, setStyles] = useState({});
+  
   useEffect(() => {
     getStyles().then((data) => {
       setStyles(data);
@@ -46,7 +48,7 @@ export default function TabOneScreen() {
           <View styles={styles.row}>
             <Cards
               title="Giveaways"
-              route="Giveaways"
+              route="tools/Giveaways"
               icon={() => <AntDesign name="gift" size={30} color="black" />}
             />
             <Cards
@@ -93,6 +95,39 @@ export default function TabOneScreen() {
               route="Finances"
               icon={() => (
                 <Ionicons name="wallet-outline" size={30} color="black" />
+              )}
+            />
+            <Cards
+              title="Expense Adder"
+              route="finances/ExpenseAdder"
+              icon={() => (
+                <MaterialCommunityIcons
+                  name="trending-down"
+                  size={30}
+                  color="black"
+                />
+              )}
+            />
+            <Cards
+              title="Savings"
+              route="finances/Savings"
+              icon={() => (
+                <MaterialCommunityIcons
+                  name="piggy-bank-outline"
+                  size={30}
+                  color="black"
+                />
+              )}
+            />
+            <Cards
+              title="Earnings"
+              route="finances/Earnings"
+              icon={() => (
+                <MaterialCommunityIcons
+                  name="finance"
+                  size={30}
+                  color="black"
+                />
               )}
             />
           </View>

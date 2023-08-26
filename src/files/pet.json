@@ -1,38 +1,128 @@
 {
-    "default": {
-      "message": "Something went wrong, please try again",
-      "img": "default",
-      "route": ""
-    },
-    "askExpected": {
-      "message": "Tell me what you plan to do today?",
-      "img": "askExpected",
-      "route": "/Days"
-    },
-    "askReal": {
-      "message": "Tell me what you did today?",
-      "img": "askReal",
-      "route": "/Days"
-    },
-    "askDiff": {
-      "message": "Tell me, regarding what you expected how do you think your day was?",
-      "img": "askDiff",
-      "route": "/Days"
-    },
-    "equalDay": {
-      "message": "You did what you planned to do today, good job!",
-      "img": "equalDay",
-      "route": "/Days"
-    },
-    "betterDay": {
-      "message": "You did more than you planned to do today, good job!",
-      "img": "betterDay",
-      "route": "/Days"
-    },
-    "worseDay": {
-      "message": "You did less than you planned to do today, but that's ok, tomorrow is a new day!",
-      "img": "worseDay",
-      "route": "/Days"
-    }
+  "main": {
+    "name": "Eco"
+  },
+  "default": {
+    "name": "Default",
+    "message": [
+      "Something went wrong, please try again",
+      "Oops, something didn't work as expected",
+      "An error occurred, please try again later",
+      "Sorry, but there seems to be an issue",
+      "Uh-oh, looks like there's a problem",
+      "We're experiencing technical difficulties",
+      "Please give it another try later",
+      "A glitch happened, please retry",
+      "This wasn't supposed to happen, please refresh",
+      "Oh no, an error happened. Please try again."
+    ],
+    "img": "default",
+    "route": ""
+  },
+  "askExpected": {
+    "name": "Ask Expected",
+    "message": [
+      "Tell me what you plan to do today?",
+      "What's your plan for today?",
+      "What are your goals for the day?",
+      "Share your plans for today",
+      "Let me know what's on your agenda",
+      "What tasks do you have in mind for today?",
+      "What's on your to-do list for today?",
+      "What activities are you aiming for today?",
+      "What's your focus for the day?",
+      "Give me a glimpse of your plans for today."
+    ],
+    "img": "askExpected",
+    "route": "/Days"
+  },
+  "askReal": {
+    "name": "Ask Real",
+    "message": [
+      "Tell me what you did today?",
+      "Share your accomplishments for the day",
+      "What did you manage to achieve today?",
+      "Let me know about your day's activities",
+      "Recap your accomplishments for the day",
+      "What tasks did you complete today?",
+      "How did you spend your day?",
+      "Give me an overview of your day's tasks",
+      "Summarize your day's achievements",
+      "Tell me about your progress today."
+    ],
+    "img": "askReal",
+    "route": "/Days"
+  },
+  "askDiff": {
+    "name": "Ask Diff",
+    "message": [
+      "Tell me, regarding what you expected how do you think your day was?",
+      "Reflect on your day based on your expectations",
+      "Compare your day with your initial plans",
+      "How do you think your day went compared to your expectations?",
+      "Did your day match up with your plans?",
+      "Were there any differences between your expectations and reality?",
+      "Share your thoughts on how your day turned out",
+      "Did your day go as you anticipated?",
+      "What was the gap between your expectations and your actual day?",
+      "Tell me about the variance between your plans and your day."
+    ],
+    "img": "askDiff",
+    "route": "/Days"
+  },
+  "equalDay": {
+    "name": "Equal Day",
+    "message": [
+      "You did what you planned to do today, good job!",
+      "Congratulations, you accomplished your daily goals!",
+      "Well done, you stuck to your plan!",
+      "You successfully met your targets for today!",
+      "Hooray, you've completed your planned tasks for the day!",
+      "Mission accomplished! You achieved what you aimed for.",
+      "Pat yourself on the back, you did exactly what you intended!",
+      "You executed your plans perfectly, kudos!",
+      "Great work! You matched your plans for the day.",
+      "Thumbs up! Your day went according to plan."
+    ],
+    "img": "equalDay",
+    "route": "/Days"
+  },
+  "betterDay": {
+    "name": "Better Day",
+    "message": [
+      "You did more than you planned to do today, good job!",
+      "Impressive work, you exceeded your expectations!",
+      "You're on fire today, surpassing your goals!",
+      "Wow, you've outdone yourself today!",
+      "You've gone above and beyond your set goals, well done!",
+      "Extraordinary effort! You went the extra mile today.",
+      "Bravo! You've overachieved on your tasks for the day.",
+      "You've set a new standard by accomplishing more than planned!",
+      "Keep up the fantastic work of exceeding your targets!",
+      "You're unstoppable! Today's achievements are exceptional."
+    ],
+    "img": "betterDay",
+    "route": "/Days"
+  },
+  "worseDay": {
+    "name": "Worse Day",
+    "message": [
+      "You did less than you planned to do today, but that's ok, tomorrow is a new day!",
+      "Don't worry, there's always another chance tomorrow!",
+      "It's alright, tomorrow is a fresh start!",
+      "No problem, there's always tomorrow to try again!",
+      "Keep your chin up! Tomorrow offers new opportunities.",
+      "Every day is a chance for improvement, including tomorrow!",
+      "One day doesn't define your journey. Tomorrow brings new potential.",
+      "Don't stress about today; tomorrow holds the promise of a better day!",
+      "Remember, a new day means a new chance to achieve your goals.",
+      "Stay positive! Tomorrow's a blank slate to make things better."
+    ],
+    "img": "worseDay",
+    "route": "/Days"
+  },
+  "petted": {
+    "name": "Petted",
+    "message": [""]
   }
-  
+}

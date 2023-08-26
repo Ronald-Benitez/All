@@ -3,10 +3,12 @@ import { View, TouchableOpacity, Text, Modal } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 import getStyles from "@/src/styles/styles";
-import db from "@/src/db/registersGroupTable.js";
-import dbList from "@/src/db/registersListTable.js";
+// import db from "@/src/db/registersGroupTable.js";
+// import dbList from "@/src/db/registersListTable.js";
 import Confirm from "@/src/components/configs/Confirm";
 import AddRegister from "./AddRegister";
+import GroupHandler from "../../db/groupTables";
+import ListHandler from "../../db/listTables";
 
 export default function RegisterCard({
   register,
@@ -15,12 +17,15 @@ export default function RegisterCard({
   handleReload,
   isDown,
   setIsDown,
-  setRegister
+  setRegister,
+  savingsFlag,
 }) {
   const [styles, setStyles] = useState({});
   const [balance, setBalance] = useState(0);
   const [edit, setEdit] = useState(false);
   const [confirm, setConfirm] = useState(false);
+  const db = new GroupHandler(savingsFlag ? "savingsGroup" : "registerGroup");
+  const dbList = new ListHandler(savingsFlag ? "savingsList" : "registerList");
 
   useEffect(() => {
     getStyles().then((data) => {
@@ -49,7 +54,12 @@ export default function RegisterCard({
     >
       <View style={styles.row}>
         <TouchableOpacity
-          style={styles.button}
+          style={[
+            styles.button,
+            {
+              width: "95%",
+            },
+          ]}
           onPress={() => setIsDown(!isDown)}
         >
           {isDown ? (
@@ -98,7 +108,7 @@ export default function RegisterCard({
                   balance >= 0 ? styles.income : styles.expense,
                 ]}
               >
-                $ {register.incomes - register.expenses}
+                $ {(register.incomes - register.expenses).toFixed(2)}
               </Text>
             </View>
           </View>

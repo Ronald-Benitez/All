@@ -49,16 +49,16 @@ export default function Confirm({
           <Text style={styles.modalText}>{message}</Text>
           <View style={[styles.row, { marginTop: 10 }]}>
             <TouchableOpacity
+              style={styles.buttonBordered}
+              onPress={handleCancel}
+            >
+              <Text style={styles.buttonSecondaryText}>{cancelText}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               style={styles.buttonPrimary}
               onPress={handleConfirm}
             >
               <Text style={styles.buttonPrimaryText}>{confirmText}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonPrimary}
-              onPress={handleCancel}
-            >
-              <Text style={styles.buttonPrimaryText}>{cancelText}</Text>
             </TouchableOpacity>
           </View>
         </View>

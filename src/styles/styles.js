@@ -18,6 +18,13 @@ export default async function getStyles() {
       marginVertical: 10,
     },
 
+    subtitle: {
+      fontSize: 15,
+      fontWeight: "bold",
+      textAlign: "center",
+      marginVertical: 10,
+    },
+
     input: {
       height: 40,
       margin: 12,
@@ -59,7 +66,7 @@ export default async function getStyles() {
     buttonBordered: {
       backgroundColor: "transparent",
       borderRadius: 5,
-      padding: 10,
+      padding: 15,
       margin: 5,
       borderColor: configs.colors.primaryColor.value || "black",
       borderWidth: 1,
@@ -72,6 +79,8 @@ export default async function getStyles() {
       margin: 5,
       justifyContent: "center",
       alignItems: "center",
+      borderColor: configs.colors.primaryColor.value || "black",
+      borderWidth: 1,
     },
 
     buttonPrimaryText: {
@@ -103,6 +112,7 @@ export default async function getStyles() {
       flexDirection: "column",
       justifyContent: "space-between",
       alignItems: "center",
+      padding: 5,
     },
 
     block: {
@@ -112,6 +122,11 @@ export default async function getStyles() {
       borderColor: "black",
       padding: 20,
       margin: 5,
+    },
+
+    primaryBorder: {
+      borderColor: configs.colors.primaryColor.value || "black",
+      borderWidth: 1,
     },
 
     modalContainer: {
@@ -152,9 +167,17 @@ export default async function getStyles() {
       borderColor: configs.days.unasigned.value || "#D3D3D3",
     },
 
+    unasignedBg: {
+      backgroundColor: configs.days.unasigned.value || "#D3D3D3",
+    },
+
     equal: {
       color: configs.days.equal.value || "#4CAF50",
       borderColor: configs.days.equal.value || "#4CAF50",
+    },
+
+    equalBg: {
+      backgroundColor: configs.days.equal.value || "#4CAF50",
     },
 
     better: {
@@ -162,9 +185,17 @@ export default async function getStyles() {
       borderColor: configs.days.better.value || "#2196F3",
     },
 
+    betterBg: {
+      backgroundColor: configs.days.better.value || "#2196F3",
+    },
+
     worse: {
       color: configs.days.worse.value || "#F44336",
       borderColor: configs.days.worse.value || "#F44336",
+    },
+
+    worseBg: {
+      backgroundColor: configs.days.worse.value || "#F44336",
     },
 
     modalBackdrop: {
@@ -236,9 +267,12 @@ export default async function getStyles() {
       width: 100,
       height: 30,
       margin: 2,
-      borderWidth: 0.5,
-      borderColor: "black",
       marginEnd: 12,
+      borderRadius: 5,
+      borderLeftColor: "lightgray",
+      borderRightColor: "lightgray",
+      borderLeftWidth: 0.5,
+      borderRightWidth: 0.5,
     },
 
     picker: {
@@ -322,71 +356,25 @@ export default async function getStyles() {
       textAlign: "center",
       fontWeight: "100",
     },
+
+    dayCircle: {
+      width: 35,
+      height: 35,
+      borderRadius: 25,
+      justifyContent: "center",
+      alignItems: "center",
+      margin: 5,
+    },
+
+    dayText: {
+      fontSize: 15,
+      fontWeight: "bold",
+      textAlign: "center",
+      color: "white",
+    },
+
+    daySelected: {
+      backgroundColor: "#6A197D",
+    },
   });
 }
-
-export const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginVertical: 10,
-  },
-
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    borderColor: "#936997",
-    padding: 10,
-    minWidth: 200,
-  },
-
-  inputLabel: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-
-  sideLabel: {
-    fontSize: 15,
-    fontWeight: "300",
-    textAlign: "center",
-  },
-
-  button: {
-    backgroundColor: "white",
-    borderRadius: 5,
-    padding: 15,
-    margin: 5,
-  },
-
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-
-  block: {
-    width: "90%",
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,
-    margin: 5,
-  },
-
-  registersList: {
-    padding: 0,
-    width: "100%",
-    overflow: "hidden",
-  },
-
-  verticalText: {
-    transform: [{ rotate: "-90deg" }],
-  },
-});

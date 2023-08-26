@@ -42,14 +42,21 @@ export default function DataContainer({
 
   const editView = () => {
     return (
-      <View style={[styles.container]}>
+      <View
+        style={[
+          styles.container,
+          {
+            minHeight: 500,
+          },
+        ]}
+      >
         <Text style={[styles.dayDetailsTitle, color]}>Expected</Text>
         <TextInput
           style={[
             styles.input,
             color,
             {
-              minHeight: 50,
+              minHeight: 150,
               width: "90%",
             },
           ]}
@@ -63,7 +70,7 @@ export default function DataContainer({
             styles.input,
             color,
             {
-              minHeight: 50,
+              minHeight: 150,
               width: "90%",
             },
           ]}
@@ -79,12 +86,28 @@ export default function DataContainer({
     return (
       <View style={[styles.container]}>
         <Text style={[styles.dayDetailsTitle, color]}>Expected</Text>
-        <View style={[styles.dayDetailsBlock, color]}>
+        <View
+          style={[
+            styles.dayDetailsBlock,
+            color,
+            {
+              padding: 10,
+            },
+          ]}
+        >
           <Text style={[styles.dayDetailsText, color]}>{expected}</Text>
         </View>
 
         <Text style={[styles.dayDetailsTitle, color]}>Real</Text>
-        <View style={[styles.dayDetailsBlock, color]}>
+        <View
+          style={[
+            styles.dayDetailsBlock,
+            color,
+            {
+              padding: 10,
+            },
+          ]}
+        >
           <Text style={[styles.dayDetailsText, color]}>{real}</Text>
         </View>
       </View>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
 import { VictoryChart, VictoryBar } from "victory-native";
 import moment from "moment";
 
@@ -95,7 +95,9 @@ export default function StadisticsContainer({ day, reload }) {
           />
         </VictoryChart>
       </View>
-      <View style={[styles.row,{justifyContent:"space-between", width:"90%"}]}>
+      <View
+        style={[styles.row, { justifyContent: "space-between", width: "90%" }]}
+      >
         {dataPie.map((item, index) => (
           <View style={styles.column} key={index}>
             <View

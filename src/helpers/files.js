@@ -1,5 +1,6 @@
 import * as FileSystem from "expo-file-system";
 import configs from "../files/configs.json";
+import pet from "../files/pet.json";
 
 export const getConfigs = async () => {
   if (await fileExists("configs.json")) {
@@ -56,4 +57,40 @@ export const writeFile = async (path, content) => {
   let fileUri = FileSystem.documentDirectory + path;
 
   await FileSystem.writeAsStringAsync(fileUri, content);
+};
+
+export const getPet = async () => {
+  if (await fileExists("pet.json")) {
+    let file = await readFile("pet.json");
+    return JSON.parse(file);
+  } else {
+    await setPet();
+    return pet;
+  }
+};
+
+export const setPet = async () => {
+  await writeFile("pet.json", JSON.stringify(pet));
+};
+
+export const updatePet = async (data) => {
+  await writeFile("pet.json", JSON.stringify(data));
+};
+
+export const updateKeyPet = async (key, value) => {
+  let file = await getPet();
+  file[key] = value;
+  await writeFile("pet.json", JSON.stringify(file));
+  return file;
+};
+
+export const reloadKeyPet = async (key) => {
+  let file = await getPet();
+  file[key] = pet[key];
+  await writeFile("pet.json", JSON.stringify(file));
+  return file;
+};
+
+export const deletePet = async () => {
+  await FileSystem.deleteAsync(FileSystem.documentDirectory + "pet.json");
 };

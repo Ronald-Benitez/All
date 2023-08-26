@@ -2,9 +2,8 @@ import { Text } from "react-native";
 import { useState, useEffect } from "react";
 import { Link } from "expo-router";
 import getStyles from "@/src/styles/styles";
-import { View } from "@/components/Themed";
 
-const Cards = ({ title, route, icon }) => {
+const Cards = ({ title, route, icon, prop }) => {
   const [styles, setStyles] = useState({});
   useEffect(() => {
     getStyles().then((data) => {
@@ -13,18 +12,15 @@ const Cards = ({ title, route, icon }) => {
   }, []);
 
   return (
-    <Link style={[styles.buttonBordered]} href={route}>
+    <Link
+      style={[styles.buttonBordered]}
+      href={{
+        pathname: route,
+        params: prop,
+      }}
+    >
       {icon()}
-      <View
-        style={[
-          styles.row,
-          {
-            backgroundColor: "transparent",
-          },
-        ]}
-      >
-        <Text style={[styles.cardText]}>{title}</Text>
-      </View>
+      <Text style={[styles.cardText]}>{"   " + title}</Text>
     </Link>
   );
 };
