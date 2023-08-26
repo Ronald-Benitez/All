@@ -8,18 +8,43 @@ import getStyles from "@/src/styles/styles";
 import AddEarning from "./AddEarning";
 import Confirm from "@/src/components/configs/Confirm";
 
-const EarningsList = ({ groupId, setTotal, setReload, reload }) => {
+const EarningsList = ({ groupId, setTotal, setReload, reload, filter }) => {
   const [earnings, setEarnings] = useState([]);
   const [styles, setStyles] = useState({});
   const [edit, setEdit] = useState(false);
   const [actualEarning, setActualEarning] = useState(null);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [filteredList, setFilteredList] = useState([]);
 
   useEffect(() => {
     getStyles().then((data) => {
       setStyles(data);
     });
   }, []);
+
+  useEffect(() => {
+    if (filter === "" || !filter) {
+      setFilteredList([]);
+      return setTotal(
+        earnings.reduce((acc, item) => acc + parseFloat(item.amount), 0)
+      );
+      return;
+    }
+    const filters = filter.split(",");
+    const newFilteredList = earnings.filter((item) => {
+      let flag = false;
+      filters.forEach((filter) => {
+        if (item.name.toLowerCase().includes(filter.toLowerCase())) {
+          flag = true;
+        }
+      });
+      return flag;
+    });
+    setFilteredList(newFilteredList);
+    setTotal(
+      newFilteredList.reduce((acc, item) => acc + parseFloat(item.amount), 0)
+    );
+  }, [filter, earnings]);
 
   useEffect(() => {
     db.getByGroup(groupId).then((data) => {
@@ -44,7 +69,7 @@ const EarningsList = ({ groupId, setTotal, setReload, reload }) => {
     >
       <>
         <FlatList
-          data={earnings}
+          data={filteredList.length > 0 ? filteredList : earnings}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View key={item.id} style={[styles.row]}>
@@ -87,8 +112,8 @@ const EarningsList = ({ groupId, setTotal, setReload, reload }) => {
                   },
                 ]}
                 onPress={() => {
-                    setDeleteModal(true);
-                    setActualEarning(item);
+                  setDeleteModal(true);
+                  setActualEarning(item);
                 }}
               >
                 <Feather name="trash-2" size={20} color="black" />

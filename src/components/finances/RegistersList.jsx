@@ -16,12 +16,15 @@ export default function RegistersListCard({
   handleReload,
   isDown,
   setIsDown,
+  filter,
 }) {
   const [styles, setStyles] = useState({});
   const [list, setList] = useState([]);
   const [confirm, setConfirm] = useState(false);
   const [selected, setSelected] = useState(null);
   const [edit, setEdit] = useState(false);
+  const [filteredList, setFilteredList] = useState([]);
+  const [total, setTotal] = useState(0);
   const db = new ListHandler(savingsFlag ? "savingsList" : "registerList");
   const dbGroup = new GroupHandler(
     savingsFlag ? "savingsGroup" : "registerGroup"
@@ -34,6 +37,22 @@ export default function RegistersListCard({
   }, []);
 
   useEffect(() => {
+    if (filter === "" || !filter) return setFilteredList([]);
+    const filters = filter.split(",");
+    const newFilteredList = list.filter((item) => {
+      let flag = false;
+      filters.forEach((filter) => {
+        if (item.name.toLowerCase().includes(filter.toLowerCase())) {
+          flag = true;
+        }
+      });
+      return flag;
+    });
+    setFilteredList(newFilteredList);
+    handleSum(newFilteredList);
+  }, [filter, list]);
+
+  useEffect(() => {
     if (!group || !group?.id) return setList([]);
 
     db.getByGroup(group.id).then((data) => {
@@ -41,6 +60,15 @@ export default function RegistersListCard({
       setList(data);
     });
   }, [group]);
+
+  const handleSum = (newList) => {
+    setTotal(
+      newList.reduce((acc, item) => {
+        if (item.type === "income") return acc + parseFloat(item.value);
+        return acc - parseFloat(item.value);
+      }, 0)
+    );
+  };
 
   const handleDelete = async () => {
     await db.deleteItem(selected.id);
@@ -78,6 +106,7 @@ export default function RegistersListCard({
             {
               width: "95%",
             },
+            styles.row,
           ]}
           onPress={() => setIsDown(!isDown)}
         >
@@ -88,10 +117,16 @@ export default function RegistersListCard({
           )}
         </TouchableOpacity>
       </View>
+      {filteredList.length > 0 && (
+        <View style={styles.row}>
+          <Text style={styles.sideLabel}>Filtered:</Text>
+          <Text style={styles.sideLabel}>{total}</Text>
+        </View>
+      )}
 
       {isDown && (
         <FlatList
-          data={list}
+          data={filteredList.length > 0 ? filteredList : list}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View key={item.id} style={[styles.row]}>

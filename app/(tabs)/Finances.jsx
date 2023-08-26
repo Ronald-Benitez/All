@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, TouchableOpacity, Modal } from "react-native";
+import { View, TouchableOpacity, Modal, Text, TextInput } from "react-native";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import moment from "moment/moment";
 
@@ -25,6 +25,9 @@ export default function Finances() {
   const [seeAddRegister, setSeeAddRegister] = useState(false);
   const [isCard, setIsCard] = useState(true);
   const [isList, setIsList] = useState(true);
+  const [seeFilter, setSeeFilter] = useState(false);
+  const [filter, setFilter] = useState("");
+
 
   useEffect(() => {
     getStyles().then(setStyles);
@@ -142,6 +145,14 @@ export default function Finances() {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
+              setSeeFilter(!seeFilter);
+            }}
+          >
+            <AntDesign name="filter" size={18} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
               setReload(!reload);
             }}
           >
@@ -170,6 +181,7 @@ export default function Finances() {
             handleReload={handleReloadActual}
             isDown={isList}
             setIsDown={setIsList}
+            filter={filter}
           />
         </View>
 
@@ -196,6 +208,25 @@ export default function Finances() {
           >
             <View style={styles.modalContent}>
               <AddRegisterList group={register} setRegister={setRegister} />
+            </View>
+          </TouchableOpacity>
+        </Modal>
+
+        <Modal visible={seeFilter} transparent>
+          <TouchableOpacity
+            style={styles.modalBackdrop}
+            onPress={() => setSeeFilter(false)}
+          >
+            <View style={styles.modalContent}>
+              <View style={styles.block}>
+                <Text style={styles.sideLabel}>Filters </Text>
+                <TextInput
+                  style={styles.input}
+                  value={filter}
+                  onChangeText={setFilter}
+                  placeholder="You can add several by separating by , "
+                />
+              </View>
             </View>
           </TouchableOpacity>
         </Modal>
