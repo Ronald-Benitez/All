@@ -3,22 +3,16 @@ import { View, TouchableOpacity, Text } from "react-native";
 import moment from "moment/moment";
 import { AntDesign } from "@expo/vector-icons";
 
-import getStyles from "@/src/styles/styles";
+import useStyle from "@/src/zustand/useStyle";
 import OptionPicker from "@/src/components/configs/OptionPicker";
 import TableHandler from "../../db/groupTables";
 
 export default function GroupSelector({ setGroup, savingsFlag }) {
-  const [styles, setStyles] = useState({});
+  const styles = useStyle((state) => state.style);
   const [actualRegister, setActualRegister] = useState("");
   const [registers, setRegisters] = useState([]);
   const [year, setYear] = useState(moment().format("YYYY"));
   const db = new TableHandler(savingsFlag ? "savingsGroup" : "registerGroup");
-
-  useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
-  }, []);
 
   useEffect(() => {
     db.getByYear(year).then((data) => {

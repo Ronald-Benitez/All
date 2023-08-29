@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text, TextInput, Alert } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import moment from "moment/moment";
 
-import getStyles from "@/src/styles/styles";
+import useStyle from "@/src/zustand/useStyle";
 import db from "@/src/db/earningsTable";
 import DatePicker from "@/src/components/configs/DatePicker.jsx";
 
@@ -13,16 +13,10 @@ export default function AddEarning({
   reload,
   actualEarning,
 }) {
-  const [styles, setStyles] = useState({});
+  const styles = useStyle((state) => state.style);
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState(moment().format("YYYY/MM/DD"));
-
-  useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
-  }, []);
 
   useEffect(() => {
     if (actualEarning) {

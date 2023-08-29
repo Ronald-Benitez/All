@@ -15,7 +15,7 @@ import { AntDesign } from "@expo/vector-icons";
 import moment from "moment/moment";
 import { Storage } from "expo-storage";
 
-import getStyles from "@/src/styles/styles";
+import useStyle from "@/src/zustand/useStyle";
 import Confirm from "@/src/components/configs/Confirm";
 import GroupSelector from "@/src/components/finances/GroupSelector";
 import GroupsHandler from "../../src/db/groupTables";
@@ -25,7 +25,7 @@ const dbGroup = new GroupsHandler("registerGroup");
 const dbList = new ListHandler("registerList");
 
 const ExpenseAdder = () => {
-  const [styles, setStyles] = useState({});
+  const styles = useStyle((state) => state.style);
   const [expenses, setExpenses] = useState([]);
   const [total, setTotal] = useState(0);
   const [name, setName] = useState("");
@@ -40,9 +40,6 @@ const ExpenseAdder = () => {
   const [savedName, setSavedName] = useState("");
 
   useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
     Storage.getItem({
       key: "expenses",
     }).then((data) => {
@@ -148,7 +145,7 @@ const ExpenseAdder = () => {
               clearInputs();
             }}
           >
-            <MaterialCommunityIcons name="cart-check" size={20} color="black" />
+            <MaterialCommunityIcons name="cart-check" size={15} color="black" />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.buttonBordered}
@@ -156,7 +153,7 @@ const ExpenseAdder = () => {
               clearInputs();
             }}
           >
-            <Feather name="x" size={20} color="black" />
+            <Feather name="x" size={15} color="black" />
           </TouchableOpacity>
         </>
       );
@@ -173,7 +170,7 @@ const ExpenseAdder = () => {
             });
           }}
         >
-          <MaterialCommunityIcons name="cart-plus" size={20} color="black" />
+          <MaterialCommunityIcons name="cart-plus" size={15} color="black" />
         </TouchableOpacity>
       );
     }
@@ -288,40 +285,22 @@ const ExpenseAdder = () => {
             <Text style={[styles.sideLabel]}>Name</Text>
           </View>
           <View style={[styles.column, { flex: 1 }]}>
-            <Text style={[styles.sideLabel]}>Value</Text>
+            <Text style={[styles.sideLabel]}>$</Text>
           </View>
           <View style={[styles.column, { flex: 1 }]}>
-            <Text
-              style={[
-                styles.sideLabel,
-                {
-                  fontSize: 12,
-                },
-              ]}
-            >
-              Quantity
-            </Text>
+            <Text style={[styles.sideLabel]}>#</Text>
           </View>
           <View style={[styles.column, { flex: 1 }]}>
-            <Text
-              style={[
-                styles.sideLabel,
-                {
-                  fontSize: 12,
-                },
-              ]}
-            >
-              Amount
-            </Text>
+            <Text style={[styles.sideLabel]}>Total</Text>
           </View>
           <View style={[styles.column, { flex: 1 }]}>
-            <Text style={[styles.sideLabel]}>Action</Text>
+            <Text style={[styles.sideLabel]}></Text>
           </View>
         </View>
         <ScrollView>
           {expenses.map((expense, index) => {
             return (
-              <View key={index} style={styles.row}>
+              <View key={index} style={[styles.row]}>
                 <TouchableOpacity
                   key={index}
                   style={[
@@ -351,7 +330,14 @@ const ExpenseAdder = () => {
                 </TouchableOpacity>
                 <View style={[styles.column, { flex: 1 }]}>
                   <TouchableOpacity
-                    style={styles.buttonBordered}
+                    style={[
+                      styles.buttonBordered,
+                      {
+                        width: "100%",
+                        padding: 6,
+                        alignItems: "center",
+                      },
+                    ]}
                     onPress={() => {
                       setConfirmVisible(true);
                       setIndex(index);

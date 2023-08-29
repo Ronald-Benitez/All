@@ -4,23 +4,18 @@ import moment from "moment/moment";
 import { Feather } from "@expo/vector-icons";
 
 import db from "@/src/db/earningsTable";
-import getStyles from "@/src/styles/styles";
+import useStyle from "@/src/zustand/useStyle";
 import AddEarning from "./AddEarning";
 import Confirm from "@/src/components/configs/Confirm";
 
 const EarningsList = ({ groupId, setTotal, setReload, reload, filter }) => {
   const [earnings, setEarnings] = useState([]);
-  const [styles, setStyles] = useState({});
+  const styles = useStyle((state) => state.style);
   const [edit, setEdit] = useState(false);
   const [actualEarning, setActualEarning] = useState(null);
   const [deleteModal, setDeleteModal] = useState(false);
   const [filteredList, setFilteredList] = useState([]);
 
-  useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
-  }, []);
 
   useEffect(() => {
     if (filter === "" || !filter) {

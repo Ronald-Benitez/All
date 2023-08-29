@@ -4,19 +4,16 @@ import { VictoryChart, VictoryBar } from "victory-native";
 import moment from "moment";
 
 import db from "@/src/db/daysTable";
-import getStyles from "@/src/styles/styles";
+import useStyle from "@/src/zustand/useStyle";
 import { getDaysColors } from "@/src/helpers/files";
 
 export default function StadisticsContainer({ day, reload }) {
-  const [styles, setStyles] = useState({});
+  const styles = useStyle((state) => state.style);
   const labels = ["Unasigned", "Equal", "Better", "Worse"];
   const [dataPie, setDataPie] = useState([]);
   const [colors, setColors] = useState([]);
 
   useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
     getDaysColors().then((data) => {
       setColors(data);
     });

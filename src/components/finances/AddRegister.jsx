@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { View, TouchableOpacity, Text, TextInput, Alert } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-import getStyles from "@/src/styles/styles";
-// import db from "@/src/db/registersGroupTable.js";
+import useStyle from "@/src/zustand/useStyle";
 import TableHandler from "../../db/groupTables";
 
 export default function AddRegister({
@@ -15,16 +14,10 @@ export default function AddRegister({
   handleReload,
   savingsFlag,
 }) {
-  const [styles, setStyles] = useState({});
+  const styles = useStyle((state) => state.style);
   const [name, setName] = useState("");
   const [goal, setGoal] = useState("");
   const db = new TableHandler(savingsFlag ? "savingsGroup" : "registerGroup");
-
-  useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
-  }, []);
 
   useEffect(() => {
     if (actualRegister) {

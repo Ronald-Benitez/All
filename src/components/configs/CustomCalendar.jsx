@@ -3,23 +3,19 @@ import { View, Text, TouchableOpacity, Modal } from "react-native";
 import moment from "moment/moment";
 import { AntDesign } from "@expo/vector-icons";
 
-import getStyles from "@/src/styles/styles";
+import useStyle from "@/src/zustand/useStyle";
 import db from "@/src/db/daysTable";
 
 export default function CustomCalendar({ value, onChange }) {
   const [selectedDate, setSelectedDate] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-  const [styles, setStyles] = useState({});
+  const styles = useStyle((state) => state.style);
   const [daysInMonth, setDaysInMonth] = useState(0);
   const [firstDay, setFirstDay] = useState(0);
   const [month, setMonth] = useState(0);
   const [differences, setDifferences] = useState({});
 
   useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
-
     setDaysInMonth(moment(value, "YYYY/MM/DD").daysInMonth());
     setFirstDay(moment(value, "YYYY/MM/DD").startOf("month").day());
     setSelectedDate(value);

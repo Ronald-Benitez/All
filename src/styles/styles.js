@@ -376,5 +376,16 @@ export default async function getStyles() {
     daySelected: {
       backgroundColor: "#6A197D",
     },
+
+    borderedBlock_:{
+      width: "100%",
+      backgroundColor: configs.colors.backgroundColor.value || "white",
+      borderRadius: 20,
+      borderColor: "black",
+      padding: 10,
+      margin: 5,
+      borderWidth: 1,
+      borderStyle: "dashed",
+    }
   });
 }

@@ -2,9 +2,7 @@ import { useState, useEffect } from "react";
 import { View, TouchableOpacity, Text, Modal } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-import getStyles from "@/src/styles/styles";
-// import db from "@/src/db/registersGroupTable.js";
-// import dbList from "@/src/db/registersListTable.js";
+import useStyle from "@/src/zustand/useStyle";
 import Confirm from "@/src/components/configs/Confirm";
 import AddRegister from "./AddRegister";
 import GroupHandler from "../../db/groupTables";
@@ -20,7 +18,7 @@ export default function RegisterCard({
   setRegister,
   savingsFlag,
 }) {
-  const [styles, setStyles] = useState({});
+  const styles = useStyle((state) => state.style);
   const [balance, setBalance] = useState(0);
   const [edit, setEdit] = useState(false);
   const [confirm, setConfirm] = useState(false);
@@ -28,9 +26,6 @@ export default function RegisterCard({
   const dbList = new ListHandler(savingsFlag ? "savingsList" : "registerList");
 
   useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
     if (register) setBalance(register.incomes - register.expenses);
   }, [register]);
 

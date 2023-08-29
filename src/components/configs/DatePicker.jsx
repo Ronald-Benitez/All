@@ -3,18 +3,12 @@ import { View, Text, TouchableOpacity, Modal } from "react-native";
 import Date from "react-native-modern-datepicker";
 import moment from "moment/moment";
 
-import getStyles from "@/src/styles/styles";
+import useStyle from "@/src/zustand/useStyle";
 
 export default function DatePicker({ value, onChange }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(value);
-  const [styles, setStyles] = useState({});
-
-  useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
-  }, []);
+  const styles = useStyle((state) => state.style);
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);

@@ -3,9 +3,7 @@ import { View, TouchableOpacity, Text, TextInput, Alert } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import moment from "moment/moment";
 
-import getStyles from "@/src/styles/styles";
-// import db from "@/src/db/registersListTable.js";
-// import dbGroup from "@/src/db/registersGroupTable.js";
+import useStyle from "@/src/zustand/useStyle";
 import DatePicker from "@/src/components/configs/DatePicker.jsx";
 import ListHandler from "../../db/listTables";
 import GroupHandler from "../../db/groupTables";
@@ -17,7 +15,7 @@ export default function AddRegisterList({
   setRegister,
   savingsFlag,
 }) {
-  const [styles, setStyles] = useState({});
+  const styles = useStyle((state) => state.style);
   const [name, setName] = useState("");
   const [value, setValue] = useState("");
   const [type, setType] = useState("expense");
@@ -25,13 +23,6 @@ export default function AddRegisterList({
 
   const db = new ListHandler(savingsFlag ? "savingsList" : "registerList");
   const dbGroup = new GroupHandler(savingsFlag ? "savingsGroup" : "registerGroup");
-
-
-  useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
-  }, []);
 
   useEffect(() => {
     if (actualRegister) {

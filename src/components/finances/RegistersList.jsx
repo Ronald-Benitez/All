@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text, FlatList, Modal } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import moment from "moment/moment";
 
-import getStyles from "@/src/styles/styles";
+import useStyle from "@/src/zustand/useStyle";
 import Confirm from "@/src/components/configs/Confirm";
 import AddRegisterList from "./AddRegisterList";
 import ListHandler from "../../db/listTables";
@@ -18,7 +18,7 @@ export default function RegistersListCard({
   setIsDown,
   filter,
 }) {
-  const [styles, setStyles] = useState({});
+  const styles = useStyle((state) => state.style);
   const [list, setList] = useState([]);
   const [confirm, setConfirm] = useState(false);
   const [selected, setSelected] = useState(null);
@@ -30,11 +30,6 @@ export default function RegistersListCard({
     savingsFlag ? "savingsGroup" : "registerGroup"
   );
 
-  useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
-  }, []);
 
   useEffect(() => {
     if (filter === "" || !filter) return setFilteredList([]);
@@ -227,6 +222,7 @@ export default function RegistersListCard({
               actualRegister={selected}
               handleReload={handleReload}
               group={group}
+              savingsFlag={savingsFlag}
             />
           </View>
         </TouchableOpacity>

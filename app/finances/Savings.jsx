@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, TouchableOpacity, Modal, Text, TextInput } from "react-native";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import moment from "moment/moment";
-import getStyles from "@/src/styles/styles";
+
+import useStyle from "@/src/zustand/useStyle";
 import AddRegister from "@/src/components/finances/AddRegister";
 import AddRegisterList from "@/src/components/finances/AddRegisterList";
 import OptionPicker from "@/src/components/configs/OptionPicker";
@@ -13,7 +14,7 @@ import GroupsHandler from "@/src/db/groupTables";
 const db = new GroupsHandler("savingsGroup");
 
 const Savings = () => {
-  const [styles, setStyles] = useState({});
+  const styles = useStyle((state) => state.style);
   const [actualRegister, setActualRegister] = useState("");
   const [seeAdd, setSeeAdd] = useState(false);
   const [registers, setRegisters] = useState([]);
@@ -26,10 +27,6 @@ const Savings = () => {
   const [isList, setIsList] = useState(true);
   const [seeFilter, setSeeFilter] = useState(false);
   const [filter, setFilter] = useState("");
-
-  useEffect(() => {
-    getStyles().then(setStyles);
-  }, []);
 
   useEffect(() => {
     fetchRegisters();

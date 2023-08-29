@@ -2,18 +2,12 @@ import { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Modal } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 
-import getStyles from "@/src/styles/styles";
+import useStyle from "@/src/zustand/useStyle";
 
 export default OptionPicker = ({ value, onChange, options, color }) => {
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
-  const [styles, setStyles] = useState({});
-
-  useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
-  }, []);
+  const styles = useStyle((state) => state.style);
 
   useEffect(() => {
     setSelectedValue(options[value]?.label || "");

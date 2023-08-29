@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Modal } from "react-native";
 
-import getStyles from "@/src/styles/styles";
+import useStyle from "@/src/zustand/useStyle";
 
 export default function Confirm({
   onConfirm,
@@ -13,13 +13,7 @@ export default function Confirm({
   setVisible,
   title,
 }) {
-  const [styles, setStyles] = useState({});
-
-  useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
-  }, [visible]);
+  const styles = useStyle((state) => state.style);
 
   const handleConfirm = () => {
     setVisible(false);

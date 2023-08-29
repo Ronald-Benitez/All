@@ -51,6 +51,7 @@ interface Configs {
     savings: { value: string };
     earnings: { value: string };
     giveaways: { value: string };
+    budgets: { value: string };
   };
 }
 
@@ -74,7 +75,7 @@ function RootLayoutNav() {
         options={{
           headerTitle: 'Expense adder',
           headerStyle: {
-            backgroundColor: configs?.headers.expenseadder.value || "#f3e7e7",
+            backgroundColor: configs?.headers.expenseadder?.value || "#f3e7e7",
           },  
         }}
         />
@@ -83,7 +84,7 @@ function RootLayoutNav() {
         options={{
           headerTitle: 'Savings',
           headerStyle: {
-            backgroundColor: configs?.headers.savings.value || "#f3e7e7",
+            backgroundColor: configs?.headers.savings?.value || "#f3e7e7",
           }, 
         }}
         />
@@ -92,7 +93,16 @@ function RootLayoutNav() {
         options={{
           headerTitle: 'Earnings',
           headerStyle: {
-            backgroundColor: configs?.headers.earnings.value || "#f3e7e7",
+            backgroundColor: configs?.headers.earnings?.value || "#f3e7e7",
+          }, 
+        }}
+        />
+        <Stack.Screen
+        name="finances/Budgets"
+        options={{
+          headerTitle: 'Budgets',
+          headerStyle: {
+            backgroundColor: configs?.headers.budgets?.value || "#f3e7e7",
           }, 
         }}
         />
@@ -101,10 +111,9 @@ function RootLayoutNav() {
         options={{
           headerTitle: 'Giveaways',
           headerStyle: {
-            backgroundColor: configs?.headers.giveaways.value || "#f3e7e7",
+            backgroundColor: configs?.headers.giveaways?.value || "#f3e7e7",
           }, 
         }}
-
         />
        
         

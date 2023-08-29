@@ -2,17 +2,11 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
 
-import getStyles from "@/src/styles/styles";
+import useStyle from "@/src/zustand/useStyle";
 
 export default function Dropdown({ title, render, key = "dfk" }) {
-  const [styles, setStyles] = useState({});
+  const styles = useStyle((state) => state.style);
   const [see, setSee] = useState(false);
-
-  useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
-  }, []);
 
   return (
     <View

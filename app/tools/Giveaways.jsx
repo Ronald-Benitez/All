@@ -8,19 +8,13 @@ import {
 } from "react-native";
 import { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import getStyles from "@/src/styles/styles";
+import useStyle from "@/src/zustand/useStyle";
 
 const Giveaways = () => {
   const [participants, setParticipants] = useState([]);
   const [awards, setAwards] = useState(1);
   const [participant, setParticipant] = useState("");
-  const [styles, setStyles] = useState({});
-
-  useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
-  }, []);
+  const styles = useStyle((state) => state.style);
 
   const handleAddParticipant = () => {
     if (participant === "") return;

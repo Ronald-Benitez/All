@@ -8,15 +8,23 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Cards from "../../src/components/Index/Cards";
 import getStyles from "@/src/styles/styles";
 import DailyCard from "@/src/components/pet/DailyCard";
+import useStyle from "@/src/zustand/useStyle";
 
 export default function TabOneScreen() {
   const [styles, setStyles] = useState({});
-  
+  const setStyle = useStyle((state) => state.setStyle);
+  const storedStyle = useStyle((state) => state.style);
+
   useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
-  }, []);
+    if (storedStyle !== null && storedStyle !== undefined) {
+      setStyles(storedStyle);
+    } else {
+      getStyles().then((data) => {
+        setStyles(data);
+        setStyle(data);
+      });
+    }
+  }, [storedStyle]);
 
   return (
     <View
@@ -27,7 +35,7 @@ export default function TabOneScreen() {
         },
       ]}
     >
-      <DailyCard />
+      <DailyCard styles={styles} />
       <ScrollView
         style={{
           width: "100%",
@@ -50,11 +58,13 @@ export default function TabOneScreen() {
               title="Giveaways"
               route="tools/Giveaways"
               icon={() => <AntDesign name="gift" size={30} color="black" />}
+              styles={styles}
             />
             <Cards
               title="Configs"
               route="Configs"
               icon={() => <Octicons name="gear" size={30} color="black" />}
+              styles={styles}
             />
           </View>
         </View>
@@ -76,6 +86,7 @@ export default function TabOneScreen() {
               icon={() => (
                 <Ionicons name="ios-today-outline" size={30} color="black" />
               )}
+              styles={styles}
             />
           </View>
         </View>
@@ -96,6 +107,7 @@ export default function TabOneScreen() {
               icon={() => (
                 <Ionicons name="wallet-outline" size={30} color="black" />
               )}
+              styles={styles}
             />
             <Cards
               title="Expense Adder"
@@ -107,6 +119,7 @@ export default function TabOneScreen() {
                   color="black"
                 />
               )}
+              styles={styles}
             />
             <Cards
               title="Savings"
@@ -129,6 +142,15 @@ export default function TabOneScreen() {
                   color="black"
                 />
               )}
+              styles={styles}
+            />
+            <Cards
+              title="Budgets"
+              route="finances/Budgets"
+              icon={() => (
+                <Ionicons name="calculator-outline" size={30} color="black" />
+              )}
+              styles={styles}
             />
           </View>
         </View>

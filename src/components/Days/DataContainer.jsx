@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, TextInput } from "react-native";
 
 import db from "@/src/db/daysTable";
-import getStyles from "@/src/styles/styles";
+import useStyle from "@/src/zustand/useStyle";
 
 export default function DataContainer({
   day,
@@ -14,7 +14,7 @@ export default function DataContainer({
 }) {
   const [expected, setExpected] = useState("");
   const [real, setReal] = useState("");
-  const [styles, setStyles] = useState({});
+  const styles = useStyle((state) => state.style);
 
   const handleExpectedChange = (value) => {
     setExpected(value);
@@ -26,12 +26,6 @@ export default function DataContainer({
     db.updateReal(day, value);
     setReload && setReload(!reload);
   };
-
-  useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
-  }, []);
 
   useEffect(() => {
     if (data) {

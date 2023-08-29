@@ -11,17 +11,27 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
+import useStyle from "@/src/zustand/useStyle";
 import getStyles from "@/src/styles/styles";
 
 export default function PetMessages({ key, data, onChange }) {
-  const [styles, setStyles] = useState({});
   const [see, setSee] = useState(false);
   const [petData, setPetData] = useState({});
 
+  const [styles, setStyles] = useState({});
+  const storedStyle = useStyle((state) => state.style);
+
   useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
+    if (storedStyle !== null && storedStyle !== undefined) {
+      setStyles(storedStyle);
+    } else {
+      getStyles().then((data) => {
+        setStyles(data);
+      });
+    }
+  }, [storedStyle]);
+
+  useEffect(() => {
     setPetData(data);
   }, [data]);
 

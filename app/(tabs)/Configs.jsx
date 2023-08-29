@@ -22,22 +22,24 @@ import Dropdown from "@/src/components/configs/Dropdown";
 import Confirm from "@/src/components/configs/Confirm";
 import PetMessages from "@/src/components/pet/PetMessages";
 import ColorPicker from "../../src/components/configs/ColorPicker";
+import useStyle from "@/src/zustand/useStyle";
 
 const Configs = () => {
   const [configs, setConfigs] = useState({});
   const [pet, setPet] = useState({});
   const [reload, setReload] = useState(false);
-  const [componentStyles, setComponentStyles] = useState({});
+  const componentStyles = useStyle((state) => state.style);
   const [newData, setNewData] = useState({});
   const [colorModal, setColorModal] = useState(false);
   const [PickerData, setPickerData] = useState({});
   const [confirmData, setConfirmData] = useState({});
   const [openConfirm, setOpenConfirm] = useState(false);
+  const setStyle = useStyle((state) => state.setStyle);
 
   useEffect(() => {
     Promise.all([getStyles(), getConfigs(), getPet()]).then(
       ([data, configsData, petData]) => {
-        setComponentStyles(data);
+        setStyle(data);
         setConfigs(configsData);
         setPet(petData);
       }

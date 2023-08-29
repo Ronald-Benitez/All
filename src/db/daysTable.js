@@ -117,6 +117,23 @@ const deleteByDate = (date) => {
   });
 };
 
+const getByDateRange = (startDate, endDate) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "select * from days where date between ? and ? order by date asc",
+        [startDate, endDate],
+        (_, { rows: { _array } }) => {
+          resolve(_array);
+        },
+        (_, error) => {
+          reject(null);
+        }
+      );
+    });
+  });
+};
+
 const database = {
   getItem,
   insertItem,
@@ -126,6 +143,7 @@ const database = {
   getMonth,
   deleteByDate,
   getMonthDifference,
+  getByDateRange,
 };
 
 export default database;

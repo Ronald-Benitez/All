@@ -10,13 +10,15 @@ import moment from "moment/moment";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import getStyles from "@/src/styles/styles";
 import OptionPicker from "@/src/components/configs/OptionPicker";
 import CustomCalendar from "@/src/components/configs/CustomCalendar";
 import db from "@/src/db/daysTable";
 import DataContainer from "@/src/components/Days/DataContainer";
 import StadisticsContainer from "@/src/components/Days/StadisticsContainer";
+import WeeklyReview from "@/src/components/Days/WeeklyReview";
+import useStyle from "@/src/zustand/useStyle";
 
 const differenceOptions = [
   { label: "Unasigned", value: "0" },
@@ -26,25 +28,22 @@ const differenceOptions = [
 ];
 
 export default function Days() {
-  const [styles, setStyles] = useState({});
+  const styles = useStyle((state) => state.style);
   const [date, setDate] = useState(moment().format("YYYY/MM/DD"));
   const [edit, setEdit] = useState(false);
-  const [difference, setDifference] = useState("0"); // 0 No asignado, 1 igual, 2 Mejor, 3 peor
+  const [difference, setDifference] = useState("0");
   const [seeStadistics, setSeeStadistics] = useState(false);
+  const [seeWeek, setSeeWeek] = useState(false);
   const [data, setData] = useState([]);
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
-
     db.getItem(date).then((data) => {
       if (data) {
         setDifference(data.difference);
         setData(data);
       } else {
-        db.insertItem(date, "", "", difference);
+        db.insertItem(date, "", "", "0");
         setData({ date, expected: "", real: "", difference });
         setDifference(0);
       }
@@ -78,6 +77,8 @@ export default function Days() {
         <TouchableOpacity
           onPress={() => {
             setEdit(!edit);
+            setSeeStadistics(false);
+            setSeeWeek(false);
           }}
           style={[styles.button]}
         >
@@ -113,6 +114,8 @@ export default function Days() {
         <TouchableOpacity
           onPress={() => {
             setSeeStadistics(!seeStadistics);
+            setSeeWeek(false);
+            setEdit(false);
           }}
           style={[styles.button]}
         >
@@ -122,6 +125,20 @@ export default function Days() {
             <Feather name="pie-chart" size={18} color="black" />
           )}
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setSeeWeek(!seeWeek);
+            setSeeStadistics(false);
+            setEdit(false);
+          }}
+          style={[styles.button]}
+        >
+          <MaterialCommunityIcons
+            name="calendar-weekend-outline"
+            size={18}
+            color="black"
+          />
+        </TouchableOpacity>
         {editButton()}
       </View>
       <ScrollView
@@ -130,9 +147,8 @@ export default function Days() {
           width: "100%",
         }}
       >
-        {seeStadistics ? (
-          <StadisticsContainer day={date} reload={reload} />
-        ) : (
+        {seeStadistics && <StadisticsContainer day={date} reload={reload} />}
+        {!seeStadistics && !seeWeek && (
           <DataContainer
             day={date}
             color={getColor()}
@@ -142,6 +158,8 @@ export default function Days() {
             setReload={setReload}
           />
         )}
+
+        {seeWeek && <WeeklyReview date={date} reload={reload} />}
       </ScrollView>
       <View style={[styles.row]}>
         <TouchableOpacity

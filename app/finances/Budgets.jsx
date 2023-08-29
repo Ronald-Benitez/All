@@ -6,12 +6,13 @@ import moment from "moment/moment";
 import OptionPicker from "@/src/components/configs/OptionPicker";
 import GroupsHandler from "@/src/db/groupTables";
 import EarningsList from "@/src/components/finances/EarningsList";
-import AddEarning from "@/src/components/finances/AddEarning";
 import useStyle from "@/src/zustand/useStyle";
+import AddBudget from "@/src/components/finances/AddBudget";
+import BudgetsList from "@/src/components/finances/BudgetsList";
 
 const db = new GroupsHandler("registerGroup");
 
-const Earnings = () => {
+const Budgets = () => {
   const styles = useStyle((state) => state.style);
   const [actualRegister, setActualRegister] = useState("");
   const [seeAdd, setSeeAdd] = useState(false);
@@ -87,6 +88,16 @@ const Earnings = () => {
   const monthOptions = months();
   const yearOptions = years();
 
+  const getColor = () => {
+    try {
+      if (register.incomes > totalEarn) return styles.income;
+      if (register.incomes < totalEarn) return styles.expense;
+      return styles.goal;
+    } catch (e) {
+      return "";
+    }
+  };
+
   return (
     <>
       <View style={styles.container}>
@@ -138,8 +149,46 @@ const Earnings = () => {
         </View>
         <View style={styles.block}>
           <View style={styles.row}>
-            <Text style={styles.sideLabel}>Total: </Text>
-            <Text style={styles.sideLabel}>$ {totalEarn.toFixed(2)}</Text>
+            <Text
+              style={[
+                {
+                  flex: 3,
+                },
+              ]}
+            >
+              Month incomes
+            </Text>
+            <Text
+              style={[
+                {
+                  flex: 1,
+                },
+                getColor(),
+              ]}
+            >
+              $ {register ? register.incomes : 0}
+            </Text>
+          </View>
+          <View style={styles.row}>
+            <Text
+              style={[
+                {
+                  flex: 3,
+                },
+              ]}
+            >
+              Total
+            </Text>
+            <Text
+              style={[
+                {
+                  flex: 1,
+                },
+                getColor(),
+              ]}
+            >
+              $ {totalEarn.toFixed(2)}
+            </Text>
           </View>
         </View>
         <View
@@ -147,7 +196,7 @@ const Earnings = () => {
             maxHeight: "70%",
           }}
         >
-          <EarningsList
+          <BudgetsList
             groupId={actualRegister}
             setTotal={setTotalEarn}
             setReload={setReload}
@@ -162,10 +211,11 @@ const Earnings = () => {
           onPress={() => setSeeAdd(false)}
         >
           <View style={styles.modalContent}>
-            <AddEarning
-              groupId={actualRegister}
-              setReload={setReload}
+            <AddBudget
               reload={reload}
+              setReload={setReload}
+              setTotal={setTotalEarn}
+              groupId={actualRegister}
             />
           </View>
         </TouchableOpacity>
@@ -192,4 +242,4 @@ const Earnings = () => {
   );
 };
 
-export default Earnings;
+export default Budgets;

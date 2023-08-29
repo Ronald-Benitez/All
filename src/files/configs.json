@@ -131,6 +131,10 @@
     "giveaways": {
       "value": "#f3e7e7",
       "type": "color"
+    },
+    "budgets": {
+      "value": "#f3e7e7",
+      "type": "color"
     }
   }
 }

@@ -3,21 +3,32 @@ import { View, Text, TouchableOpacity, Image } from "react-native";
 import moment from "moment/moment";
 import { Link } from "expo-router";
 
-import getStyles from "@/src/styles/styles";
 import db from "@/src/db/daysTable.js";
 import { getPet } from "@/src/helpers/files";
+import useStyle from "@/src/zustand/useStyle";
+import getStyles from "@/src/styles/styles";
 
 export default function DayCard() {
-  const [styles, setStyles] = useState({});
-  const [today, setToday] = useState(moment().format("YYYY/MM/DD"));
+  const today = moment().format("YYYY/MM/DD");
   const [petData, setPetData] = useState({});
   const [source, setSource] = useState(null);
   const [pet, setPet] = useState({});
 
+  const [styles, setStyles] = useState({});
+  const storedStyle = useStyle((state) => state.style);
+
   useEffect(() => {
-    getStyles().then((data) => {
-      setStyles(data);
-    });
+    if (storedStyle !== null && storedStyle !== undefined) {
+      setStyles(storedStyle);
+    } else {
+      getStyles().then((data) => {
+        setStyles(data);
+      });
+    }
+  }, [storedStyle]);
+
+
+  useEffect(() => {
     handleReload();
   }, []);
 
