@@ -72,7 +72,7 @@ export default function Days() {
   };
 
   const editButton = () => {
-    if (!seeStadistics) {
+    if (!seeStadistics && !seeWeek) {
       return (
         <TouchableOpacity
           onPress={() => {
@@ -80,12 +80,17 @@ export default function Days() {
             setSeeStadistics(false);
             setSeeWeek(false);
           }}
-          style={[styles.button]}
+          style={[
+            styles.button,
+            {
+              margin: 5,
+            },
+          ]}
         >
           {edit ? (
-            <AntDesign name="checkcircleo" size={18} color="black" />
+            <AntDesign name="checkcircleo" size={15} color="black" />
           ) : (
-            <Feather name="edit" size={18} color="black" />
+            <Feather name="edit" size={15} color="black" />
           )}
         </TouchableOpacity>
       );
@@ -100,7 +105,15 @@ export default function Days() {
             setDate(moment().format("YYYY/MM/DD"));
           }}
         >
-          <Text style={[styles.day, getColor()]}>
+          <Text
+            style={[
+              styles.day,
+              getColor(),
+              {
+                margin: 5,
+              },
+            ]}
+          >
             {moment(date, "YYYY/MM/DD").format("dddd")}
           </Text>
         </TouchableOpacity>
@@ -117,12 +130,17 @@ export default function Days() {
             setSeeWeek(false);
             setEdit(false);
           }}
-          style={[styles.button]}
+          style={[
+            styles.button,
+            {
+              margin: 5,
+            },
+          ]}
         >
           {seeStadistics ? (
-            <Ionicons name="today-outline" size={18} color="black" />
+            <Ionicons name="today-outline" size={15} color="black" />
           ) : (
-            <Feather name="pie-chart" size={18} color="black" />
+            <Feather name="pie-chart" size={15} color="black" />
           )}
         </TouchableOpacity>
         <TouchableOpacity
@@ -131,13 +149,22 @@ export default function Days() {
             setSeeStadistics(false);
             setEdit(false);
           }}
-          style={[styles.button]}
+          style={[
+            styles.button,
+            {
+              margin: 5,
+            },
+          ]}
         >
-          <MaterialCommunityIcons
-            name="calendar-weekend-outline"
-            size={18}
-            color="black"
-          />
+          {seeWeek ? (
+            <Ionicons name="today-outline" size={15} color="black" />
+          ) : (
+            <MaterialCommunityIcons
+              name="calendar-weekend-outline"
+              size={15}
+              color="black"
+            />
+          )}
         </TouchableOpacity>
         {editButton()}
       </View>
