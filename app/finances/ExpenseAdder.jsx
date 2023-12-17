@@ -47,12 +47,23 @@ const ExpenseAdder = () => {
         setExpenses(JSON.parse(data));
       }
     });
+    Storage.getItem({
+      key: "total",
+    }).then((data) => {
+      if (data) {
+        setTotal(JSON.parse(data));
+      }
+    });
   }, []);
 
   useEffect(() => {
     Storage.setItem({
       key: "expenses",
       value: JSON.stringify(expenses),
+    });
+    Storage.setItem({
+      key: "total",
+      value: JSON.stringify(total),
     });
   }, [expenses]);
 

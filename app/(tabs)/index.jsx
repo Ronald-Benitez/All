@@ -39,7 +39,7 @@ export default function TabOneScreen() {
       <ScrollView
         style={{
           width: "100%",
-          maxHeight: "35%",
+          marginTop: 10,
         }}
       >
         <View
