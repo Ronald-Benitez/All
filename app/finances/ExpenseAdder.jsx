@@ -38,6 +38,7 @@ const ExpenseAdder = () => {
   const [save, setSave] = useState(false);
   const [group, setGroup] = useState(null);
   const [savedName, setSavedName] = useState("");
+  const [isDown, setIsDown] = useState(false);
 
   useEffect(() => {
     Storage.getItem({
@@ -47,13 +48,7 @@ const ExpenseAdder = () => {
         setExpenses(JSON.parse(data));
       }
     });
-    Storage.getItem({
-      key: "total",
-    }).then((data) => {
-      if (data) {
-        setTotal(JSON.parse(data));
-      }
-    });
+    handleSumExpenses();
   }, []);
 
   useEffect(() => {
@@ -61,11 +56,14 @@ const ExpenseAdder = () => {
       key: "expenses",
       value: JSON.stringify(expenses),
     });
-    Storage.setItem({
-      key: "total",
-      value: JSON.stringify(total),
-    });
   }, [expenses]);
+
+  const handleSumExpenses = () => {
+    const sum = expenses.reduce((acc, expense) => {
+      return acc + expense.amount;
+    }, 0);
+    setTotal(sum);
+  }
 
   const addExpense = async (newExpense) => {
     setExpenses([...expenses, newExpense]);
@@ -189,98 +187,104 @@ const ExpenseAdder = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.block}>
+      <View style={[styles.block, { padding: 0 }]}>
         <View style={styles.row}>
           <TouchableOpacity
-            style={styles.buttonBordered}
-            onPress={() => {
-              setReload(!reload);
-            }}
+            style={[
+              styles.button,
+              {
+                width: "95%",
+              },
+            ]}
+            onPress={() => setIsDown(!isDown)}
           >
-            <MaterialIcons name="loop" size={20} color="black" />
-          </TouchableOpacity>
-          <Text style={styles.title}>${total}</Text>
-          <TouchableOpacity
-            style={styles.buttonBordered}
-            onPress={() => {
-              setSave(!save);
-            }}
-          >
-            <AntDesign name="addfile" size={20} color="black" />
+            {isDown ? (
+              <Feather name="chevron-up" size={20} color="black" />
+            ) : (
+              <Feather name="chevron-down" size={20} color="black" />
+            )}
           </TouchableOpacity>
         </View>
+        {isDown && (
+          <View>
+            <View style={styles.row}>
+              <View style={styles.column}>
+                <Text style={styles.sideLabel}>Value</Text>
+                <TextInput
+                  style={[
+                    styles.input,
+                    {
+                      minWidth: 100,
+                    },
+                  ]}
+                  value={String(value)}
+                  placeholder="Value"
+                  onChangeText={(text) => setValue(text)}
+                  keyboardType="numeric"
+                />
+              </View>
+              <View style={styles.column}>
+                <Text style={styles.sideLabel}>Quantity</Text>
+                <TextInput
+                  style={[
+                    styles.input,
+                    {
+                      minWidth: 100,
+                    },
+                  ]}
+                  value={String(quantity)}
+                  placeholder="Quantity"
+                  onChangeText={(text) => setQuantity(text)}
+                  keyboardType="numeric"
+                />
+              </View>
+              <View style={styles.column}>
+                <Text style={styles.sideLabel}>Amount</Text>
+                <Text
+                  style={[
+                    styles.input,
+                    {
+                      minWidth: 100,
+                    },
+                  ]}
+                >
+                  ${value * quantity}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.row}>
+              <View style={styles.column}>
+                <Text style={styles.sideLabel}>Name</Text>
+                <TextInput
+                  style={[
+                    styles.input,
+                    {
+                      minWidth: 175,
+                      maxWidth: 200,
+                    },
+                  ]}
+                  placeholder="Name"
+                  onChangeText={(text) => setName(text)}
+                  multiline={true}
+                  value={name}
+                />
+              </View>
+              <View style={styles.column}>
+                <View style={styles.row}>{renderBtn()}</View>
+              </View>
+            </View>
+          </View>
+
+        )}
       </View>
-      <View style={styles.block}>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            <Text style={styles.sideLabel}>Name</Text>
-            <TextInput
-              style={[
-                styles.input,
-                {
-                  minWidth: 175,
-                  maxWidth: 200,
-                },
-              ]}
-              placeholder="Name"
-              onChangeText={(text) => setName(text)}
-              multiline={true}
-              value={name}
-            />
-          </View>
-          <View style={styles.column}>
-            <Text style={styles.sideLabel}>Value</Text>
-            <TextInput
-              style={[
-                styles.input,
-                {
-                  minWidth: 100,
-                },
-              ]}
-              value={String(value)}
-              placeholder="Value"
-              onChangeText={(text) => setValue(text)}
-              keyboardType="numeric"
-            />
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            <Text style={styles.sideLabel}>Quantity</Text>
-            <TextInput
-              style={[
-                styles.input,
-                {
-                  minWidth: 100,
-                },
-              ]}
-              value={String(quantity)}
-              placeholder="Quantity"
-              onChangeText={(text) => setQuantity(text)}
-              keyboardType="numeric"
-            />
-          </View>
-          <View style={styles.column}>
-            <Text style={styles.sideLabel}>Amount</Text>
-            <Text
-              style={[
-                styles.input,
-                {
-                  minWidth: 100,
-                },
-              ]}
-            >
-              ${value * quantity}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.row}>{renderBtn()}</View>
+      <View style={[styles.block, { padding: 0 }]}>
+        <Text style={styles.title}>${total}</Text>
       </View>
       <View
         style={[
           styles.block,
           {
-            maxHeight: "45%",
+            height: isDown ? "45%" : "70%",
           },
         ]}
       >
@@ -365,6 +369,41 @@ const ExpenseAdder = () => {
             );
           })}
         </ScrollView>
+      </View>
+      <View style={[styles.block, { padding: 2 }]}>
+        <View style={styles.row}>
+          <TouchableOpacity
+            style={[styles.buttonBordered, { padding: 10 }]}
+            onPress={() => {
+              setReload(!reload);
+            }}
+          >
+            <MaterialIcons name="loop" size={18} color="black" />
+          </TouchableOpacity>
+          <View style={styles.column}>
+            <TouchableOpacity
+              style={[styles.buttonBordered, { padding: 10 }]}
+              onPress={() => {
+                handleSumExpenses();
+              }}
+            >
+              <MaterialCommunityIcons
+                name="cart-arrow-down"
+                size={18}
+                color="black"
+              />
+            </TouchableOpacity>
+            <Text style={{ fontWeight: "100", padding: 0 }}>Sumar</Text>
+          </View>
+          <TouchableOpacity
+            style={[styles.buttonBordered, { padding: 10 }]}
+            onPress={() => {
+              setSave(!save);
+            }}
+          >
+            <AntDesign name="addfile" size={18} color="black" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <Confirm
