@@ -393,7 +393,7 @@ const ExpenseAdder = () => {
                 color="black"
               />
             </TouchableOpacity>
-            <Text style={{ fontWeight: "100", padding: 0 }}>Sumar</Text>
+            <Text style={{ fontWeight: "100", padding: 0 }}>Add</Text>
           </View>
           <TouchableOpacity
             style={[styles.buttonBordered, { padding: 10 }]}
