@@ -23,16 +23,8 @@ const BudgetsList = ({ groupId, setTotal, setReload, reload, filter }) => {
         budgets.reduce((acc, item) => acc + parseFloat(item.amount), 0)
       );
     }
-    const filters = filter.split(",");
-    const newFilteredList = budgets.filter((item) => {
-      let flag = false;
-      filters.forEach((filter) => {
-        if (item.name.toLowerCase().includes(filter.toLowerCase())) {
-          flag = true;
-        }
-      });
-      return flag;
-    });
+    const filters = filter.trim().toLowerCase().split(" ")
+    const newFilteredList = budgets.filter((item) => filters.some((f) => item.name.toLowerCase().includes(f)));
     setFilteredList(newFilteredList);
     setTotal(
       newFilteredList.reduce((acc, item) => acc + parseFloat(item.amount), 0)

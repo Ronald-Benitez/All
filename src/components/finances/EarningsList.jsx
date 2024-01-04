@@ -23,18 +23,9 @@ const EarningsList = ({ groupId, setTotal, setReload, reload, filter }) => {
       return setTotal(
         earnings.reduce((acc, item) => acc + parseFloat(item.amount), 0)
       );
-      return;
     }
-    const filters = filter.split(",");
-    const newFilteredList = earnings.filter((item) => {
-      let flag = false;
-      filters.forEach((filter) => {
-        if (item.name.toLowerCase().includes(filter.toLowerCase())) {
-          flag = true;
-        }
-      });
-      return flag;
-    });
+    const filters = filter.trim().toLowerCase().split(" ")
+    const newFilteredList = earnings.filter((item) => filters.some((f) => item.name.toLowerCase().includes(f)));
     setFilteredList(newFilteredList);
     setTotal(
       newFilteredList.reduce((acc, item) => acc + parseFloat(item.amount), 0)
@@ -83,15 +74,16 @@ const EarningsList = ({ groupId, setTotal, setReload, reload, filter }) => {
                 }}
               >
                 <View style={styles.row}>
-                  <Text style={[styles.dateVerticalSmall, styles.income]}>
-                    {moment(item.date, "YYYY/MM/DD").format("DD")}
-                  </Text>
-                  <Text style={[styles.dateVerticalSmall, styles.income]}>
-                    {moment(item.date, "YYYY/MM/DD").format("MMM")}
-                  </Text>
-                  <Text style={[styles.dateVerticalSmall, styles.income]}>
-                    {moment(item.date, "YYYY/MM/DD").format("YYYY")}
-                  </Text>
+                  {["DD", "MMM", "YYYY"].map((format, index) => (
+                    <Text
+                      key={index}
+                      style={[
+                        styles.dateVerticalSmall, styles.income
+                      ]}
+                    >
+                      {moment(item.date, "YYYY/MM/DD").format(format)}
+                    </Text>
+                  ))}
                 </View>
                 <Text style={[styles.text, styles.income]}>{item.name}</Text>
                 <Text style={[styles.text, styles.income]}>

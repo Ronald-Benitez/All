@@ -5,10 +5,10 @@ import moment from "moment/moment";
 
 import OptionPicker from "@/src/components/configs/OptionPicker";
 import GroupsHandler from "@/src/db/groupTables";
-import EarningsList from "@/src/components/finances/EarningsList";
 import useStyle from "@/src/zustand/useStyle";
 import AddBudget from "@/src/components/finances/AddBudget";
 import BudgetsList from "@/src/components/finances/BudgetsList";
+import monthOptions from "@/constants/Months.json"
 
 const db = new GroupsHandler("registerGroup");
 
@@ -49,44 +49,16 @@ const Budgets = () => {
     });
   };
 
-  const years = () => {
-    const years = [];
-    for (let i = 0; i < 10; i++) {
-      const year = moment().subtract(i, "years").format("YYYY");
-      years.push({
-        label: year,
-        value: year,
-      });
-    }
-    return years;
-  };
-
   const registersList = () => {
     if (registers.length === 0) {
       return [{ label: "No registers", value: "0" }];
     }
     return registers.map((item) => ({
-      label: `${item.name} (${moment(item.month, "MM").format("MMMM")} ${
-        item.year
-      })`,
+      label: `${item.name} (${moment(item.month, "MM").format("MMMM")} ${item.year
+        })`,
       value: item.id,
     }));
   };
-
-  const months = () => {
-    const months = [];
-    for (let i = 0; i < 12; i++) {
-      const month = moment().subtract(i, "months").format("MM");
-      months.push({
-        label: moment(month, "MM").format("MMMM"),
-        value: month,
-      });
-    }
-    return months;
-  };
-
-  const monthOptions = months();
-  const yearOptions = years();
 
   const getColor = () => {
     try {
@@ -108,11 +80,13 @@ const Budgets = () => {
             onChange={setMonth}
           />
 
-          <OptionPicker
-            options={yearOptions}
-            value={yearOptions.findIndex((item) => item.value === year)}
-            onChange={setYear}
-          />
+          <TextInput
+            style={[styles.input, { minWidth: 100, textAlign: "center" }]}
+            value={year}
+            onChangeText={setYear}
+            placeholder="Year"
+            keyboardType="numeric" />
+            
           {register && (
             <TouchableOpacity
               style={styles.button}
@@ -232,7 +206,7 @@ const Budgets = () => {
                 style={styles.input}
                 value={filter}
                 onChangeText={setFilter}
-                placeholder="You can add several by separating by , "
+                placeholder="You can add several"
               />
             </View>
           </View>
