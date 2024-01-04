@@ -70,13 +70,13 @@ export default function RegisterCard({
             <View style={[styles.detailsBlock, styles.income]}>
               <Text style={styles.income}>Incomes</Text>
               <Text style={[styles.sideLabel, styles.income]}>
-                $ {register.incomes}
+                $ {register.incomes.toFixed(2)}
               </Text>
             </View>
             <View style={[styles.detailsBlock, styles.goal]}>
               <Text style={styles.goal}>Goal</Text>
               <Text style={[styles.sideLabel, styles.goal]}>
-                $ {register.goal}
+                $ {register.goal.toFixed(2)}
               </Text>
             </View>
           </View>
@@ -85,7 +85,7 @@ export default function RegisterCard({
             <View style={[styles.detailsBlock, styles.expense]}>
               <Text style={styles.expense}>Expenses</Text>
               <Text style={[styles.sideLabel, styles.expense]}>
-                $ {register.expenses}
+                $ {register.expenses.toFixed(2)}
               </Text>
             </View>
             <View

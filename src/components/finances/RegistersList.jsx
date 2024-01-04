@@ -32,55 +32,69 @@ export default function RegistersListCard({
 
 
   useEffect(() => {
-    if (filter === "" || !filter) return setFilteredList([]);
-    const filters = filter.split(",");
-    const newFilteredList = list.filter((item) => {
-      let flag = false;
-      filters.forEach((filter) => {
-        if (item.name.toLowerCase().includes(filter.toLowerCase())) {
-          flag = true;
-        }
-      });
-      return flag;
-    });
+    if (!filter || filter.trim() === "") {
+      setFilteredList([]);
+      return;
+    }
+
+    const filters = filter.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    if (filters.length === 0) {
+      setFilteredList([]);
+      return;
+    }
+
+    const newFilteredList = list.filter((item) =>
+      filters.some((f) => item.name.toLowerCase().includes(f))
+    );
+
     setFilteredList(newFilteredList);
-    handleSum(newFilteredList);
   }, [filter, list]);
 
   useEffect(() => {
-    if (!group || !group?.id) return setList([]);
+    if (filteredList.length > 0) {
+      handleSum(filteredList);
+    }
+  }, [filteredList]);
 
-    db.getByGroup(group.id).then((data) => {
-      if (!data) return setList([]);
-      setList(data);
-    });
+  useEffect(() => {
+    if (!group?.id) {
+      setList([]);
+      return;
+    }
+
+    db.getByGroup(group.id)
+      .then((data) => setList(data || []))
+      .catch(() => setList([]));
   }, [group]);
+
 
   const handleSum = (newList) => {
     setTotal(
       newList.reduce((acc, item) => {
-        if (item.type === "income") return acc + parseFloat(item.value);
-        return acc - parseFloat(item.value);
+        return acc + (item.type === "income" ? parseFloat(item.value) : -parseFloat(item.value));
       }, 0)
     );
   };
 
   const handleDelete = async () => {
-    await db.deleteItem(selected.id);
-    const newGroup = group;
+    db.deleteItem(selected.id);
+
+    const newGroup = { ...group }; 
+
     if (selected.type === "income") {
       newGroup.incomes -= selected.value;
       dbGroup.updateIncomes(newGroup.id, newGroup.incomes);
-    }
-    if (selected.type === "expense") {
+    } else if (selected.type === "expense") {
       newGroup.expenses -= selected.value;
       dbGroup.updateExpenses(newGroup.id, newGroup.expenses);
     }
+
     setGroup(newGroup);
-    dbGroup.getByYear(newGroup.year).then((data) => {
-      handleReload(data, newGroup.id);
-    });
+
+    dbGroup.getByYear(newGroup.year)
+      .then((data) => handleReload(data, newGroup.id));
   };
+
 
   if (!group) return null;
 
@@ -118,7 +132,6 @@ export default function RegistersListCard({
           <Text style={styles.sideLabel}>{total}</Text>
         </View>
       )}
-
       {isDown && (
         <FlatList
           data={filteredList.length > 0 ? filteredList : list}
@@ -140,31 +153,19 @@ export default function RegistersListCard({
                 }}
               >
                 <View style={styles.row}>
-                  <Text
-                    style={[
-                      styles.dateVerticalSmall,
-                      item.type === "income" ? styles.income : styles.expense,
-                    ]}
-                  >
-                    {moment(item.date, "YYYY/MM/DD").format("DD")}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.dateVerticalSmall,
-                      item.type === "income" ? styles.income : styles.expense,
-                    ]}
-                  >
-                    {moment(item.date, "YYYY/MM/DD").format("MMM")}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.dateVerticalSmall,
-                      item.type === "income" ? styles.income : styles.expense,
-                    ]}
-                  >
-                    {moment(item.date, "YYYY/MM/DD").format("YYYY")}
-                  </Text>
+                  {["DD", "MMM", "YYYY"].map((format, index) => (
+                    <Text
+                      key={index}
+                      style={[
+                        styles.dateVerticalSmall,
+                        item.type === "income" ? styles.income : styles.expense,
+                      ]}
+                    >
+                      {moment(item.date, "YYYY/MM/DD").format(format)}
+                    </Text>
+                  ))}
                 </View>
+
                 <Text
                   style={
                     item.type === "income" ? styles.income : styles.expense

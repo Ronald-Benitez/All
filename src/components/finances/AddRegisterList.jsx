@@ -63,13 +63,13 @@ export default function AddRegisterList({
       return;
     }
     if (actualRegister) {
-      await db.updateItem(actualRegister.id, name, date, value, type);
+      db.updateItem(actualRegister.id, name, date, value, type);
       db.getByGroup(group.id).then(() => {
         handleReloadGroup();
       });
       Alert.alert("Success", "Register edited");
     } else {
-      await db.insertItem(name, date, value, type, group.id);
+      db.insertItem(name, date, value, type, group.id);
       setName("");
       setValue("");
       setType("expense");
@@ -89,7 +89,7 @@ export default function AddRegisterList({
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
-        {actualRegister ? "Edit register file" : "Add register file"}
+        {actualRegister ? "Edit register item" : "Add register item"}
       </Text>
       <View style={styles.row}>
         <Text style={styles.label}>Name</Text>

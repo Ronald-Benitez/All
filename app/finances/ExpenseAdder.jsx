@@ -5,24 +5,14 @@ import {
   TextInput,
   ScrollView,
   Modal,
-  Alert,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import moment from "moment/moment";
 import { Storage } from "expo-storage";
-
 import useStyle from "@/src/zustand/useStyle";
 import Confirm from "@/src/components/configs/Confirm";
-import GroupSelector from "@/src/components/finances/GroupSelector";
-import GroupsHandler from "../../src/db/groupTables";
-import ListHandler from "../../src/db/listTables";
-
-const dbGroup = new GroupsHandler("registerGroup");
-const dbList = new ListHandler("registerList");
 
 const ExpenseAdder = () => {
   const styles = useStyle((state) => state.style);
@@ -36,9 +26,6 @@ const ExpenseAdder = () => {
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [reload, setReload] = useState(false);
   const [save, setSave] = useState(false);
-  const [group, setGroup] = useState(null);
-  const [savedName, setSavedName] = useState("");
-  const [isDown, setIsDown] = useState(false);
 
   useEffect(() => {
     Storage.getItem({
@@ -48,14 +35,14 @@ const ExpenseAdder = () => {
         setExpenses(JSON.parse(data));
       }
     });
-    handleSumExpenses();
   }, []);
-
+  
   useEffect(() => {
     Storage.setItem({
       key: "expenses",
       value: JSON.stringify(expenses),
     });
+    handleSumExpenses();
   }, [expenses]);
 
   const handleSumExpenses = () => {
@@ -101,41 +88,12 @@ const ExpenseAdder = () => {
     setQuantity(1);
     setEdit(false);
     setIndex("");
-    setGroup(null);
-    setSavedName("");
   };
 
   const clear = () => {
     setExpenses([]);
     setTotal(0);
     clearInputs();
-  };
-
-  const saveExpense = async () => {
-    if (expenses.length <= 0) {
-      Alert.alert("There are no expenses to save");
-      return;
-    }
-
-    if (!group) {
-      Alert.alert("Please select a group");
-      return;
-    }
-
-    if (savedName === "") {
-      Alert.alert("Please enter a name");
-      return;
-    }
-
-    const date = moment().format("YYYY/MM/DD");
-
-    await dbList.insertItem(savedName, date, total, "expense", group.id);
-
-    await dbGroup.updateExpenses(group.id, group.expenses + total);
-
-    Alert.alert("Saved");
-    clearInputs();
-    setSave(false);
   };
 
   const renderBtn = () => {
@@ -188,103 +146,13 @@ const ExpenseAdder = () => {
   return (
     <View style={styles.container}>
       <View style={[styles.block, { padding: 0 }]}>
-        <View style={styles.row}>
-          <TouchableOpacity
-            style={[
-              styles.button,
-              {
-                width: "95%",
-              },
-            ]}
-            onPress={() => setIsDown(!isDown)}
-          >
-            {isDown ? (
-              <Feather name="chevron-up" size={20} color="black" />
-            ) : (
-              <Feather name="chevron-down" size={20} color="black" />
-            )}
-          </TouchableOpacity>
-        </View>
-        {isDown && (
-          <View>
-            <View style={styles.row}>
-              <View style={styles.column}>
-                <Text style={styles.sideLabel}>Value</Text>
-                <TextInput
-                  style={[
-                    styles.input,
-                    {
-                      minWidth: 100,
-                    },
-                  ]}
-                  value={String(value)}
-                  placeholder="Value"
-                  onChangeText={(text) => setValue(text)}
-                  keyboardType="numeric"
-                />
-              </View>
-              <View style={styles.column}>
-                <Text style={styles.sideLabel}>Quantity</Text>
-                <TextInput
-                  style={[
-                    styles.input,
-                    {
-                      minWidth: 100,
-                    },
-                  ]}
-                  value={String(quantity)}
-                  placeholder="Quantity"
-                  onChangeText={(text) => setQuantity(text)}
-                  keyboardType="numeric"
-                />
-              </View>
-              <View style={styles.column}>
-                <Text style={styles.sideLabel}>Amount</Text>
-                <Text
-                  style={[
-                    styles.input,
-                    {
-                      minWidth: 100,
-                    },
-                  ]}
-                >
-                  ${value * quantity}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.column}>
-                <Text style={styles.sideLabel}>Name</Text>
-                <TextInput
-                  style={[
-                    styles.input,
-                    {
-                      minWidth: 175,
-                      maxWidth: 200,
-                    },
-                  ]}
-                  placeholder="Name"
-                  onChangeText={(text) => setName(text)}
-                  multiline={true}
-                  value={name}
-                />
-              </View>
-              <View style={styles.column}>
-                <View style={styles.row}>{renderBtn()}</View>
-              </View>
-            </View>
-          </View>
-
-        )}
-      </View>
-      <View style={[styles.block, { padding: 0 }]}>
-        <Text style={styles.title}>${total}</Text>
+        <Text style={styles.title}>${total.toFixed(2)}</Text>
       </View>
       <View
         style={[
           styles.block,
           {
-            height: isDown ? "45%" : "70%",
+            height: "75%",
           },
         ]}
       >
@@ -393,7 +261,7 @@ const ExpenseAdder = () => {
                 color="black"
               />
             </TouchableOpacity>
-            <Text style={{ fontWeight: "100", padding: 0 }}>Add</Text>
+            <Text style={{ fontWeight: "100", padding: 0 }}>Calculate</Text>
           </View>
           <TouchableOpacity
             style={[styles.buttonBordered, { padding: 10 }]}
@@ -401,7 +269,7 @@ const ExpenseAdder = () => {
               setSave(!save);
             }}
           >
-            <AntDesign name="addfile" size={18} color="black" />
+            <MaterialCommunityIcons name="cart-plus" size={18} color="black" />
           </TouchableOpacity>
         </View>
       </View>
@@ -435,32 +303,78 @@ const ExpenseAdder = () => {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={save}
+        visible={save || edit}
         onRequestClose={() => {
           setSave(false);
+          clearInputs();
         }}
       >
         <TouchableOpacity
           style={styles.modalBackdrop}
-          onPress={() => setSave(false)}
+          onPress={() => {
+            setSave(false);
+            clearInputs();
+          }}
         >
           <View style={[styles.modalContent]}>
-            <GroupSelector setGroup={setGroup} />
-            <TextInput
-              style={styles.input}
-              placeholder="Name"
-              onChangeText={(text) => setSavedName(text)}
-              multiline={true}
-              value={savedName}
-            />
-            <TouchableOpacity
-              style={styles.buttonPrimary}
-              onPress={() => {
-                saveExpense();
-              }}
-            >
-              <Text style={styles.buttonPrimaryText}>Save</Text>
-            </TouchableOpacity>
+            <View>
+              <View style={styles.row}>
+                <View style={styles.column}>
+                  <Text style={styles.sideLabel}>Value</Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      {
+                        minWidth: 100,
+                      },
+                    ]}
+                    value={String(value)}
+                    placeholder="Value"
+                    onChangeText={(text) => setValue(text)}
+                    keyboardType="numeric"
+                  />
+                </View>
+                <View style={styles.column}>
+                  <Text style={styles.sideLabel}>Quantity</Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      {
+                        minWidth: 100,
+                      },
+                    ]}
+                    value={String(quantity)}
+                    placeholder="Quantity"
+                    onChangeText={(text) => setQuantity(text)}
+                    keyboardType="numeric"
+                  />
+                </View>
+
+              </View>
+              <View style={styles.row}>
+                <View style={styles.column}>
+                  <Text style={styles.sideLabel}>Name</Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      {
+                        minWidth: 175,
+                        maxWidth: 200,
+                      },
+                    ]}
+                    placeholder="Name"
+                    onChangeText={(text) => setName(text)}
+                    multiline={true}
+                    value={name}
+                  />
+                </View>
+              </View>
+              <View style={styles.row}>
+                <View style={styles.column}>
+                  <View style={styles.row}>{renderBtn()}</View>
+                </View>
+              </View>
+            </View>
           </View>
         </TouchableOpacity>
       </Modal>
