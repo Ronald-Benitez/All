@@ -42,6 +42,8 @@ const Configs = () => {
         setStyle(data);
         setConfigs(configsData);
         setPet(petData);
+        console.log("configsData", petData);
+
       }
     );
     // deleteConfigs();
@@ -210,47 +212,46 @@ const Configs = () => {
           <Dropdown
             key="pet"
             title={pet.main?.name || "Pet"}
-            render={() => (
-              <View style={componentStyles.block}>
-                <View
-                  style={[
-                    componentStyles.row,
-                    { justifyContent: "space-between" },
-                  ]}
-                >
-                  <Text style={componentStyles.sideLabel}>Name</Text>
-                  <TextInput
-                    style={[componentStyles.input, { minWidth: 150 }]}
-                    onChangeText={(value) =>
-                      setNewData({
-                        type: "pet",
-                        key: "main",
-                        value: { ...pet.main, name: value },
-                      })
-                    }
-                    value={pet.main?.name}
-                    placeholder="Name"
-                  />
-                </View>
-                {Object.keys(pet).map(
-                  (key) =>
-                    key !== "main" && (
-                      <PetMessages
-                        key={key}
-                        data={pet[key]}
-                        onChange={(value) =>
-                          setNewData({
-                            type: "pet",
-                            key,
-                            value,
-                          })
-                        }
-                      />
-                    )
-                )}
+          >
+            <View style={componentStyles.block}>
+              <View
+                style={[
+                  componentStyles.row,
+                  { justifyContent: "space-between" },
+                ]}
+              >
+                <Text style={componentStyles.sideLabel}>Name</Text>
+                <TextInput
+                  style={[componentStyles.input, { minWidth: 150 }]}
+                  onChangeText={(value) =>
+                    setNewData({
+                      type: "pet",
+                      key: "main",
+                      value: { ...pet.main, name: value },
+                    })
+                  }
+                  value={pet.main?.name}
+                  placeholder="Name"
+                />
               </View>
-            )}
-          />
+              {Object.keys(pet).map(
+                (key) =>
+                  key !== "main" && (
+                    <PetMessages
+                      key={key}
+                      data={pet[key]}
+                      onChange={(value) =>
+                        setNewData({
+                          type: "pet",
+                          key,
+                          value,
+                        })
+                      }
+                    />
+                  )
+              )}
+            </View>
+          </Dropdown>
         )}
       </View>
 
