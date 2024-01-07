@@ -89,9 +89,9 @@ function RootLayoutNav() {
         }}
         />
         <Stack.Screen
-        name="finances/Earnings"
+        name="finances/Profits"
         options={{
-          headerTitle: 'Earnings',
+          headerTitle: 'Profits',
           headerStyle: {
             backgroundColor: configs?.headers.earnings?.value || "#f3e7e7",
           }, 

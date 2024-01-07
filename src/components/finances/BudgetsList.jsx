@@ -1,7 +1,6 @@
 import { View, Text, FlatList, TouchableOpacity, Modal } from "react-native";
 import { useEffect, useState } from "react";
-import moment from "moment/moment";
-import { Feather } from "@expo/vector-icons";
+import { Feather, AntDesign } from "@expo/vector-icons";
 
 import db from "@/src/db/budgetsTable";
 import useStyle from "@/src/zustand/useStyle";
@@ -17,14 +16,13 @@ const BudgetsList = ({ groupId, setTotal, setReload, reload, filter }) => {
   const [filteredList, setFilteredList] = useState([]);
 
   useEffect(() => {
-    if (filter === "" || !filter) {
+    if (!filter || filter.length <= 0) {
       setFilteredList([]);
       return setTotal(
         budgets.reduce((acc, item) => acc + parseFloat(item.amount), 0)
       );
     }
-    const filters = filter.trim().toLowerCase().split(" ")
-    const newFilteredList = budgets.filter((item) => filters.some((f) => item.name.toLowerCase().includes(f)));
+    const newFilteredList = budgets.filter((item) => filter.some((f) => item.name.toLowerCase().includes(f)));
     setFilteredList(newFilteredList);
     setTotal(
       newFilteredList.reduce((acc, item) => acc + parseFloat(item.amount), 0)
@@ -43,22 +41,43 @@ const BudgetsList = ({ groupId, setTotal, setReload, reload, filter }) => {
     setReload(!reload);
   };
 
+  if (!groupId || groupId === "") return
+
+  if (budgets.length <= 0) return (
+    <>
+      <View
+        style={[
+          styles.block,
+          { padding: 0, minWidth: "90%", },
+        ]}
+      >
+        <Text style={[styles.sideLabel, { padding: 10 }]}>
+          Budget, finance and profits use the same group by default, enter a
+          budgeted item to get started
+        </Text>
+        <AddBudget
+          groupId={groupId}
+          setReload={setReload}
+          reload={reload}
+          style={styles.button}
+        >
+          <AntDesign name="addfile" size={20} color="black" />
+        </AddBudget>
+      </View>
+    </>
+  )
+
   return (
     <View
       style={[
         styles.block,
-        {
-          minWidth: "99%",
-          padding: 7,
-        },
+        { minWidth: "99%", padding: 7, },
       ]}
     >
       <View
         style={[
           styles.row,
-          {
-            height: 30,
-          },
+          { height: 30, },
         ]}
       >
         <View style={[styles.column, { flex: 2 }]}>
@@ -82,21 +101,18 @@ const BudgetsList = ({ groupId, setTotal, setReload, reload, filter }) => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View key={item.id} style={[styles.row]}>
-            <TouchableOpacity
+            <AddBudget
+              groupId={groupId}
+              setReload={setReload}
+              reload={reload}
+              data={item}
               style={[
                 styles.row,
                 styles.primaryBorder,
-                {
-                  width: "85%",
-                  minHeight: 30,
-                },
+                { width: "85%", minHeight: 30, },
               ]}
-              onPress={() => {
-                setActualBudget(item);
-                setEdit(true);
-              }}
             >
-              <View style={styles.row}>
+              <View style={[styles.row, { minHeight: 45 }]}>
                 <View style={[styles.column, { flex: 2 }]}>
                   <Text style={[styles.text]}>{item.name}</Text>
                 </View>
@@ -110,7 +126,7 @@ const BudgetsList = ({ groupId, setTotal, setReload, reload, filter }) => {
                   <Text style={[styles.text]}>$ {item.amount}</Text>
                 </View>
               </View>
-            </TouchableOpacity>
+            </AddBudget>
             <View style={[styles.column, { flex: 1 }]}>
               <TouchableOpacity
                 onPress={() => {

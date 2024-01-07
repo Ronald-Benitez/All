@@ -4,6 +4,16 @@ import { getConfigs } from "../helpers/files";
 export default async function getStyles() {
   let configs = await getConfigs();
 
+  const baseButtonStyles = {
+    borderRadius: 5,
+    padding: 15,
+    margin: 5,
+    minHeight: 48,
+    minWidth: 48,
+    justifyContent: "center",
+    alignItems: "center",
+  };
+
   return StyleSheet.create({
     container: {
       alignItems: "center",
@@ -26,7 +36,7 @@ export default async function getStyles() {
     },
 
     input: {
-      height: 40,
+      minHeight: 48,
       margin: 12,
       borderWidth: 1,
       borderColor: configs.colors.inputBorderColor.value || "#936997",
@@ -49,12 +59,8 @@ export default async function getStyles() {
     },
 
     button: {
+      ...baseButtonStyles,
       backgroundColor: "white",
-      borderRadius: 5,
-      padding: 15,
-      margin: 5,
-      justifyContent: "center",
-      alignItems: "center",
     },
 
     buttonText: {
@@ -64,23 +70,16 @@ export default async function getStyles() {
     },
 
     buttonBordered: {
+      ...baseButtonStyles,
       backgroundColor: "transparent",
-      borderRadius: 5,
-      padding: 15,
-      margin: 5,
       borderColor: configs.colors.primaryColor.value || "black",
       borderWidth: 1,
     },
 
     buttonPrimary: {
+      ...baseButtonStyles,
       backgroundColor: configs.colors.primaryColor.value || "white",
-      borderRadius: 5,
-      padding: 15,
-      margin: 5,
-      justifyContent: "center",
-      alignItems: "center",
       borderColor: configs.colors.primaryColor.value || "black",
-      borderWidth: 1,
     },
 
     buttonPrimaryText: {
@@ -89,12 +88,8 @@ export default async function getStyles() {
     },
 
     buttonSecondary: {
+      ...baseButtonStyles,
       backgroundColor: configs.colors.secondaryColor.value || "white",
-      borderRadius: 5,
-      padding: 15,
-      margin: 5,
-      justifyContent: "center",
-      alignItems: "center",
     },
 
     buttonSecondaryText: {
@@ -265,7 +260,7 @@ export default async function getStyles() {
 
     colorPreview: {
       width: 100,
-      height: 30,
+      height: 47,
       margin: 2,
       marginEnd: 12,
       borderRadius: 5,

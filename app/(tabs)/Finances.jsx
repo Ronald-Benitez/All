@@ -7,26 +7,25 @@ import AddRegister from "@/src/components/finances/AddRegister";
 import AddRegisterList from "@/src/components/finances/AddRegisterList";
 import OptionPicker from "@/src/components/configs/OptionPicker";
 import RegisterCard from "@/src/components/finances/RegisterCard";
-import RegistersListCard from "@/src/components/finances/RegistersList";
-import GroupsHandler from "../../src/db/groupTables";
+import RegistersList from "@/src/components/finances/RegistersList";
+import groupsHandler from "../../src/db/groupTables";
+import Filter from "@/src/components/ui/Filter";
 import useStyle from "@/src/zustand/useStyle";
-import monthOptions from "@/constants/Months.json"
 
-const db = new GroupsHandler("registerGroup");
 
-export default function Finances() {
+export default function Finances({ savingsFlag = false }) {
+  const db = new groupsHandler(
+    savingsFlag ? "savingsGroup" : "registerGroup"
+  );
   const [actualRegister, setActualRegister] = useState("");
-  const [seeAdd, setSeeAdd] = useState(false);
   const [registers, setRegisters] = useState([]);
   const [register, setRegister] = useState(null);
   const [reload, setReload] = useState(false);
   const [year, setYear] = useState(moment().format("YYYY"));
-  const [month, setMonth] = useState(moment().format("MM"));
-  const [seeAddRegister, setSeeAddRegister] = useState(false);
   const [isCard, setIsCard] = useState(true);
   const [isList, setIsList] = useState(true);
   const [seeFilter, setSeeFilter] = useState(false);
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState([]);
   const styles = useStyle((state) => state.style);
 
   useEffect(() => {
@@ -57,7 +56,6 @@ export default function Finances() {
     setRegisters(newRegisters);
     setActualRegister(actual);
     setRegister(newRegisters.find((item) => item.id === actual));
-    setIsList(false);
   };
 
   const registersList = () => {
@@ -76,12 +74,6 @@ export default function Finances() {
     <>
       <View style={styles.container}>
         <View style={styles.row}>
-          <OptionPicker
-            options={monthOptions}
-            value={monthOptions.findIndex((item) => item.value === month)}
-            onChange={setMonth}
-          />
-
           <TextInput
             style={[styles.input, { minWidth: 100, textAlign: "center" }]}
             value={year}
@@ -89,19 +81,21 @@ export default function Finances() {
             placeholder="Year"
             keyboardType="numeric" />
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => setSeeAdd(true)}
+          <AddRegister
+            reload={() => setReload(!reload)}
+            savingsFlag={savingsFlag}
           >
             <AntDesign name="addfolder" size={20} color="black" />
-          </TouchableOpacity>
+          </AddRegister>
           {register && (
-            <TouchableOpacity
+            <AddRegisterList
+              group={register}
+              setRegister={setRegister}
               style={styles.button}
-              onPress={() => setSeeAddRegister(true)}
+              savingsFlag={savingsFlag}
             >
               <AntDesign name="addfile" size={20} color="black" />
-            </TouchableOpacity>
+            </AddRegisterList>
           )}
         </View>
         <View style={styles.row}>
@@ -112,14 +106,7 @@ export default function Finances() {
             )}
             onChange={setActualRegister}
           />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              setSeeFilter(!seeFilter);
-            }}
-          >
-            <AntDesign name="filter" size={18} color="black" />
-          </TouchableOpacity>
+          <Filter setFilters={setFilter} />
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
@@ -132,18 +119,18 @@ export default function Finances() {
 
         <View style={styles.row}>
           <RegisterCard
-            reload={reload}
-            setReload={setReload}
+            reload={() => setReload(!reload)}
             register={register}
             handleReload={handleReloadActual}
             isDown={isCard}
             setIsDown={setIsCard}
             setRegister={setRegister}
+            savingsFlag={savingsFlag}
           />
         </View>
 
-        <View style={isCard ? { maxHeight: "38%" } : { maxHeight: "65%" }}>
-          <RegistersListCard
+        <View style={isCard ? { maxHeight: "37%" } : { maxHeight: "65%" }}>
+          <RegistersList
             reload={reload}
             setReload={setReload}
             group={register}
@@ -152,54 +139,9 @@ export default function Finances() {
             isDown={isList}
             setIsDown={setIsList}
             filter={filter}
+            savingsFlag={savingsFlag}
           />
         </View>
-
-        <Modal visible={seeAdd} transparent>
-          <TouchableOpacity
-            style={styles.modalBackdrop}
-            onPress={() => setSeeAdd(false)}
-          >
-            <View style={styles.modalContent}>
-              <AddRegister
-                reload={reload}
-                setReload={setReload}
-                year={year}
-                month={month}
-              />
-            </View>
-          </TouchableOpacity>
-        </Modal>
-
-        <Modal visible={seeAddRegister} transparent>
-          <TouchableOpacity
-            style={styles.modalBackdrop}
-            onPress={() => setSeeAddRegister(false)}
-          >
-            <View style={styles.modalContent}>
-              <AddRegisterList group={register} setRegister={setRegister} />
-            </View>
-          </TouchableOpacity>
-        </Modal>
-
-        <Modal visible={seeFilter} transparent>
-          <TouchableOpacity
-            style={styles.modalBackdrop}
-            onPress={() => setSeeFilter(false)}
-          >
-            <View style={styles.modalContent}>
-              <View style={styles.block}>
-                <Text style={styles.sideLabel}>Filters </Text>
-                <TextInput
-                  style={styles.input}
-                  value={filter}
-                  onChangeText={setFilter}
-                  placeholder="You can add several"
-                />
-              </View>
-            </View>
-          </TouchableOpacity>
-        </Modal>
       </View>
     </>
   );

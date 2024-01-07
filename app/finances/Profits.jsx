@@ -5,29 +5,28 @@ import moment from "moment/moment";
 
 import OptionPicker from "@/src/components/configs/OptionPicker";
 import GroupsHandler from "@/src/db/groupTables";
-import EarningsList from "@/src/components/finances/EarningsList";
-import AddEarning from "@/src/components/finances/AddEarning";
+import ProfitsList from "@/src/components/finances/ProfitsList";
+import AddProfit from "@/src/components/finances/AddProfit";
 import useStyle from "@/src/zustand/useStyle";
-import monthOptions from "@/constants/Months.json"
+import Filter from "@/src/components/ui/Filter";
+import ProfitsCard from "../../src/components/finances/ProfitsCard";
 
 const db = new GroupsHandler("registerGroup");
 
-const Earnings = () => {
+const Profits = () => {
   const styles = useStyle((state) => state.style);
   const [actualRegister, setActualRegister] = useState("");
-  const [seeAdd, setSeeAdd] = useState(false);
   const [registers, setRegisters] = useState([]);
   const [register, setRegister] = useState(null);
   const [reload, setReload] = useState(false);
+  const [reloadRegister, setReloadRegister] = useState(false);
   const [year, setYear] = useState(moment().format("YYYY"));
-  const [month, setMonth] = useState(moment().format("MM"));
   const [totalEarn, setTotalEarn] = useState(0);
-  const [seeFilter, setSeeFilter] = useState(false);
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState([]);
 
   useEffect(() => {
     fetchRegisters();
-  }, [year, reload]);
+  }, [year, reloadRegister]);
 
   useEffect(() => {
     if (actualRegister && actualRegister !== "") {
@@ -64,11 +63,6 @@ const Earnings = () => {
     <>
       <View style={styles.container}>
         <View style={styles.row}>
-          <OptionPicker
-            options={monthOptions}
-            value={monthOptions.findIndex((item) => item.value === month)}
-            onChange={setMonth}
-          />
           <TextInput
             style={[styles.input, { minWidth: 100, textAlign: "center" }]}
             value={year}
@@ -76,12 +70,13 @@ const Earnings = () => {
             placeholder="Year"
             keyboardType="numeric" />
           {register && (
-            <TouchableOpacity
+            <AddProfit
+              groupId={actualRegister}
+              reload={() => setReload(!reload)}
               style={styles.button}
-              onPress={() => setSeeAdd(true)}
             >
               <AntDesign name="addfile" size={20} color="black" />
-            </TouchableOpacity>
+            </AddProfit>
           )}
         </View>
         <View style={styles.row}>
@@ -92,14 +87,7 @@ const Earnings = () => {
             )}
             onChange={setActualRegister}
           />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              setSeeFilter(!seeFilter);
-            }}
-          >
-            <AntDesign name="filter" size={18} color="black" />
-          </TouchableOpacity>
+          <Filter setFilters={setFilter} />
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
@@ -109,60 +97,26 @@ const Earnings = () => {
             <MaterialIcons name="loop" size={18} color="black" />
           </TouchableOpacity>
         </View>
-        <View style={styles.block}>
-          <View style={styles.row}>
-            <Text style={styles.sideLabel}>Total: </Text>
-            <Text style={styles.sideLabel}>$ {totalEarn.toFixed(2)}</Text>
-          </View>
-        </View>
+        <ProfitsCard
+          totalEarn={totalEarn}
+          register={register}
+          reload={() => setReloadRegister(!reloadRegister)}
+        />
         <View
           style={{
-            maxHeight: "70%",
+            maxHeight: "66%",
           }}
         >
-          <EarningsList
+          <ProfitsList
             groupId={actualRegister}
             setTotal={setTotalEarn}
-            setReload={setReload}
-            reload={reload}
+            reload={() => setReload(!reload)}
             filter={filter}
           />
         </View>
       </View>
-      <Modal visible={seeAdd} transparent>
-        <TouchableOpacity
-          style={styles.modalBackdrop}
-          onPress={() => setSeeAdd(false)}
-        >
-          <View style={styles.modalContent}>
-            <AddEarning
-              groupId={actualRegister}
-              setReload={setReload}
-              reload={reload}
-            />
-          </View>
-        </TouchableOpacity>
-      </Modal>
-      <Modal visible={seeFilter} transparent>
-        <TouchableOpacity
-          style={styles.modalBackdrop}
-          onPress={() => setSeeFilter(false)}
-        >
-          <View style={styles.modalContent}>
-            <View style={styles.block}>
-              <Text style={styles.sideLabel}>Filters </Text>
-              <TextInput
-                style={styles.input}
-                value={filter}
-                onChangeText={setFilter}
-                placeholder="You can add several"
-              />
-            </View>
-          </View>
-        </TouchableOpacity>
-      </Modal>
     </>
   );
 };
 
-export default Earnings;
+export default Profits;

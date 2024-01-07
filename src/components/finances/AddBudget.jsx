@@ -1,15 +1,16 @@
-import { View, Text, TouchableOpacity, TextInput, Alert } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, Alert, Modal } from "react-native";
 import { useState, useEffect } from "react";
-import { MaterialCommunityIcons, Feather, AntDesign } from "@expo/vector-icons";
+import { Feather, AntDesign } from "@expo/vector-icons";
 
 import useStyle from "@/src/zustand/useStyle";
 import db from "@/src/db/budgetsTable";
 
-const AddBudget = ({ reload, setReload, groupId, data }) => {
+const AddBudget = ({ reload, setReload, groupId, data, children, style }) => {
   const styles = useStyle((state) => state.style);
   const [name, setName] = useState("");
   const [value, setValue] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [seeAdd, setSeeAdd] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -42,12 +43,6 @@ const AddBudget = ({ reload, setReload, groupId, data }) => {
     }
   };
 
-  const clearInputs = () => {
-    setName("");
-    setValue("");
-    setQuantity("");
-  };
-
   const renderBtn = () => {
     if (data) {
       return (
@@ -56,7 +51,7 @@ const AddBudget = ({ reload, setReload, groupId, data }) => {
             style={[styles.buttonBordered]}
             onPress={() => {
               handleSave();
-              clearInputs();
+              setSeeAdd(false)
             }}
           >
             <Feather name="check" size={15} color="black" />
@@ -64,7 +59,7 @@ const AddBudget = ({ reload, setReload, groupId, data }) => {
           <TouchableOpacity
             style={styles.buttonBordered}
             onPress={() => {
-              clearInputs();
+              setSeeAdd(false)
             }}
           >
             <Feather name="x" size={15} color="black" />
@@ -87,72 +82,76 @@ const AddBudget = ({ reload, setReload, groupId, data }) => {
 
   return (
     <>
-      <View style={styles.block}>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            <Text style={styles.sideLabel}>Name</Text>
-            <TextInput
-              style={[
-                styles.input,
-                {
-                  minWidth: 175,
-                  maxWidth: 200,
-                },
-              ]}
-              placeholder="Name"
-              onChangeText={(text) => setName(text)}
-              multiline={true}
-              value={name}
-            />
+      <TouchableOpacity
+        style={style}
+        onPress={() => setSeeAdd(true)}
+      >
+        {children}
+      </TouchableOpacity>
+      <Modal visible={seeAdd} transparent>
+        <TouchableOpacity
+          style={styles.modalBackdrop}
+          onPress={() => setSeeAdd(false)}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.title}>Add Budget</Text>
+            <View style={styles.block}>
+              <View style={styles.row}>
+                <View style={styles.column}>
+                  <Text style={styles.sideLabel}>Name</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Name"
+                    onChangeText={(text) => setName(text)}
+                    multiline={true}
+                    value={name}
+                  />
+                </View>
+              </View>
+              <View style={styles.row}>
+                <View style={styles.column}>
+                  <Text style={styles.sideLabel}>Value</Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      { minWidth: 120 },
+                    ]}
+                    value={String(value)}
+                    placeholder="Value"
+                    onChangeText={(text) => setValue(text)}
+                    keyboardType="numeric"
+                  />
+                </View>
+                <View style={styles.column}>
+                  <Text style={styles.sideLabel}>Quantity</Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      { minWidth: 120 },
+                    ]}
+                    value={String(quantity)}
+                    placeholder="Quantity"
+                    onChangeText={(text) => setQuantity(text)}
+                    keyboardType="numeric"
+                  />
+                </View>
+              </View>
+              <View style={styles.row}>
+                <View style={styles.column}>
+                  <Text style={styles.sideLabel}>Amount</Text>
+                  <Text
+                    style={styles.input}
+                  >
+                    ${(value * quantity).toFixed(2)}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.row}>{renderBtn()}</View>
+            </View>
           </View>
-          <View style={styles.column}>
-            <Text style={styles.sideLabel}>Value</Text>
-            <TextInput
-              style={[
-                styles.input,
-                {
-                  minWidth: 90,
-                },
-              ]}
-              value={String(value)}
-              placeholder="Value"
-              onChangeText={(text) => setValue(text)}
-              keyboardType="numeric"
-            />
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            <Text style={styles.sideLabel}>Quantity</Text>
-            <TextInput
-              style={[
-                styles.input,
-                {
-                  minWidth: 100,
-                },
-              ]}
-              value={String(quantity)}
-              placeholder="Quantity"
-              onChangeText={(text) => setQuantity(text)}
-              keyboardType="numeric"
-            />
-          </View>
-          <View style={styles.column}>
-            <Text style={styles.sideLabel}>Amount</Text>
-            <Text
-              style={[
-                styles.input,
-                {
-                  minWidth: 100,
-                },
-              ]}
-            >
-              ${value * quantity}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.row}>{renderBtn()}</View>
-      </View>
+        </TouchableOpacity>
+      </Modal>
+
     </>
   );
 };

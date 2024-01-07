@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { View, TouchableOpacity, Text, TextInput, Alert } from "react-native";
+import { View, TouchableOpacity, Text, TextInput, Alert, Modal } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import moment from "moment/moment";
 
@@ -14,12 +14,15 @@ export default function AddRegisterList({
   handleReload,
   setRegister,
   savingsFlag,
+  children,
+  style
 }) {
   const styles = useStyle((state) => state.style);
   const [name, setName] = useState("");
   const [value, setValue] = useState("");
   const [type, setType] = useState("expense");
   const [date, setDate] = useState(moment().format("YYYY/MM/DD"));
+  const [seeModal, setSeeModal] = useState(false);
 
   const db = new ListHandler(savingsFlag ? "savingsList" : "registerList");
   const dbGroup = new GroupHandler(savingsFlag ? "savingsGroup" : "registerGroup");
@@ -87,45 +90,62 @@ export default function AddRegisterList({
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>
-        {actualRegister ? "Edit register item" : "Add register item"}
-      </Text>
-      <View style={styles.row}>
-        <Text style={styles.label}>Name</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setName(text)}
-          value={name}
-        />
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Value</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setValue(text)}
-          value={String(value)}
-          keyboardType="numeric"
-        />
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Type</Text>
-        <TouchableOpacity
-          style={styles.input}
-          onPress={() => {
-            setType(type == "expense" ? "income" : "expense");
-          }}
-        >
-          <Text style={styles.buttonText}>{type}</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Date</Text>
-        <DatePicker value={date} onChange={setDate} />
-      </View>
-      <TouchableOpacity style={[styles.buttonBordered]} onPress={handleSave}>
-        <Feather name="save" size={24} color="black" />
+    <>
+      <TouchableOpacity
+        style={style}
+        onPress={() => setSeeModal(true)}
+      >
+        {children}
       </TouchableOpacity>
-    </View>
+      <Modal visible={seeModal} transparent>
+        <TouchableOpacity
+          style={styles.modalBackdrop}
+          onPress={() => setSeeModal(false)}
+        >
+          <View style={styles.modalContent}>
+            <View style={styles.container}>
+              <Text style={styles.title}>
+                {actualRegister ? "Edit register item" : "Add register item"}
+              </Text>
+              <View style={styles.row}>
+                <Text style={styles.label}>Name</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={(text) => setName(text)}
+                  value={name}
+                />
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.label}>Value</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={(text) => setValue(text)}
+                  value={String(value)}
+                  keyboardType="numeric"
+                />
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.label}>Type</Text>
+                <TouchableOpacity
+                  style={styles.input}
+                  onPress={() => {
+                    setType(type == "expense" ? "income" : "expense");
+                  }}
+                >
+                  <Text style={styles.buttonText}>{type}</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.label}>Date</Text>
+                <DatePicker value={date} onChange={setDate} />
+              </View>
+              <TouchableOpacity style={[styles.buttonBordered]} onPress={handleSave}>
+                <Feather name="save" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    </>
   );
 }

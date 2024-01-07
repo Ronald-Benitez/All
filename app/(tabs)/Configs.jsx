@@ -106,6 +106,7 @@ const Configs = () => {
               setOpenConfirm(true);
             }}
           >
+
             <Text style={componentStyles.buttonPrimaryText}>
               Reset configs to default
             </Text>
@@ -116,76 +117,75 @@ const Configs = () => {
             <Dropdown
               key={"configs" + key}
               title={configs[key]?.name.value}
-              render={() => (
-                <View style={componentStyles.block}>
-                  {Object.keys(configs[key]).map((key2) => {
-                    const configValue = configs[key][key2].value;
-                    const configType = configs[key][key2].type;
+            >
+              <View style={componentStyles.block}>
+                {Object.keys(configs[key]).map((key2) => {
+                  const configValue = configs[key][key2].value;
+                  const configType = configs[key][key2].type;
 
-                    return (
-                      <View
-                        key={key2}
-                        style={[
-                          componentStyles.row,
-                          { justifyContent: "space-between" },
-                        ]}
-                      >
-                        <Text style={componentStyles.sideLabel}>
-                          {convertCamelCase(key2)}
-                        </Text>
-                        {configType === "color" ? (
-                          <TouchableOpacity
-                            onPress={() => {
-                              setColorModal(true);
-                              setPickerData({ key, key2, value: configValue });
-                            }}
-                          >
-                            <View
-                              style={[
-                                componentStyles.colorPreview,
-                                { backgroundColor: configValue },
-                              ]}
-                            />
-                          </TouchableOpacity>
-                        ) : (
-                          <TextInput
-                            style={[componentStyles.input, { minWidth: 150 }]}
-                            onChangeText={(value) =>
-                              setNewData({
-                                type: "config",
-                                key,
-                                key2,
-                                value,
-                              })
-                            }
-                            value={configValue}
-                            placeholder={key2}
-                          />
-                        )}
-                      </View>
-                    );
-                  })}
-                  <View style={componentStyles.row}>
-                    <TouchableOpacity
-                      style={[componentStyles.buttonPrimary, { padding: 10 }]}
-                      onPress={() => {
-                        setConfirmData({
-                          title: "Reset config?",
-                          message:
-                            "Are you sure you want to reset this config to default?",
-                          confirmText: "Reset",
-                          cancelText: "Cancel",
-                          onConfirm: () => handleReset(key),
-                        });
-                        setOpenConfirm(true);
-                      }}
+                  return (
+                    <View
+                      key={key2}
+                      style={[
+                        componentStyles.row,
+                        { justifyContent: "space-between" },
+                      ]}
                     >
-                      <SimpleLineIcons name="refresh" size={18} color="white" />
-                    </TouchableOpacity>
-                  </View>
+                      <Text style={componentStyles.sideLabel}>
+                        {convertCamelCase(key2)}
+                      </Text>
+                      {configType === "color" ? (
+                        <TouchableOpacity
+                          onPress={() => {
+                            setColorModal(true);
+                            setPickerData({ key, key2, value: configValue });
+                          }}
+                        >
+                          <View
+                            style={[
+                              componentStyles.colorPreview,
+                              { backgroundColor: configValue },
+                            ]}
+                          />
+                        </TouchableOpacity>
+                      ) : (
+                        <TextInput
+                          style={[componentStyles.input, { minWidth: 150 }]}
+                          onChangeText={(value) =>
+                            setNewData({
+                              type: "config",
+                              key,
+                              key2,
+                              value,
+                            })
+                          }
+                          value={configValue}
+                          placeholder={key2}
+                        />
+                      )}
+                    </View>
+                  );
+                })}
+                <View style={componentStyles.row}>
+                  <TouchableOpacity
+                    style={[componentStyles.buttonPrimary, { padding: 10 }]}
+                    onPress={() => {
+                      setConfirmData({
+                        title: "Reset config?",
+                        message:
+                          "Are you sure you want to reset this config to default?",
+                        confirmText: "Reset",
+                        cancelText: "Cancel",
+                        onConfirm: () => handleReset(key),
+                      });
+                      setOpenConfirm(true);
+                    }}
+                  >
+                    <SimpleLineIcons name="refresh" size={18} color="white" />
+                  </TouchableOpacity>
                 </View>
-              )}
-            />
+              </View>
+            </Dropdown>
           ))}
         <View style={componentStyles.row}>
           <TouchableOpacity

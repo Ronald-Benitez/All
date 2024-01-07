@@ -1,14 +1,14 @@
 import { View, Text, FlatList, TouchableOpacity, Modal } from "react-native";
 import { useEffect, useState } from "react";
 import moment from "moment/moment";
-import { Feather } from "@expo/vector-icons";
+import { Feather, AntDesign } from "@expo/vector-icons";
 
 import db from "@/src/db/earningsTable";
 import useStyle from "@/src/zustand/useStyle";
-import AddEarning from "./AddEarning";
+import AddProfit from "./AddProfit";
 import Confirm from "@/src/components/configs/Confirm";
 
-const EarningsList = ({ groupId, setTotal, setReload, reload, filter }) => {
+const EarningsList = ({ groupId, setTotal, reload, filter }) => {
   const [earnings, setEarnings] = useState([]);
   const styles = useStyle((state) => state.style);
   const [edit, setEdit] = useState(false);
@@ -18,14 +18,13 @@ const EarningsList = ({ groupId, setTotal, setReload, reload, filter }) => {
 
 
   useEffect(() => {
-    if (filter === "" || !filter) {
+    if (!filter || filter.length <= 0) {
       setFilteredList([]);
       return setTotal(
         earnings.reduce((acc, item) => acc + parseFloat(item.amount), 0)
       );
     }
-    const filters = filter.trim().toLowerCase().split(" ")
-    const newFilteredList = earnings.filter((item) => filters.some((f) => item.name.toLowerCase().includes(f)));
+    const newFilteredList = earnings.filter((item) => filter.some((f) => item.name.toLowerCase().includes(f)));
     setFilteredList(newFilteredList);
     setTotal(
       newFilteredList.reduce((acc, item) => acc + parseFloat(item.amount), 0)
@@ -41,8 +40,33 @@ const EarningsList = ({ groupId, setTotal, setReload, reload, filter }) => {
 
   const handleDelete = async () => {
     await db.deleteItem(actualEarning.id);
-    setReload(!reload);
+    reload()
   };
+
+  if (!groupId || groupId === "") return
+
+  if (earnings.length <= 0) return (
+    <>
+      <View
+        style={[styles.block,
+        {
+          minWidth: "90%",
+        },]}
+      >
+        <Text style={[styles.sideLabel, { padding: 10 }]}>
+          Profits, budget and finances use the same group by default, enter a
+          profit to get started
+        </Text>
+        <AddProfit
+          groupId={groupId}
+          reload={reload}
+          style={styles.button}
+        >
+          <AntDesign name="addfile" size={20} color="black" />
+        </AddProfit>
+      </View>
+    </>
+  )
 
   return (
     <View
@@ -59,7 +83,8 @@ const EarningsList = ({ groupId, setTotal, setReload, reload, filter }) => {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View key={item.id} style={[styles.row]}>
-              <TouchableOpacity
+              <AddProfit
+                reload={reload}
                 style={[
                   styles.registerBlock,
                   styles.income,
@@ -68,10 +93,7 @@ const EarningsList = ({ groupId, setTotal, setReload, reload, filter }) => {
                     margin: 5,
                   },
                 ]}
-                onPress={() => {
-                  setEdit(true);
-                  setActualEarning(item);
-                }}
+                actualEarning={item}
               >
                 <View style={styles.row}>
                   {["DD", "MMM", "YYYY"].map((format, index) => (
@@ -89,7 +111,7 @@ const EarningsList = ({ groupId, setTotal, setReload, reload, filter }) => {
                 <Text style={[styles.text, styles.income]}>
                   $ {item.amount}
                 </Text>
-              </TouchableOpacity>
+              </AddProfit>
               <TouchableOpacity
                 style={[
                   {
@@ -114,8 +136,7 @@ const EarningsList = ({ groupId, setTotal, setReload, reload, filter }) => {
             onPress={() => setEdit(false)}
           >
             <View style={styles.modalContent}>
-              <AddEarning
-                setReload={setReload}
+              <AddProfit
                 reload={reload}
                 actualEarning={actualEarning}
               />

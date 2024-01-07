@@ -1,26 +1,25 @@
 import { useState, useEffect } from "react";
-import { View, TouchableOpacity, Text, Modal } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { View, TouchableOpacity, Text } from "react-native";
+import { Feather, AntDesign } from "@expo/vector-icons";
 
 import useStyle from "@/src/zustand/useStyle";
 import Confirm from "@/src/components/configs/Confirm";
 import AddRegister from "./AddRegister";
 import GroupHandler from "../../db/groupTables";
 import ListHandler from "../../db/listTables";
+import WithoutRegister from "./WithoutRegister";
 
 export default function RegisterCard({
   register,
   reload,
-  setReload,
-  handleReload,
   isDown,
   setIsDown,
   setRegister,
   savingsFlag,
+  handleReload,
 }) {
   const styles = useStyle((state) => state.style);
   const [balance, setBalance] = useState(0);
-  const [edit, setEdit] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const db = new GroupHandler(savingsFlag ? "savingsGroup" : "registerGroup");
   const dbList = new ListHandler(savingsFlag ? "savingsList" : "registerList");
@@ -30,13 +29,20 @@ export default function RegisterCard({
   }, [register]);
 
   const handleDelete = async () => {
-    await db.deleteItem(register.id);
-    await dbList.deleteByGroup(register.id);
-    setReload(!reload);
+    db.deleteItem(register.id);
+    dbList.deleteByGroup(register.id);
+    reload();
     setRegister(null);
   };
 
-  if (!register || !register?.id) return null;
+  if (!register || !register?.id) return (
+    <>
+      <WithoutRegister
+        reload={reload}
+        savingsFlag={savingsFlag}
+      />
+    </>
+  )
 
   return (
     <View
@@ -108,12 +114,13 @@ export default function RegisterCard({
             </View>
           </View>
           <View style={styles.row}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => setEdit(!edit)}
+            <AddRegister
+              actualRegister={register}
+              reload={reload}
+              handleReload={handleReload}
             >
               <Feather name="edit" size={20} color="black" />
-            </TouchableOpacity>
+            </AddRegister>
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
@@ -134,19 +141,6 @@ export default function RegisterCard({
             confirmText="Delete"
             cancelText="Cancel"
           />
-          <Modal visible={edit} transparent>
-            <TouchableOpacity
-              style={styles.modalBackdrop}
-              onPress={() => setEdit(false)}
-            >
-              <View style={styles.modalContent}>
-                <AddRegister
-                  actualRegister={register}
-                  handleReload={handleReload}
-                />
-              </View>
-            </TouchableOpacity>
-          </Modal>
         </>
       )}
     </View>

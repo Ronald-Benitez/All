@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { View, TouchableOpacity, Text, FlatList, Modal } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { Feather, AntDesign } from "@expo/vector-icons";
 import moment from "moment/moment";
 
 import useStyle from "@/src/zustand/useStyle";
@@ -22,7 +22,6 @@ export default function RegistersListCard({
   const [list, setList] = useState([]);
   const [confirm, setConfirm] = useState(false);
   const [selected, setSelected] = useState(null);
-  const [edit, setEdit] = useState(false);
   const [filteredList, setFilteredList] = useState([]);
   const [total, setTotal] = useState(0);
   const db = new ListHandler(savingsFlag ? "savingsList" : "registerList");
@@ -32,21 +31,13 @@ export default function RegistersListCard({
 
 
   useEffect(() => {
-    if (!filter || filter.trim() === "") {
+    if (!filter || filter.length <= 0) {
       setFilteredList([]);
       return;
     }
-
-    const filters = filter.trim().toLowerCase().split(/\s+/).filter(Boolean);
-    if (filters.length === 0) {
-      setFilteredList([]);
-      return;
-    }
-
     const newFilteredList = list.filter((item) =>
-      filters.some((f) => item.name.toLowerCase().includes(f))
+    filter.some((f) => item.name.toLowerCase().includes(f))
     );
-
     setFilteredList(newFilteredList);
   }, [filter, list]);
 
@@ -79,7 +70,7 @@ export default function RegistersListCard({
   const handleDelete = async () => {
     db.deleteItem(selected.id);
 
-    const newGroup = { ...group }; 
+    const newGroup = { ...group };
 
     if (selected.type === "income") {
       newGroup.incomes -= selected.value;
@@ -95,8 +86,31 @@ export default function RegistersListCard({
       .then((data) => handleReload(data, newGroup.id));
   };
 
-
-  if (!group) return null;
+  if (!group) return
+  if (list.length <= 0) return (
+    <>
+      <View
+        style={[
+          styles.block,
+          {
+            padding: 0,
+          },
+        ]}
+      >
+        <Text style={[styles.sideLabel, { padding: 10 }]}>
+          Create your first item on this group to start managing your finances.
+        </Text>
+        <AddRegisterList
+          group={group}
+          setRegister={setGroup}
+          style={styles.button}
+          savingsFlag={savingsFlag}
+        >
+          <AntDesign name="addfile" size={20} color="black" />
+        </AddRegisterList>
+      </View>
+    </>
+  );
 
   return (
     <View
@@ -138,7 +152,11 @@ export default function RegistersListCard({
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View key={item.id} style={[styles.row]}>
-              <TouchableOpacity
+              <AddRegisterList
+                actualRegister={item}
+                handleReload={handleReload}
+                group={group}
+                savingsFlag={savingsFlag}
                 style={[
                   styles.registerBlock,
                   item.type === "income" ? styles.income : styles.expense,
@@ -147,10 +165,6 @@ export default function RegistersListCard({
                     margin: 5,
                   },
                 ]}
-                onPress={() => {
-                  setEdit(true);
-                  setSelected(item);
-                }}
               >
                 <View style={styles.row}>
                   {["DD", "MMM", "YYYY"].map((format, index) => (
@@ -181,7 +195,7 @@ export default function RegistersListCard({
                 >
                   $ {item.value}
                 </Text>
-              </TouchableOpacity>
+              </AddRegisterList>
               <TouchableOpacity
                 style={[
                   {
@@ -213,21 +227,7 @@ export default function RegistersListCard({
         onCancel={() => setConfirm(false)}
       />
 
-      <Modal transparent={true} visible={edit}>
-        <TouchableOpacity
-          style={styles.modalBackdrop}
-          onPress={() => setEdit(false)}
-        >
-          <View style={styles.modalContent}>
-            <AddRegisterList
-              actualRegister={selected}
-              handleReload={handleReload}
-              group={group}
-              savingsFlag={savingsFlag}
-            />
-          </View>
-        </TouchableOpacity>
-      </Modal>
+
     </View>
   );
 }

@@ -45,10 +45,7 @@ export default function TabOneScreen() {
         <View
           style={[
             styles.block,
-            {
-              width: "100%",
-              padding: 0,
-            },
+            { width: "100%" },
           ]}
         >
           <Text style={[styles.title]}>Tools</Text>
@@ -71,10 +68,7 @@ export default function TabOneScreen() {
         <View
           style={[
             styles.block,
-            {
-              width: "100%",
-              padding: 0,
-            },
+            { width: "100%" },
           ]}
         >
           <Text style={[styles.title]}>Days</Text>
@@ -93,10 +87,7 @@ export default function TabOneScreen() {
         <View
           style={[
             styles.block,
-            {
-              width: "100%",
-              padding: 0,
-            },
+            { width: "100%" },
           ]}
         >
           <Text style={[styles.title]}>Finances</Text>
@@ -133,8 +124,8 @@ export default function TabOneScreen() {
               )}
             />
             <Cards
-              title="Earnings"
-              route="finances/Earnings"
+              title="Profits"
+              route="finances/Profits"
               icon={() => (
                 <MaterialCommunityIcons
                   name="finance"

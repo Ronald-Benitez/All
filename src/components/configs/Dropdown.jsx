@@ -4,7 +4,7 @@ import { Feather } from "@expo/vector-icons";
 
 import useStyle from "@/src/zustand/useStyle";
 
-export default function Dropdown({ title, render, key = "dfk" }) {
+export default function Dropdown({ title, children }) {
   const styles = useStyle((state) => state.style);
   const [see, setSee] = useState(false);
 
@@ -12,12 +12,7 @@ export default function Dropdown({ title, render, key = "dfk" }) {
     <View
       style={[
         styles.block,
-        {
-          padding: 0,
-          width: "95%",
-        },
       ]}
-      key={key}
     >
       <TouchableOpacity
         style={[
@@ -39,7 +34,7 @@ export default function Dropdown({ title, render, key = "dfk" }) {
           )}
         </View>
       </TouchableOpacity>
-      {see && render()}
+      {see && children}
     </View>
   );
 }
