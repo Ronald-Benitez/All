@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import useStyle from '@/src/zustand/useStyle'
 import WithoutRegister from './WithoutRegister'
 
-const ProfitsCard = ({ totalEarn, register, reload }) => {
+const ProfitsCard = ({ totalEarn, register, reload, year }) => {
     const styles = useStyle(state => state.style)
     const [total, setTotal] = useState(0)
 
@@ -21,9 +21,9 @@ const ProfitsCard = ({ totalEarn, register, reload }) => {
 
     const fixed = (value) => parseFloat(value).toFixed(2)
 
-    if(!register) return (
+    if (!register) return (
         <>
-            <WithoutRegister reload={reload} savingsFlag={false} />
+            <WithoutRegister reload={reload} savingsFlag={false} year={year} />
         </>
     )
 

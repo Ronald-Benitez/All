@@ -106,7 +106,9 @@ const Budgets = () => {
         <BudgetsCard
           totalBudget={total}
           register={register}
-          reload={() => setReloadRegister(!reloadRegister)} />
+          reload={() => setReloadRegister(!reloadRegister)}
+          year={year}
+        />
         <View
           style={{
             maxHeight: "70%",

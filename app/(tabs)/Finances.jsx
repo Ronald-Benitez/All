@@ -84,6 +84,7 @@ export default function Finances({ savingsFlag = false }) {
           <AddRegister
             reload={() => setReload(!reload)}
             savingsFlag={savingsFlag}
+            baseYear={year}
           >
             <AntDesign name="addfolder" size={20} color="black" />
           </AddRegister>
@@ -126,6 +127,7 @@ export default function Finances({ savingsFlag = false }) {
             setIsDown={setIsCard}
             setRegister={setRegister}
             savingsFlag={savingsFlag}
+            year={year}
           />
         </View>
 

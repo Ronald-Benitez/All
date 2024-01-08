@@ -17,6 +17,7 @@ export default function RegisterCard({
   setRegister,
   savingsFlag,
   handleReload,
+  year,
 }) {
   const styles = useStyle((state) => state.style);
   const [balance, setBalance] = useState(0);
@@ -40,6 +41,7 @@ export default function RegisterCard({
       <WithoutRegister
         reload={reload}
         savingsFlag={savingsFlag}
+        year={year}
       />
     </>
   )
@@ -48,18 +50,14 @@ export default function RegisterCard({
     <View
       style={[
         styles.block,
-        {
-          padding: 0,
-        },
+        {padding: 0,},
       ]}
     >
       <View style={styles.row}>
         <TouchableOpacity
           style={[
             styles.button,
-            {
-              width: "95%",
-            },
+            { width: "95%",},
           ]}
           onPress={() => setIsDown(!isDown)}
         >

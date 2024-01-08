@@ -4,7 +4,7 @@ import { AntDesign } from '@expo/vector-icons'
 import useStyle from "@/src/zustand/useStyle";
 import AddRegister from './AddRegister'
 
-const WithoutRegistration = ({ reload, savingsFlag }) => {
+const WithoutRegistration = ({ reload, savingsFlag, year }) => {
     const styles = useStyle(state => state.style)
 
     return (
@@ -24,6 +24,7 @@ const WithoutRegistration = ({ reload, savingsFlag }) => {
                     reload={reload}
                     savingsFlag={savingsFlag}
                     style={styles.button}
+                    baseYear={year}
                 >
                     <AntDesign name="addfolder" size={20} color="black" />
                 </AddRegister>

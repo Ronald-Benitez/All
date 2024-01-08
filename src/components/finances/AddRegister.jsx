@@ -12,7 +12,8 @@ export default function AddRegister({
   actualRegister,
   handleReload,
   savingsFlag,
-  children
+  children,
+  baseYear,
 }) {
   const styles = useStyle((state) => state.style);
   const [name, setName] = useState("");
@@ -28,6 +29,12 @@ export default function AddRegister({
       setGoal(actualRegister.goal.toString());
     }
   }, [actualRegister]);
+
+  useEffect(() => {
+    if (baseYear) {
+      setYear(baseYear);
+    }
+  }, [baseYear]);
 
   const handleSave = async () => {
     if (!verifyFields()) {
@@ -61,7 +68,7 @@ export default function AddRegister({
         style={styles.button}
         onPress={() => setSeeModal(true)}
       >
-        {children }
+        {children}
       </TouchableOpacity>
       <Modal visible={seeModal} transparent>
         <TouchableOpacity

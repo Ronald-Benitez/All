@@ -120,7 +120,7 @@ const Configs = () => {
               key={"configs" + key}
               title={configs[key]?.name.value}
             >
-              <View style={componentStyles.block}>
+              <View style={[componentStyles.block, { minWidth: "100%" }]}>
                 {Object.keys(configs[key]).map((key2) => {
                   const configValue = configs[key][key2].value;
                   const configType = configs[key][key2].type;

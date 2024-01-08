@@ -4,7 +4,7 @@ import React from 'react'
 import useStyle from '@/src/zustand/useStyle'
 import WithoutRegister from './WithoutRegister'
 
-const BudgetsCard = ({ register, totalBudget, reload }) => {
+const BudgetsCard = ({ register, totalBudget, reload, year }) => {
     const styles = useStyle(state => state.style)
 
     const getColor = () => {
@@ -19,10 +19,11 @@ const BudgetsCard = ({ register, totalBudget, reload }) => {
 
     if (!register) return (
         <>
-            <WithoutRegister reload={reload} savingsFlag={false} />
+            <WithoutRegister reload={reload} savingsFlag={false} year={year}/>
         </>
     )
 
+    const fixed = (value) => parseFloat(value).toFixed(2)
 
     const renderRow = (label, value) => (
         <View style={styles.row}>
@@ -34,9 +35,9 @@ const BudgetsCard = ({ register, totalBudget, reload }) => {
 
     return (
         <View style={styles.block}>
-            {renderRow("Incomes", register?.incomes || 0)}
-            {renderRow("Expenses", register?.expenses || 0)}
-            {renderRow("Budget", totalBudget?.toFixed(2) || 0)}
+            {renderRow("Incomes", fixed(register?.incomes || 0))}
+            {renderRow("Expenses", fixed(register?.expenses || 0))}
+            {renderRow("Budget", fixed(totalBudget || 0))}
 
         </View>
     );

@@ -101,6 +101,7 @@ const Profits = () => {
           totalEarn={totalEarn}
           register={register}
           reload={() => setReloadRegister(!reloadRegister)}
+          year={year}
         />
         <View
           style={{
