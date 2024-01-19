@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { View, TouchableOpacity, Text, TextInput, Alert, Modal } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import moment from "moment/moment";
+import { useTranslation } from "react-i18next";
 
 import useStyle from "@/src/zustand/useStyle";
 import db from "@/src/db/earningsTable";
@@ -19,6 +20,7 @@ export default function AddEarning({
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState(moment().format("YYYY/MM/DD"));
   const [seeAdd, setSeeAdd] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (actualEarning) {
@@ -35,7 +37,7 @@ export default function AddEarning({
 
   const handleSave = async () => {
     if (!verifyFields()) {
-      Alert.alert("Error", "Please fill all the fields");
+      Alert.alert("Error", t("errors.empty-fields"));
       return;
     }
     if (actualEarning) {
@@ -46,15 +48,14 @@ export default function AddEarning({
         amount,
         actualEarning.group_id
       );
-      setReload(!reload);
-      Alert.alert("Success", "Earning updated");
+      reload();
     } else {
       db.insertItem(date, name, amount, groupId);
       setName("");
       setAmount("");
       reload();
-      Alert.alert("Success", "Earning added");
     }
+    setSeeAdd(false);
   };
 
   return (
@@ -73,27 +74,28 @@ export default function AddEarning({
           <View style={styles.modalContent}>
             <View style={styles.container}>
               <Text style={styles.title}>
-                {actualEarning ? "Edit " : "Add "}profit
+                {actualEarning ? t("finances-feature.edit-profit") : t("finances-feature.add-profit")}
               </Text>
               <View style={[styles.row]}>
-                <Text style={styles.label}>Date</Text>
                 <DatePicker value={date} onChange={setDate} />
               </View>
               <View style={[styles.row]}>
-                <Text style={styles.label}>Name{"    "}</Text>
+                <Text style={[styles.label]}>{t("finances-feature.name")}</Text>
                 <TextInput
                   style={styles.input}
                   value={name}
                   onChangeText={(text) => setName(text)}
+                  placeholder={t("finances-feature.name")}
                 />
               </View>
               <View style={[styles.row]}>
-                <Text style={styles.label}>Amount</Text>
+                <Text style={[styles.label]}>{t("finances-feature.value")}</Text>
                 <TextInput
                   style={styles.input}
                   value={amount}
                   onChangeText={(text) => setAmount(text)}
                   keyboardType="numeric"
+                  placeholder={t("finances-feature.value")}
                 />
               </View>
               <TouchableOpacity style={[styles.buttonBordered]} onPress={handleSave}>

@@ -1,6 +1,9 @@
 import * as FileSystem from "expo-file-system";
+import { Storage } from "expo-storage";
+
 import configs from "../files/configs.json";
 import pet from "../files/pet.json";
+import petEs from "../files/petEs.json";
 
 export const getConfigs = async () => {
   if (await fileExists("configs.json")) {
@@ -22,10 +25,10 @@ export const resetConfigs = async (key) => {
 export const getDaysColors = async () => {
   let configs = await getConfigs();
   let daysColors = {
-    Unasigned: configs.days.unasigned,
-    Equal: configs.days.equal,
-    Better: configs.days.better,
-    Worse: configs.days.worse,
+    0: configs.days.unasigned,
+    1: configs.days.equal,
+    2: configs.days.better,
+    3: configs.days.worse,
   };
 
   return daysColors;
@@ -59,9 +62,18 @@ export const writeFile = async (path, content) => {
   await FileSystem.writeAsStringAsync(fileUri, content);
 };
 
+const getPetFileName = async () => {
+  const res = await Storage.getItem({ key: "language" })
+  if (res === "es") {
+    return "petEs.json";
+  }
+  return "pet.json";
+};
+
 export const getPet = async () => {
-  if (await fileExists("pet.json")) {
-    let file = await readFile("pet.json");
+  const fileName = await getPetFileName();
+  if (await fileExists(fileName)) {
+    let file = await readFile(fileName);
     return JSON.parse(file);
   } else {
     await setPet();
@@ -70,27 +82,36 @@ export const getPet = async () => {
 };
 
 export const setPet = async () => {
-  await writeFile("pet.json", JSON.stringify(pet));
+  const fileName = await getPetFileName();
+  if (fileName === "petEs.json") {
+    await writeFile(fileName, JSON.stringify(petEs));
+    return;
+  }
+  await writeFile(fileName, JSON.stringify(pet));
 };
 
 export const updatePet = async (data) => {
-  await writeFile("pet.json", JSON.stringify(data));
+  const fileName = await getPetFileName();
+  await writeFile(fileName, JSON.stringify(data));
 };
 
 export const updateKeyPet = async (key, value) => {
+  const fileName = await getPetFileName();
   let file = await getPet();
   file[key] = value;
-  await writeFile("pet.json", JSON.stringify(file));
+  await writeFile(fileName, JSON.stringify(file));
   return file;
 };
 
 export const reloadKeyPet = async (key) => {
+  const fileName = await getPetFileName();
   let file = await getPet();
   file[key] = pet[key];
-  await writeFile("pet.json", JSON.stringify(file));
+  await writeFile(fileName, JSON.stringify(file));
   return file;
 };
 
 export const deletePet = async () => {
-  await FileSystem.deleteAsync(FileSystem.documentDirectory + "pet.json");
+  const fileName = await getPetFileName();
+  await FileSystem.deleteAsync(FileSystem.documentDirectory + fileName);
 };

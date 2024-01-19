@@ -4,6 +4,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 import Cards from "../../src/components/Index/Cards";
 import getStyles from "@/src/styles/styles";
@@ -14,6 +15,7 @@ export default function TabOneScreen() {
   const [styles, setStyles] = useState({});
   const setStyle = useStyle((state) => state.setStyle);
   const storedStyle = useStyle((state) => state.style);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (storedStyle !== null && storedStyle !== undefined) {
@@ -48,17 +50,17 @@ export default function TabOneScreen() {
             { width: "100%" },
           ]}
         >
-          <Text style={[styles.title]}>Tools</Text>
+          <Text style={[styles.title]}>{t("index.tools")}</Text>
 
           <View styles={styles.row}>
             <Cards
-              title="Giveaways"
+              title={t("index.giveaways")}
               route="tools/Giveaways"
               icon={() => <AntDesign name="gift" size={30} color="black" />}
               styles={styles}
             />
             <Cards
-              title="Configs"
+              title={t("index.configs")}
               route="Configs"
               icon={() => <Octicons name="gear" size={30} color="black" />}
               styles={styles}
@@ -71,11 +73,11 @@ export default function TabOneScreen() {
             { width: "100%" },
           ]}
         >
-          <Text style={[styles.title]}>Days</Text>
+          <Text style={[styles.title]}>{t("index.days")}</Text>
 
           <View styles={styles.row}>
             <Cards
-              title="Days"
+              title={t("index.days")}
               route="Days"
               icon={() => (
                 <Ionicons name="ios-today-outline" size={30} color="black" />
@@ -90,10 +92,10 @@ export default function TabOneScreen() {
             { width: "100%" },
           ]}
         >
-          <Text style={[styles.title]}>Finances</Text>
+          <Text style={[styles.title]}>{t("index.finances")}</Text>
           <View styles={styles.row}>
             <Cards
-              title="Finances"
+              title={t("index.finances")}
               route="Finances"
               icon={() => (
                 <Ionicons name="wallet-outline" size={30} color="black" />
@@ -101,7 +103,7 @@ export default function TabOneScreen() {
               styles={styles}
             />
             <Cards
-              title="Expense Adder"
+              title={t("index.expense-adder")}
               route="finances/ExpenseAdder"
               icon={() => (
                 <MaterialCommunityIcons
@@ -113,7 +115,7 @@ export default function TabOneScreen() {
               styles={styles}
             />
             <Cards
-              title="Savings"
+              title={t("index.savings")}
               route="finances/Savings"
               icon={() => (
                 <MaterialCommunityIcons
@@ -124,7 +126,7 @@ export default function TabOneScreen() {
               )}
             />
             <Cards
-              title="Profits"
+              title={t("index.profits")}
               route="finances/Profits"
               icon={() => (
                 <MaterialCommunityIcons
@@ -136,7 +138,7 @@ export default function TabOneScreen() {
               styles={styles}
             />
             <Cards
-              title="Budgets"
+              title={t("index.budgets")}
               route="finances/Budgets"
               icon={() => (
                 <Ionicons name="calculator-outline" size={30} color="black" />

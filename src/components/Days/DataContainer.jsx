@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, TextInput } from "react-native";
+import { useTranslation } from 'react-i18next'
 
 import db from "@/src/db/daysTable";
 import useStyle from "@/src/zustand/useStyle";
@@ -15,6 +16,7 @@ export default function DataContainer({
   const [expected, setExpected] = useState("");
   const [real, setReal] = useState("");
   const styles = useStyle((state) => state.style);
+  const { t } = useTranslation()
 
   const handleExpectedChange = (value) => {
     setExpected(value);
@@ -44,7 +46,7 @@ export default function DataContainer({
           },
         ]}
       >
-        <Text style={[styles.dayDetailsTitle, color]}>Expected</Text>
+        <Text style={[styles.dayDetailsTitle, color]}>{t("days-feature.expected")}</Text>
         <TextInput
           style={[
             styles.input,
@@ -57,8 +59,9 @@ export default function DataContainer({
           onChangeText={handleExpectedChange}
           value={expected}
           multiline={true}
+          placeholder={t("days-feature.expected")}
         />
-        <Text style={[styles.dayDetailsTitle, color]}>Real</Text>
+        <Text style={[styles.dayDetailsTitle, color]}>{t("days-feature.real")}</Text>
         <TextInput
           style={[
             styles.input,
@@ -71,6 +74,7 @@ export default function DataContainer({
           onChangeText={handleRealChange}
           value={real}
           multiline={true}
+          placeholder={t("days-feature.real")}
         />
       </View>
     );
@@ -79,7 +83,7 @@ export default function DataContainer({
   const view = () => {
     return (
       <View style={[styles.container]}>
-        <Text style={[styles.dayDetailsTitle, color]}>Expected</Text>
+        <Text style={[styles.dayDetailsTitle, color]}>{t("days-feature.expected")}</Text>
         <View
           style={[
             styles.dayDetailsBlock,
@@ -92,7 +96,7 @@ export default function DataContainer({
           <Text style={[styles.dayDetailsText, color]}>{expected}</Text>
         </View>
 
-        <Text style={[styles.dayDetailsTitle, color]}>Real</Text>
+        <Text style={[styles.dayDetailsTitle, color]}>{t("days-feature.real")}</Text>
         <View
           style={[
             styles.dayDetailsBlock,

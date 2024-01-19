@@ -4,6 +4,9 @@ import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { useColorScheme } from 'react-native';
 import { useState, useEffect } from "react";
+import { useTranslation } from 'react-i18next';
+
+import "@/src/translation/i18n"
 
 import {
   getConfigs,
@@ -57,6 +60,7 @@ interface Configs {
 
 function RootLayoutNav() {
   const [configs, setConfigs] = useState<Configs | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     getConfigs().then((data) => {
@@ -71,52 +75,52 @@ function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
-        name="finances/ExpenseAdder"
-        options={{
-          headerTitle: 'Expense adder',
-          headerStyle: {
-            backgroundColor: configs?.headers.expenseadder?.value || "#f3e7e7",
-          },  
-        }}
-        />
-         <Stack.Screen
-        name="finances/Savings"
-        options={{
-          headerTitle: 'Savings',
-          headerStyle: {
-            backgroundColor: configs?.headers.savings?.value || "#f3e7e7",
-          }, 
-        }}
+          name="finances/ExpenseAdder"
+          options={{
+            headerTitle: t("index.expense-adder"),
+            headerStyle: {
+              backgroundColor: configs?.headers.expenseadder?.value || "#f3e7e7",
+            },
+          }}
         />
         <Stack.Screen
-        name="finances/Profits"
-        options={{
-          headerTitle: 'Profits',
-          headerStyle: {
-            backgroundColor: configs?.headers.earnings?.value || "#f3e7e7",
-          }, 
-        }}
+          name="finances/Savings"
+          options={{
+            headerTitle: t("index.savings"),
+            headerStyle: {
+              backgroundColor: configs?.headers.savings?.value || "#f3e7e7",
+            },
+          }}
         />
         <Stack.Screen
-        name="finances/Budgets"
-        options={{
-          headerTitle: 'Budgets',
-          headerStyle: {
-            backgroundColor: configs?.headers.budgets?.value || "#f3e7e7",
-          }, 
-        }}
+          name="finances/Profits"
+          options={{
+            headerTitle: t("index.profits"),
+            headerStyle: {
+              backgroundColor: configs?.headers.earnings?.value || "#f3e7e7",
+            },
+          }}
         />
         <Stack.Screen
-        name="tools/Giveaways"
-        options={{
-          headerTitle: 'Giveaways',
-          headerStyle: {
-            backgroundColor: configs?.headers.giveaways?.value || "#f3e7e7",
-          }, 
-        }}
+          name="finances/Budgets"
+          options={{
+            headerTitle: t("index.budgets"),
+            headerStyle: {
+              backgroundColor: configs?.headers.budgets?.value || "#f3e7e7",
+            },
+          }}
         />
-       
-        
+        <Stack.Screen
+          name="tools/Giveaways"
+          options={{
+            headerTitle: t("index.giveaways"),
+            headerStyle: {
+              backgroundColor: configs?.headers.giveaways?.value || "#f3e7e7",
+            },
+          }}
+        />
+
+
       </Stack>
     </ThemeProvider>
   );

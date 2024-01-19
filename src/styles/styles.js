@@ -45,6 +45,14 @@ export default async function getStyles() {
       minWidth: 200,
       color: configs.colors.inputTextColor.value || "black",
     },
+    separator: {
+      height: 1,
+      width: "100%",
+      backgroundColor: "#CED0CE",
+    },
+    label: {
+      minWidth: 70,
+    },
 
     inputLabel: {
       fontSize: 20,
@@ -204,6 +212,7 @@ export default async function getStyles() {
       borderRadius: 8,
       padding: 16,
       minWidth: 200,
+      maxWidth: 350,
     },
     optionText: {
       fontSize: 16,
@@ -372,7 +381,7 @@ export default async function getStyles() {
       backgroundColor: "#6A197D",
     },
 
-    borderedBlock_:{
+    borderedBlock_: {
       width: "100%",
       backgroundColor: configs.colors.backgroundColor.value || "white",
       borderRadius: 20,
@@ -381,6 +390,6 @@ export default async function getStyles() {
       margin: 5,
       borderWidth: 1,
       borderStyle: "dashed",
-    }
+    },
   });
 }

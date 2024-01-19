@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import {
   getConfigs,
 } from "@/src/helpers/files";
+import { useTranslation } from "react-i18next";
 
 interface Configs {
   headers: {
@@ -18,6 +19,7 @@ interface Configs {
 
 export default () => {
   const [configs, setConfigs] = useState<Configs | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     getConfigs().then((data) => {
@@ -41,51 +43,51 @@ export default () => {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: t("index.home"),
           tabBarLabel: "",
           tabBarIcon: () => <AntDesign name="home" size={28} color="black" />,
           headerStyle: {
             backgroundColor: configs?.headers.index.value || "#f3e7e7",
-          },  
+          },
         }}
 
       />
-        <Tabs.Screen
-         name="Days"
-         options={{
-           title: "Days",
-           tabBarLabel: "",
-           tabBarIcon: () => <Ionicons name="ios-today-outline" size={24} color="black" />,
-           headerStyle: {
+      <Tabs.Screen
+        name="Days"
+        options={{
+          title: t("index.days"),
+          tabBarLabel: "",
+          tabBarIcon: () => <Ionicons name="ios-today-outline" size={24} color="black" />,
+          headerStyle: {
             backgroundColor: configs?.headers.days.value || "#f3e7e7",
-          },  
-          }}
-       />
-       <Tabs.Screen
+          },
+        }}
+      />
+      <Tabs.Screen
         name="Finances"
         options={{
-          title: "Finances",
+          title: t("index.finances"),
           tabBarLabel: "",
           tabBarIcon: () => <Ionicons name="wallet-outline" size={24} color="black" />,
           headerStyle: {
             backgroundColor: configs?.headers.finances.value || "#f3e7e7",
-          },  
+          },
         }}
-        
+
       />
       <Tabs.Screen
         name="Configs"
         options={{
-          title: "Configs",
+          title: t("index.configs"),
           tabBarLabel: "",
           tabBarIcon: () => <Octicons name="gear" size={24} color="black" />,
           headerStyle: {
             backgroundColor: configs?.headers.configs.value || "#f3e7e7",
-          },  
+          },
         }}
-      
+
       />
     </Tabs>
-    
+
   );
 };

@@ -1,6 +1,7 @@
 import { View, Text, FlatList, TouchableOpacity, Modal } from "react-native";
 import { useEffect, useState } from "react";
 import { Feather, AntDesign } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 import db from "@/src/db/budgetsTable";
 import useStyle from "@/src/zustand/useStyle";
@@ -10,10 +11,8 @@ import Confirm from "@/src/components/configs/Confirm";
 const BudgetsList = ({ groupId, setTotal, setReload, reload, filter }) => {
   const [budgets, setBudgets] = useState([]);
   const styles = useStyle((state) => state.style);
-  const [edit, setEdit] = useState(false);
-  const [actualBudget, setActualBudget] = useState(null);
-  const [deleteModal, setDeleteModal] = useState(false);
   const [filteredList, setFilteredList] = useState([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!filter || filter.length <= 0) {
@@ -36,8 +35,8 @@ const BudgetsList = ({ groupId, setTotal, setReload, reload, filter }) => {
     });
   }, [groupId, reload]);
 
-  const handleDelete = async () => {
-    await db.deleteItem(actualBudget.id);
+  const handleDelete = async (item) => {
+    await db.deleteItem(item.id);
     setReload(!reload);
   };
 
@@ -52,8 +51,7 @@ const BudgetsList = ({ groupId, setTotal, setReload, reload, filter }) => {
         ]}
       >
         <Text style={[styles.sideLabel, { padding: 10 }]}>
-          Budget, finance and profits use the same group by default, enter a
-          budgeted item to get started
+          {t("finances-feature.no-item-b")}
         </Text>
         <AddBudget
           groupId={groupId}
@@ -81,7 +79,7 @@ const BudgetsList = ({ groupId, setTotal, setReload, reload, filter }) => {
         ]}
       >
         <View style={[styles.column, { flex: 2 }]}>
-          <Text style={[styles.sideLabel]}>Name</Text>
+          <Text style={[styles.sideLabel]}>{t("finances-feature.name")}</Text>
         </View>
         <View style={[styles.column, { flex: 1 }]}>
           <Text style={[styles.sideLabel]}>$</Text>
@@ -90,7 +88,7 @@ const BudgetsList = ({ groupId, setTotal, setReload, reload, filter }) => {
           <Text style={[styles.sideLabel]}>#</Text>
         </View>
         <View style={[styles.column, { flex: 1 }]}>
-          <Text style={[styles.sideLabel]}>Total</Text>
+          <Text style={[styles.sideLabel]}>{t("finances-feature.total")}</Text>
         </View>
         <View style={[styles.column, { flex: 1 }]}>
           <Text style={[styles.sideLabel]}></Text>
@@ -128,55 +126,27 @@ const BudgetsList = ({ groupId, setTotal, setReload, reload, filter }) => {
               </View>
             </AddBudget>
             <View style={[styles.column, { flex: 1 }]}>
-              <TouchableOpacity
-                onPress={() => {
-                  setActualBudget(item);
-                  setDeleteModal(true);
-                }}
-                style={[
-                  styles.buttonBordered,
-                  {
-                    width: "100%",
-                    padding: 6,
-                    alignItems: "center",
-                  },
-                ]}
+              <Confirm
+                onConfirm={() => handleDelete(item)}
+                title={t("finances-feature.d-i-title")}
+                message={t("finances-feature.d-i-msg")}
               >
-                <Feather name="trash-2" size={15} color="black" />
-              </TouchableOpacity>
+                <View
+                  style={[
+                    styles.buttonBordered,
+                    {
+                      width: "100%",
+                      padding: 6, 
+                      alignItems: "center",
+                    },
+                  ]}
+                >
+                  <Feather name="trash-2" size={15} color="black" />
+                </View>
+              </Confirm>
             </View>
           </View>
         )}
-      />
-      <Modal
-        visible={edit}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setEdit(false)}
-      >
-        <TouchableOpacity
-          style={styles.modalBackdrop}
-          onPress={() => setEdit(false)}
-        >
-          <View style={styles.modalContainer}>
-            <AddBudget
-              groupId={groupId}
-              setReload={setReload}
-              reload={reload}
-              data={actualBudget}
-            />
-          </View>
-        </TouchableOpacity>
-      </Modal>
-      <Confirm
-        visible={deleteModal}
-        setVisible={setDeleteModal}
-        onConfirm={handleDelete}
-        title="Delete Budget"
-        message="Are you sure you want to delete this budget?"
-        confirmText="Delete"
-        cancelText="Cancel"
-        onCancel={() => setDeleteModal(false)}
       />
     </View>
   );

@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
-import { View, TouchableOpacity, Text, FlatList, Modal } from "react-native";
+import { View, TouchableOpacity, Text, FlatList, ScrollView } from "react-native";
 import { Feather, AntDesign } from "@expo/vector-icons";
-import moment from "moment/moment";
+import { useTranslation } from "react-i18next";
 
 import useStyle from "@/src/zustand/useStyle";
 import Confirm from "@/src/components/configs/Confirm";
 import AddRegisterList from "./AddRegisterList";
 import ListHandler from "../../db/listTables";
 import GroupHandler from "../../db/groupTables";
+import VerticalDateBlock from "../ui/VerticalDateBlock";
 
 export default function RegistersListCard({
   group,
@@ -20,15 +21,13 @@ export default function RegistersListCard({
 }) {
   const styles = useStyle((state) => state.style);
   const [list, setList] = useState([]);
-  const [confirm, setConfirm] = useState(false);
-  const [selected, setSelected] = useState(null);
   const [filteredList, setFilteredList] = useState([]);
   const [total, setTotal] = useState(0);
+  const { t } = useTranslation();
   const db = new ListHandler(savingsFlag ? "savingsList" : "registerList");
   const dbGroup = new GroupHandler(
     savingsFlag ? "savingsGroup" : "registerGroup"
   );
-
 
   useEffect(() => {
     if (!filter || filter.length <= 0) {
@@ -36,7 +35,7 @@ export default function RegistersListCard({
       return;
     }
     const newFilteredList = list.filter((item) =>
-    filter.some((f) => item.name.toLowerCase().includes(f))
+      filter.some((f) => item.name.toLowerCase().includes(f))
     );
     setFilteredList(newFilteredList);
   }, [filter, list]);
@@ -67,16 +66,16 @@ export default function RegistersListCard({
     );
   };
 
-  const handleDelete = async () => {
-    db.deleteItem(selected.id);
+  const handleDelete = async (item) => {
+    db.deleteItem(item.id);
 
     const newGroup = { ...group };
 
-    if (selected.type === "income") {
-      newGroup.incomes -= selected.value;
+    if (item.type === "income") {
+      newGroup.incomes -= item.value;
       dbGroup.updateIncomes(newGroup.id, newGroup.incomes);
-    } else if (selected.type === "expense") {
-      newGroup.expenses -= selected.value;
+    } else if (item.type === "expense") {
+      newGroup.expenses -= item.value;
       dbGroup.updateExpenses(newGroup.id, newGroup.expenses);
     }
 
@@ -98,7 +97,7 @@ export default function RegistersListCard({
         ]}
       >
         <Text style={[styles.sideLabel, { padding: 10 }]}>
-          Create your first item on this group to start managing your finances.
+          {t("finances-feature.no-items-msg")}
         </Text>
         <AddRegisterList
           group={group}
@@ -111,6 +110,8 @@ export default function RegistersListCard({
       </View>
     </>
   );
+
+  const data = filteredList.length > 0 ? filteredList : list;
 
   return (
     <View
@@ -142,15 +143,13 @@ export default function RegistersListCard({
       </View>
       {filteredList.length > 0 && (
         <View style={styles.row}>
-          <Text style={styles.sideLabel}>Filtered:</Text>
+          <Text style={styles.sideLabel}>{t("finances-feature.filtered")}:</Text>
           <Text style={styles.sideLabel}>{total}</Text>
         </View>
       )}
       {isDown && (
-        <FlatList
-          data={filteredList.length > 0 ? filteredList : list}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
+        <ScrollView>
+          {data.map((item) => (
             <View key={item.id} style={[styles.row]}>
               <AddRegisterList
                 actualRegister={item}
@@ -166,19 +165,7 @@ export default function RegistersListCard({
                   },
                 ]}
               >
-                <View style={styles.row}>
-                  {["DD", "MMM", "YYYY"].map((format, index) => (
-                    <Text
-                      key={index}
-                      style={[
-                        styles.dateVerticalSmall,
-                        item.type === "income" ? styles.income : styles.expense,
-                      ]}
-                    >
-                      {moment(item.date, "YYYY/MM/DD").format(format)}
-                    </Text>
-                  ))}
-                </View>
+                <VerticalDateBlock date={item.date} type={item.type} />
 
                 <Text
                   style={
@@ -196,38 +183,26 @@ export default function RegistersListCard({
                   $ {item.value}
                 </Text>
               </AddRegisterList>
-              <TouchableOpacity
-                style={[
-                  {
-                    margin: 0,
-                    padding: 0,
-                    marginRight: 5,
-                  },
-                ]}
-                onPress={() => {
-                  setConfirm(true);
-                  setSelected(item);
-                }}
+              <Confirm
+                title={t("finances-feature.d-i-title")}
+                message={t("finances-feature.d-i-msg")}
+                onConfirm={() => handleDelete(item)}
               >
-                <Feather name="trash-2" size={20} color="black" />
-              </TouchableOpacity>
+                <View
+                  style={[
+                    {
+                      padding: 10,
+                      margin: 0,
+                    },
+                  ]}
+                >
+                  <Feather name="trash-2" size={20} color="black" />
+                </View>
+              </Confirm>
             </View>
-          )}
-        />
+          ))}
+        </ScrollView>
       )}
-
-      <Confirm
-        title="Delete"
-        message="Are you sure you want to delete this item?"
-        visible={confirm}
-        setVisible={setConfirm}
-        onConfirm={() => handleDelete()}
-        confirmText="Delete"
-        cancelText="Cancel"
-        onCancel={() => setConfirm(false)}
-      />
-
-
     </View>
   );
 }

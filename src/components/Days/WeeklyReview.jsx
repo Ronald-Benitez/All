@@ -1,15 +1,23 @@
 import { View, Text } from "react-native";
 import { useState, useEffect } from "react";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 import db from "@/src/db/daysTable";
 import useStyle from "@/src/zustand/useStyle";
-
-const differenceOptions = ["Unasigned", "Equal", "Better", "Worse"];
+import { completeDate } from "../../helpers/dates";
 
 const WeeklyReview = ({ date, reload }) => {
   const styles = useStyle((state) => state.style);
   const [data, setData] = useState([]);
+  const { t } = useTranslation();
+
+  const differenceOptions = {
+    "0": t("days-feature.Unasigned"),
+    "1": t("days-feature.Equal"),
+    "2": t("days-feature.Better"),
+    "3": t("days-feature.Worse")
+  };
 
   const getColor = (difference) => {
     switch (difference) {
@@ -46,7 +54,7 @@ const WeeklyReview = ({ date, reload }) => {
         return (
           <View key={index} style={[styles.block]}>
             <Text style={[styles.subtitle, color]}>
-              {moment(day.date, "YYYY/MM/DD").format("dddd DD MMMM YYYY")}
+              {completeDate(moment(date, "YYYY/MM/DD"), t)}
             </Text>
             <Text style={[styles.sideLabel, color]}>
               {differenceOptions[day.difference]}

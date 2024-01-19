@@ -10,13 +10,15 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 import useStyle from "@/src/zustand/useStyle";
 import getStyles from "@/src/styles/styles";
 
-export default function PetMessages({ key, data, onChange }) {
+export default function PetMessages({ key = "nokey", data, onChange }) {
   const [see, setSee] = useState(false);
   const [petData, setPetData] = useState({});
+  const { t } = useTranslation();
 
   const [styles, setStyles] = useState({});
   const storedStyle = useStyle((state) => state.style);
@@ -43,7 +45,7 @@ export default function PetMessages({ key, data, onChange }) {
 
   const deleteMessageHandler = (key2) => {
     if (petData.message.length === 1) {
-      Alert.alert("Error", "You can't delete the last message");
+      Alert.alert("Error", t("pet.error-last"));
       return;
     }
 
@@ -147,7 +149,7 @@ export default function PetMessages({ key, data, onChange }) {
                 style={[styles.buttonPrimary, { marginRight: 10 }]}
                 onPress={() => setSee(false)}
               >
-                <Text style={styles.buttonPrimaryText}>Cancel</Text>
+                <Text style={styles.buttonPrimaryText}>{t("pet.cancel")}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -161,7 +163,7 @@ export default function PetMessages({ key, data, onChange }) {
                 style={[styles.buttonPrimary, { marginLeft: 10 }]}
                 onPress={() => confirmChangesHandler()}
               >
-                <Text style={styles.buttonPrimaryText}>Confirm</Text>
+                <Text style={styles.buttonPrimaryText}>{t("pet.confirm")}</Text>
               </TouchableOpacity>
             </View>
           </View>

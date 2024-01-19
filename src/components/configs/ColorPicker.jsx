@@ -9,7 +9,7 @@ import {
 import Picker from "react-native-wheel-color-picker";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
-
+import { useTranslation } from "react-i18next";
 
 const ColorPicker = ({
   newElement,
@@ -19,22 +19,21 @@ const ColorPicker = ({
   onColorChange,
 }) => {
   const [color, setColor] = useState(newElement.value);
+  const { t } = useTranslation();
 
   const handleCopy = () => {
-    //Function to copy on the clipboard the color code
     Clipboard.setStringAsync(color);
-    ToastAndroid.show("Copied to clipboard", ToastAndroid.SHORT);
+    ToastAndroid.show(t("color-picker.copied"), ToastAndroid.SHORT);
   };
 
   const handlePaste = async () => {
-    //Function to paste the color code from the clipboard
     const color = await Clipboard.getStringAsync();
     if (verifyValidHex(color)) {
       setColor(color);
       onColorChange(color);
-      ToastAndroid.show("Color pasted", ToastAndroid.SHORT);
+      ToastAndroid.show(t("color-picker.pasted"), ToastAndroid.SHORT);
     } else {
-      ToastAndroid.show("Invalid color code", ToastAndroid.SHORT);
+      ToastAndroid.show(t("color-picker.invalid-color"), ToastAndroid.SHORT);
     }
   };
 
@@ -44,13 +43,12 @@ const ColorPicker = ({
     setTimeout(() => {
       if (verifyValidHex(color)) {
         onColorChange(color);
-        ToastAndroid.show("Color changed", ToastAndroid.SHORT);
+        ToastAndroid.show(t("color-picker.color-changed"), ToastAndroid.SHORT);
       }
     }, 1000);
   };
 
   const verifyValidHex = (color) => {
-    //Function to verify if the color code is valid
     const regex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
     return regex.test(color);
   };

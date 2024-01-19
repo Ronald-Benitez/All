@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { View, TouchableOpacity, Text } from "react-native";
-import { Feather, AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 import useStyle from "@/src/zustand/useStyle";
 import Confirm from "@/src/components/configs/Confirm";
@@ -21,7 +22,7 @@ export default function RegisterCard({
 }) {
   const styles = useStyle((state) => state.style);
   const [balance, setBalance] = useState(0);
-  const [confirm, setConfirm] = useState(false);
+  const { t } = useTranslation();
   const db = new GroupHandler(savingsFlag ? "savingsGroup" : "registerGroup");
   const dbList = new ListHandler(savingsFlag ? "savingsList" : "registerList");
 
@@ -50,14 +51,14 @@ export default function RegisterCard({
     <View
       style={[
         styles.block,
-        {padding: 0,},
+        { padding: 0, },
       ]}
     >
       <View style={styles.row}>
         <TouchableOpacity
           style={[
             styles.button,
-            { width: "95%",},
+            { width: "95%", },
           ]}
           onPress={() => setIsDown(!isDown)}
         >
@@ -72,13 +73,13 @@ export default function RegisterCard({
         <>
           <View style={styles.row}>
             <View style={[styles.detailsBlock, styles.income]}>
-              <Text style={styles.income}>Incomes</Text>
+              <Text style={styles.income}>{t("finances-feature.income")}</Text>
               <Text style={[styles.sideLabel, styles.income]}>
                 $ {register.incomes.toFixed(2)}
               </Text>
             </View>
             <View style={[styles.detailsBlock, styles.goal]}>
-              <Text style={styles.goal}>Goal</Text>
+              <Text style={styles.goal}>{t("finances-feature.goal")}</Text>
               <Text style={[styles.sideLabel, styles.goal]}>
                 $ {register.goal.toFixed(2)}
               </Text>
@@ -87,7 +88,7 @@ export default function RegisterCard({
 
           <View style={styles.row}>
             <View style={[styles.detailsBlock, styles.expense]}>
-              <Text style={styles.expense}>Expenses</Text>
+              <Text style={styles.expense}>{t("finances-feature.expenses")}</Text>
               <Text style={[styles.sideLabel, styles.expense]}>
                 $ {register.expenses.toFixed(2)}
               </Text>
@@ -99,7 +100,7 @@ export default function RegisterCard({
               ]}
             >
               <Text style={balance >= 0 ? styles.income : styles.expense}>
-                Balance
+              {t("finances-feature.balance")}
               </Text>
               <Text
                 style={[
@@ -119,26 +120,16 @@ export default function RegisterCard({
             >
               <Feather name="edit" size={20} color="black" />
             </AddRegister>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                setConfirm(!confirm);
-              }}
+            <Confirm
+              title={t("finances-feature.d-r-title")}
+              message={t("finances-feature.d-r-msg")}
+              onConfirm={handleDelete}
             >
-              <Feather name="trash" size={20} color="black" />
-            </TouchableOpacity>
+              <View style={styles.button}>
+                <Feather name="trash" size={20} color="black" />
+              </View>
+            </Confirm>
           </View>
-
-          <Confirm
-            visible={confirm}
-            setVisible={setConfirm}
-            title="Delete register"
-            message="Are you sure you want to delete this register?"
-            onConfirm={handleDelete}
-            onCancel={() => setConfirm(!confirm)}
-            confirmText="Delete"
-            cancelText="Cancel"
-          />
         </>
       )}
     </View>

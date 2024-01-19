@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react'
 import { View, Text, Modal, TextInput, TouchableOpacity } from 'react-native'
 import { AntDesign } from "@expo/vector-icons";
+import { useTranslation } from 'react-i18next';
+
 import useStyle from "@/src/zustand/useStyle";
 
 const Filter = ({ setFilters }) => {
     const [seeFilter, setSeeFilter] = useState(false);
     const styles = useStyle((state) => state.style);
     const [filter, setFilter] = useState("");
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (!filter || filter.trim() === "") {
@@ -36,12 +39,12 @@ const Filter = ({ setFilters }) => {
                 >
                     <View style={styles.modalContent}>
                         <View style={styles.block}>
-                            <Text style={styles.sideLabel}>Filters </Text>
+                            <Text style={styles.sideLabel}>{t("filter.label")} </Text>
                             <TextInput
                                 style={styles.input}
                                 value={filter}
                                 onChangeText={setFilter}
-                                placeholder="You can add several"
+                                placeholder={t("filter.placeholder")}
                             />
                         </View>
                     </View>

@@ -1,11 +1,13 @@
 import { View, Text } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
+import { useTranslation } from 'react-i18next'
 
 import useStyle from "@/src/zustand/useStyle";
 import AddRegister from './AddRegister'
 
 const WithoutRegistration = ({ reload, savingsFlag, year }) => {
     const styles = useStyle(state => state.style)
+    const { t } = useTranslation()
 
     return (
         <>
@@ -16,9 +18,7 @@ const WithoutRegistration = ({ reload, savingsFlag, year }) => {
                 ]}
             >
                 <Text style={[styles.sideLabel, { padding: 10 }]}>
-                    It looks like you haven't created a group yet.
-                    Create one to start managing your finances, this will
-                    be used in the financial record, budget and profits.
+                    {t("finances-feature.no-registers-msg")}
                 </Text>
                 <AddRegister
                     reload={reload}

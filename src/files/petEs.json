@@ -1,0 +1,129 @@
+{
+    "main": {
+      "name": "Eco"
+    },
+    "default": {
+      "name": "Predeterminado",
+      "message": [
+        "Algo salió mal, por favor inténtalo de nuevo",
+        "Vaya, algo no funcionó como se esperaba",
+        "Ocurrió un error, por favor inténtalo más tarde",
+        "Lo siento, parece que hay un problema",
+        "Uh-oh, parece que hay un problema",
+        "Estamos experimentando dificultades técnicas",
+        "Por favor, inténtalo de nuevo más tarde",
+        "Hubo un error, por favor reintenta",
+        "Esto no debería haber pasado, por favor, actualiza",
+        "Oh no, ocurrió un error. Por favor, inténtalo de nuevo."
+      ],
+      "img": "default",
+      "route": ""
+    },
+    "askExpected": {
+      "name": "Pregunta Esperada",
+      "message": [
+        "Cuéntame qué planeas hacer hoy",
+        "¿Cuál es tu plan para hoy?",
+        "¿Cuáles son tus objetivos para el día?",
+        "Comparte tus planes para hoy",
+        "Hazme saber qué tienes en tu agenda",
+        "¿Qué tareas tienes en mente para hoy?",
+        "¿Qué hay en tu lista de cosas por hacer hoy?",
+        "¿A qué actividades aspiras hoy?",
+        "¿Cuál es tu enfoque para el día?",
+        "Dame un vistazo a tus planes para hoy."
+      ],
+      "img": "askExpected",
+      "route": "/Days"
+    },
+    "askReal": {
+      "name": "Pregunta Real",
+      "message": [
+        "Cuéntame qué hiciste hoy",
+        "Comparte tus logros del día",
+        "¿Qué lograste hoy?",
+        "Háblame sobre las actividades de tu día",
+        "Resume tus logros del día",
+        "¿Qué tareas completaste hoy?",
+        "¿Cómo pasaste tu día?",
+        "Dame una visión general de las tareas de tu día",
+        "Resume los logros de tu día",
+        "Cuéntame sobre tu progreso hoy."
+      ],
+      "img": "askReal",
+      "route": "/Days"
+    },
+    "askDiff": {
+      "name": "Pregunta Diferencia",
+      "message": [
+        "Cuéntame, ¿cómo crees que fue tu día en comparación con lo que esperabas?",
+        "Reflexiona sobre tu día basándote en tus expectativas",
+        "Compara tu día con tus planes iniciales",
+        "¿Cómo crees que fue tu día en comparación con tus expectativas?",
+        "¿Coincidió tu día con tus planes?",
+        "¿Hubo alguna diferencia entre tus expectativas y la realidad?",
+        "Comparte tus pensamientos sobre cómo resultó tu día",
+        "¿Fue tu día como lo anticipabas?",
+        "¿Cuál fue la brecha entre tus expectativas y tu día real?",
+        "Cuéntame sobre la variación entre tus planes y tu día."
+      ],
+      "img": "askDiff",
+      "route": "/Days"
+    },
+    "equalDay": {
+      "name": "Día Igual",
+      "message": [
+        "Hiciste lo que planeaste hacer hoy, ¡buen trabajo!",
+        "¡Felicidades, lograste tus metas diarias!",
+        "Bien hecho, te apegaste a tu plan!",
+        "Cumpliste con éxito tus objetivos para hoy!",
+        "¡Hurra, completaste tus tareas planeadas para el día!",
+        "Misión cumplida! Lograste lo que te propusiste.",
+        "Date una palmada en la espalda, hiciste exactamente lo que pretendías!",
+        "Ejecutaste tus planes perfectamente, ¡bravo!",
+        "¡Gran trabajo! Coincidiste con tus planes para el día.",
+        "¡Thumbs up! Tu día transcurrió según lo planeado."
+      ],
+      "img": "equalDay",
+      "route": "/Days"
+    },
+    "betterDay": {
+      "name": "Día Mejor",
+      "message": [
+        "Hiciste más de lo que planeaste hacer hoy, ¡buen trabajo!",
+        "Trabajo impresionante, ¡superaste tus expectativas!",
+        "¡Estás que ardes hoy, superando tus metas!",
+        "Wow, te has superado hoy!",
+        "Has ido más allá de tus metas establecidas, ¡bien hecho!",
+        "¡Esfuerzo extraordinario! Fuiste más allá hoy.",
+        "¡Bravo! Has sobrepasado tus tareas del día.",
+        "Estableciste un nuevo estándar al lograr más de lo planeado!",
+        "¡Sigue con el trabajo fantástico de superar tus objetivos!",
+        "¡Eres imparable! Los logros de hoy son excepcionales."
+      ],
+      "img": "betterDay",
+      "route": "/Days"
+    },
+    "worseDay": {
+      "name": "Día Peor",
+      "message": [
+        "Hiciste menos de lo que planeaste hacer hoy, ¡pero está bien, mañana es un nuevo día!",
+        "No te preocupes, siempre hay otra oportunidad mañana!",
+        "Está bien, ¡mañana es un nuevo comienzo!",
+        "No hay problema, siempre hay mañana para intentarlo de nuevo!",
+        "¡Mantén la frente en alto! Mañana ofrece nuevas oportunidades.",
+        "Cada día es una oportunidad para mejorar, incluido mañana!",
+        "Un día no define tu viaje. Mañana trae nuevo potencial.",
+        "No te estreses por hoy; ¡mañana promete un día mejor!",
+        "Recuerda, un nuevo día significa una nueva oportunidad para alcanzar tus metas.",
+        "¡Mantén una actitud positiva! Mañana es una pizarra en blanco para mejorar las cosas."
+      ],
+      "img": "worseDay",
+      "route": "/Days"
+    },
+    "petted": {
+      "name": "Acariciado",
+      "message": [""]
+    }
+  }
+  

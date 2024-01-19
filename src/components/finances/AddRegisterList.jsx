@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { View, TouchableOpacity, Text, TextInput, Alert, Modal } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import moment from "moment/moment";
+import { useTranslation } from "react-i18next";
 
 import useStyle from "@/src/zustand/useStyle";
 import DatePicker from "@/src/components/configs/DatePicker.jsx";
@@ -23,6 +24,7 @@ export default function AddRegisterList({
   const [type, setType] = useState("expense");
   const [date, setDate] = useState(moment().format("YYYY/MM/DD"));
   const [seeModal, setSeeModal] = useState(false);
+  const { t } = useTranslation();
 
   const db = new ListHandler(savingsFlag ? "savingsList" : "registerList");
   const dbGroup = new GroupHandler(savingsFlag ? "savingsGroup" : "registerGroup");
@@ -62,7 +64,7 @@ export default function AddRegisterList({
 
   const handleSave = async () => {
     if (!verifyFields()) {
-      Alert.alert("Error", "Please fill all the fields");
+      Alert.alert("Error", t("errors.empty-fields"));
       return;
     }
     if (actualRegister) {
@@ -70,7 +72,6 @@ export default function AddRegisterList({
       db.getByGroup(group.id).then(() => {
         handleReloadGroup();
       });
-      Alert.alert("Success", "Register edited");
     } else {
       db.insertItem(name, date, value, type, group.id);
       setName("");
@@ -85,8 +86,8 @@ export default function AddRegisterList({
       dbGroup.getItem(group.id).then((data) => {
         setRegister(data);
       });
-      Alert.alert("Success", "Register added");
     }
+    setSeeModal(false);
   };
 
   return (
@@ -105,38 +106,39 @@ export default function AddRegisterList({
           <View style={styles.modalContent}>
             <View style={styles.container}>
               <Text style={styles.title}>
-                {actualRegister ? "Edit register item" : "Add register item"}
+                {actualRegister ? t("finances-feature.edit-item") : t("finances-feature.add-item")}
               </Text>
               <View style={styles.row}>
-                <Text style={styles.label}>Name</Text>
+                <Text style={styles.label}>{t("finances-feature.name")}</Text>
                 <TextInput
                   style={styles.input}
                   onChangeText={(text) => setName(text)}
                   value={name}
+                  placeholder={t("finances-feature.name")}
                 />
               </View>
               <View style={styles.row}>
-                <Text style={styles.label}>Value</Text>
+                <Text style={styles.label}>{t("finances-feature.value")}</Text>
                 <TextInput
                   style={styles.input}
                   onChangeText={(text) => setValue(text)}
                   value={String(value)}
                   keyboardType="numeric"
+                  placeholder={t("finances-feature.value")}
                 />
               </View>
               <View style={styles.row}>
-                <Text style={styles.label}>Type</Text>
+                <Text style={styles.label}>{t("finances-feature.type")}</Text>
                 <TouchableOpacity
                   style={styles.input}
                   onPress={() => {
                     setType(type == "expense" ? "income" : "expense");
                   }}
                 >
-                  <Text style={styles.buttonText}>{type}</Text>
+                  <Text style={styles.buttonText}>{t(`finances-feature.${type}`)}</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.row}>
-                <Text style={styles.label}>Date</Text>
                 <DatePicker value={date} onChange={setDate} />
               </View>
               <TouchableOpacity style={[styles.buttonBordered]} onPress={handleSave}>

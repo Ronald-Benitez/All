@@ -1,11 +1,13 @@
 import { View, Text } from 'react-native'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import useStyle from '@/src/zustand/useStyle'
 import WithoutRegister from './WithoutRegister'
 
 const BudgetsCard = ({ register, totalBudget, reload, year }) => {
     const styles = useStyle(state => state.style)
+    const { t } = useTranslation()
 
     const getColor = () => {
         try {
@@ -19,7 +21,7 @@ const BudgetsCard = ({ register, totalBudget, reload, year }) => {
 
     if (!register) return (
         <>
-            <WithoutRegister reload={reload} savingsFlag={false} year={year}/>
+            <WithoutRegister reload={reload} savingsFlag={false} year={year} />
         </>
     )
 
@@ -32,12 +34,11 @@ const BudgetsCard = ({ register, totalBudget, reload, year }) => {
         </View>
     );
 
-
     return (
         <View style={styles.block}>
-            {renderRow("Incomes", fixed(register?.incomes || 0))}
-            {renderRow("Expenses", fixed(register?.expenses || 0))}
-            {renderRow("Budget", fixed(totalBudget || 0))}
+            {renderRow(t("finances-feature.income"), fixed(register?.incomes || 0))}
+            {renderRow(t("finances-feature.expenses"), fixed(register?.expenses || 0))}
+            {renderRow(t("finances-feature.budget"), fixed(totalBudget || 0))}
 
         </View>
     );

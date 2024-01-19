@@ -2,16 +2,25 @@ import { useState, useEffect } from "react";
 import { View, Text } from "react-native";
 import { VictoryChart, VictoryBar } from "victory-native";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 import db from "@/src/db/daysTable";
 import useStyle from "@/src/zustand/useStyle";
 import { getDaysColors } from "@/src/helpers/files";
+import { monthAndYear } from "../../helpers/dates";
 
 export default function StadisticsContainer({ day, reload }) {
   const styles = useStyle((state) => state.style);
-  const labels = ["Unasigned", "Equal", "Better", "Worse"];
   const [dataPie, setDataPie] = useState([]);
   const [colors, setColors] = useState([]);
+  const { t } = useTranslation();
+
+  const labels = {
+    "0": t("days-feature.Unasigned"),
+    "1": t("days-feature.Equal"),
+    "2": t("days-feature.Better"),
+    "3": t("days-feature.Worse")
+  };
 
   useEffect(() => {
     getDaysColors().then((data) => {
@@ -65,7 +74,7 @@ export default function StadisticsContainer({ day, reload }) {
     <View style={styles.container}>
       <View style={styles.row}>
         <Text style={styles.title}>
-          {moment(day, "YYYY/MM/DD").format("MMMM YYYY")} statistics
+          {t("days-feature.stadistics")} ({monthAndYear(moment(day, "YYYY/MM/DD"), t)})
         </Text>
       </View>
       <View style={styles.row}>
@@ -84,8 +93,8 @@ export default function StadisticsContainer({ day, reload }) {
             data={dataPie}
             style={{
               data: {
-                fill: ({ datum }) => {
-                  return colors[datum.x]?.value;
+                fill: ({ datum, index }) => {
+                  return colors[index]?.value;
                 },
               },
             }}

@@ -19,13 +19,8 @@ import DataContainer from "@/src/components/Days/DataContainer";
 import StadisticsContainer from "@/src/components/Days/StadisticsContainer";
 import WeeklyReview from "@/src/components/Days/WeeklyReview";
 import useStyle from "@/src/zustand/useStyle";
+import { useTranslation } from "react-i18next";
 
-const differenceOptions = [
-  { label: "Unasigned", value: "0" },
-  { label: "Equal", value: "1" },
-  { label: "Better", value: "2" },
-  { label: "Worse", value: "3" },
-];
 
 export default function Days() {
   const styles = useStyle((state) => state.style);
@@ -36,6 +31,15 @@ export default function Days() {
   const [seeWeek, setSeeWeek] = useState(false);
   const [data, setData] = useState([]);
   const [reload, setReload] = useState(false);
+  const { t } = useTranslation();
+
+
+  const differenceOptions = [
+    { label: t("days-feature.Unasigned"), value: "0" },
+    { label: t("days-feature.Equal"), value: "1" },
+    { label: t("days-feature.Better"), value: "2" },
+    { label: t("days-feature.Worse"), value: "3" },
+  ];
 
   useEffect(() => {
     db.getItem(date).then((data) => {
@@ -114,7 +118,7 @@ export default function Days() {
               },
             ]}
           >
-            {moment(date, "YYYY/MM/DD").format("dddd")}
+            {t(`days.${moment(date, "YYYY/MM/DD").format("dddd")}`)}
           </Text>
         </TouchableOpacity>
 

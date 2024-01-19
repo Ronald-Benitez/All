@@ -22,7 +22,9 @@ import Dropdown from "@/src/components/configs/Dropdown";
 import Confirm from "@/src/components/configs/Confirm";
 import PetMessages from "@/src/components/pet/PetMessages";
 import ColorPicker from "../../src/components/configs/ColorPicker";
+import LanguageHandler from "@/src/components/configs/LanguagesHandler";
 import useStyle from "@/src/zustand/useStyle";
+import { useTranslation } from 'react-i18next'
 
 const Configs = () => {
   const [configs, setConfigs] = useState({});
@@ -32,9 +34,8 @@ const Configs = () => {
   const [newData, setNewData] = useState({});
   const [colorModal, setColorModal] = useState(false);
   const [PickerData, setPickerData] = useState({});
-  const [confirmData, setConfirmData] = useState({});
-  const [openConfirm, setOpenConfirm] = useState(false);
   const setStyle = useStyle((state) => state.setStyle);
+  const { t } = useTranslation()
 
   useEffect(() => {
     Promise.all([getStyles(), getConfigs(), getPet()]).then(
@@ -42,8 +43,6 @@ const Configs = () => {
         setStyle(data);
         setConfigs(configsData);
         setPet(petData);
-        console.log("configsData", petData);
-
       }
     );
     // deleteConfigs();
@@ -91,122 +90,80 @@ const Configs = () => {
     <ScrollView>
       <View style={componentStyles.container}>
         <View style={componentStyles.row}>
-          <TouchableOpacity
-            style={[componentStyles.buttonPrimary, { padding: 10 }]}
-            onPress={() => {
-              setConfirmData({
-                title: "Reset configs?",
-                message:
-                  "Are you sure you want to reset your configs to default?",
-                confirmText: "Reset",
-                cancelText: "Cancel",
-                onConfirm: () => {
-                  deleteConfigs();
-                  setReload(!reload);
-                },
-              });
-              setOpenConfirm(true);
-            }}
+          <Confirm
+            title={t("configs.reset-title")}
+            message={t("configs.reset-msg")}
+            onConfirm={deleteConfigs}
           >
-
-            <Text style={componentStyles.buttonPrimaryText}>
-              Reset configs to default
+            <Text style={[componentStyles.buttonPrimary, componentStyles.buttonPrimaryText]}>
+              {t("configs.reset-btn")}
             </Text>
-          </TouchableOpacity>
+          </Confirm>
         </View>
         {configs &&
           Object.keys(configs).map((key) => (
             <Dropdown
               key={"configs" + key}
-              title={configs[key]?.name.value}
+              title={t("configs." + key) || convertCamelCase(key)}
             >
               <View style={[componentStyles.block, { minWidth: "100%" }]}>
                 {Object.keys(configs[key]).map((key2) => {
                   const configValue = configs[key][key2].value;
                   const configType = configs[key][key2].type;
-
+                  if (configType !== "color") return null
                   return (
                     <View
                       key={key2}
                       style={[
                         componentStyles.row,
-                        { justifyContent: "space-between" },
+                        { justifyContent: "space-between", minHeight: 40 },
                       ]}
                     >
                       <Text style={componentStyles.sideLabel}>
-                        {convertCamelCase(key2)}
+                        {t("configs." + key2) || convertCamelCase(key2)}
                       </Text>
-                      {configType === "color" ? (
-                        <TouchableOpacity
-                          onPress={() => {
-                            setColorModal(true);
-                            setPickerData({ key, key2, value: configValue });
-                          }}
-                        >
-                          <View
-                            style={[
-                              componentStyles.colorPreview,
-                              { backgroundColor: configValue },
-                            ]}
-                          />
-                        </TouchableOpacity>
-                      ) : (
-                        <TextInput
-                          style={[componentStyles.input, { minWidth: 150 }]}
-                          onChangeText={(value) =>
-                            setNewData({
-                              type: "config",
-                              key,
-                              key2,
-                              value,
-                            })
-                          }
-                          value={configValue}
-                          placeholder={key2}
+                      <TouchableOpacity
+                        onPress={() => {
+                          setColorModal(true);
+                          setPickerData({ key, key2, value: configValue });
+                        }}
+                      >
+                        <View
+                          style={[
+                            componentStyles.colorPreview,
+                            { backgroundColor: configValue },
+                          ]}
                         />
-                      )}
+                      </TouchableOpacity>
                     </View>
                   );
                 })}
                 <View style={componentStyles.row}>
-                  <TouchableOpacity
-                    style={[componentStyles.buttonPrimary, { padding: 10 }]}
-                    onPress={() => {
-                      setConfirmData({
-                        title: "Reset config?",
-                        message:
-                          "Are you sure you want to reset this config to default?",
-                        confirmText: "Reset",
-                        cancelText: "Cancel",
-                        onConfirm: () => handleReset(key),
-                      });
-                      setOpenConfirm(true);
-                    }}
+                  <Confirm
+                    title={t("configs.reset-one-title")}
+                    message={t("configs.reset-one-msg")}
+                    onConfirm={() => handleReset(key)}
                   >
-                    <SimpleLineIcons name="refresh" size={18} color="white" />
-                  </TouchableOpacity>
+                    <View
+                      style={[componentStyles.buttonPrimary, { padding: 10 }]}
+                    >
+                      <SimpleLineIcons name="refresh" size={18} color="white" />
+                    </View>
+                  </Confirm>
                 </View>
               </View>
             </Dropdown>
           ))}
         <View style={componentStyles.row}>
-          <TouchableOpacity
-            style={[componentStyles.buttonPrimary, { padding: 10 }]}
-            onPress={() => {
-              setConfirmData({
-                title: "Reset pet?",
-                message: "Are you sure you want to reset your pet?",
-                confirmText: "Delete",
-                cancelText: "Cancel",
-                onConfirm: () => handleDelete(),
-              });
-              setOpenConfirm(true);
-            }}
+          <Confirm
+            title={t("configs.reset-p-title")}
+            message={t("configs.reset-p-msg")}
+            onConfirm={handleDelete}
           >
-            <Text style={componentStyles.buttonPrimaryText}>
-              Reset pet to default
+            <Text style={[componentStyles.buttonPrimary, componentStyles.buttonPrimaryText]}>
+              {t("configs.reset-p-btn")}
             </Text>
-          </TouchableOpacity>
+          </Confirm>
         </View>
         {pet && (
           <Dropdown
@@ -220,7 +177,7 @@ const Configs = () => {
                   { justifyContent: "space-between" },
                 ]}
               >
-                <Text style={componentStyles.sideLabel}>Name</Text>
+                <Text style={componentStyles.sideLabel}>{t("configs.name")}</Text>
                 <TextInput
                   style={[componentStyles.input, { minWidth: 150 }]}
                   onChangeText={(value) =>
@@ -235,10 +192,10 @@ const Configs = () => {
                 />
               </View>
               {Object.keys(pet).map(
-                (key) =>
+                (key, index) =>
                   key !== "main" && (
                     <PetMessages
-                      key={key}
+                      key={index}
                       data={pet[key]}
                       onChange={(value) =>
                         setNewData({
@@ -253,23 +210,14 @@ const Configs = () => {
             </View>
           </Dropdown>
         )}
+        <Dropdown
+          key="language"
+          title={t("language.label")}
+        >
+          <LanguageHandler />
+        </Dropdown>
       </View>
 
-      <Confirm
-        title={confirmData.title}
-        message={confirmData.message}
-        confirmText={confirmData.confirmText}
-        cancelText={confirmData.cancelText}
-        visible={openConfirm}
-        setVisible={setOpenConfirm}
-        onConfirm={() => {
-          confirmData.onConfirm();
-          setOpenConfirm(false);
-        }}
-        onCancel={() => {
-          setOpenConfirm(false);
-        }}
-      />
       <ColorPicker
         newElement={PickerData}
         styles={componentStyles}
