@@ -11,7 +11,7 @@ const ProfitsCard = ({ totalEarn, register, reload, year }) => {
     const { t } = useTranslation()
 
     useEffect(() => {
-        setTotal(register?.incomes + totalEarn)
+        setTotal(register?.incomes + totalEarn - register?.expenses)
     }, [register, totalEarn])
 
     const renderRow = (label, value) => (

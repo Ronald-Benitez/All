@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import useStyle from "@/src/zustand/useStyle";
 import TableHandler from "../../db/groupTables";
 import MonthPicker from "../ui/MonthPicker";
+import { useAlerts } from "../ui/useAlerts";
 
 export default function AddRegister({
   reload,
@@ -24,6 +25,7 @@ export default function AddRegister({
   const [year, setYear] = useState(moment().format("YYYY"));
   const db = new TableHandler(savingsFlag ? "savingsGroup" : "registerGroup");
   const { t } = useTranslation();
+  const { Toast, showSuccessToast, showErrorToast } = useAlerts();
 
   useEffect(() => {
     if (actualRegister) {
@@ -40,11 +42,11 @@ export default function AddRegister({
 
   const handleSave = async () => {
     if (!verifyFields()) {
-      Alert.alert("Error", t("errors.empty-fields"));
+      showErrorToast(t("errors.empty-fields"));
       return;
     }
-    if(year.length !== 4) {
-      Alert.alert("Error", t("errors.invalid-year"));
+    if (year.length !== 4) {
+      showErrorToast(t("errors.invalid-year"));
       return;
     }
     if (actualRegister) {
@@ -52,13 +54,14 @@ export default function AddRegister({
       db.getByYear(actualRegister.year).then((data) => {
         handleReload(data, actualRegister.id);
       });
-      Alert.alert("Success", t("finances-feature.register-updated"));
+      showSuccessToast(t("finances-feature.register-updated"));
+
     } else {
       db.insertItem(name, month, year, 0, 0, goal);
       setName("");
       setGoal("");
       reload();
-      Alert.alert("Success", t("finances-feature.register-added"));
+      showSuccessToast(t("finances-feature.register-added"));
     }
     setSeeModal(false);
   };
@@ -121,6 +124,7 @@ export default function AddRegister({
           </View>
         </TouchableOpacity>
       </Modal>
+      {Toast}
     </>
   );
 }

@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import useStyle from "@/src/zustand/useStyle";
 import db from "@/src/db/earningsTable";
 import DatePicker from "@/src/components/configs/DatePicker.jsx";
+import { useAlerts } from "../ui/useAlerts";
 
 export default function AddEarning({
   groupId,
@@ -21,6 +22,7 @@ export default function AddEarning({
   const [date, setDate] = useState(moment().format("YYYY/MM/DD"));
   const [seeAdd, setSeeAdd] = useState(false);
   const { t } = useTranslation();
+  const { Toast, showSuccessToast, showErrorToast } = useAlerts();
 
   useEffect(() => {
     if (actualEarning) {
@@ -37,7 +39,7 @@ export default function AddEarning({
 
   const handleSave = async () => {
     if (!verifyFields()) {
-      Alert.alert("Error", t("errors.empty-fields"));
+      showErrorToast(t("errors.empty-fields"));
       return;
     }
     if (actualEarning) {
@@ -49,11 +51,13 @@ export default function AddEarning({
         actualEarning.group_id
       );
       reload();
+      showSuccessToast(t("finances-feature.item-updated"));
     } else {
       db.insertItem(date, name, amount, groupId);
       setName("");
       setAmount("");
       reload();
+      showSuccessToast(t("finances-feature.item-added"));
     }
     setSeeAdd(false);
   };
@@ -105,6 +109,7 @@ export default function AddEarning({
           </View>
         </TouchableOpacity>
       </Modal>
+      {Toast}
     </>
   );
 }

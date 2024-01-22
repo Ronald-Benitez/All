@@ -53,6 +53,14 @@
     "backgroundColor": {
       "value": "#FFFFFF",
       "type": "color"
+    },
+    "toastBgColor":{
+      "value": "#f3e7e7",
+      "type": "color"
+    },
+    "toastTextColor":{
+      "value": "#000000",
+      "type": "color"
     }
   },
   "days": {

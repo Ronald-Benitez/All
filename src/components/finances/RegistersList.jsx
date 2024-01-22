@@ -9,6 +9,7 @@ import AddRegisterList from "./AddRegisterList";
 import ListHandler from "../../db/listTables";
 import GroupHandler from "../../db/groupTables";
 import VerticalDateBlock from "../ui/VerticalDateBlock";
+import { useAlerts } from "../ui/useAlerts";
 
 export default function RegistersListCard({
   group,
@@ -28,6 +29,7 @@ export default function RegistersListCard({
   const dbGroup = new GroupHandler(
     savingsFlag ? "savingsGroup" : "registerGroup"
   );
+  const { Toast, showSuccessToast } = useAlerts();
 
   useEffect(() => {
     if (!filter || filter.length <= 0) {
@@ -83,6 +85,7 @@ export default function RegistersListCard({
 
     dbGroup.getByYear(newGroup.year)
       .then((data) => handleReload(data, newGroup.id));
+      showSuccessToast(t("finances-feature.item-deleted"));
   };
 
   if (!group) return
@@ -203,6 +206,7 @@ export default function RegistersListCard({
           ))}
         </ScrollView>
       )}
+      {Toast}
     </View>
   );
 }

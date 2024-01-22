@@ -7,12 +7,14 @@ import db from "@/src/db/budgetsTable";
 import useStyle from "@/src/zustand/useStyle";
 import AddBudget from "./AddBudget";
 import Confirm from "@/src/components/configs/Confirm";
+import { useAlerts } from "../ui/useAlerts";
 
 const BudgetsList = ({ groupId, setTotal, setReload, reload, filter }) => {
   const [budgets, setBudgets] = useState([]);
   const styles = useStyle((state) => state.style);
   const [filteredList, setFilteredList] = useState([]);
   const { t } = useTranslation();
+  const { Toast, showSuccessToast } = useAlerts();
 
   useEffect(() => {
     if (!filter || filter.length <= 0) {
@@ -32,11 +34,14 @@ const BudgetsList = ({ groupId, setTotal, setReload, reload, filter }) => {
     db.getByGroup(groupId).then((data) => {
       setBudgets(data);
       setTotal(data.reduce((acc, item) => acc + parseFloat(item.amount), 0));
+    }).catch((err) => {
+      console.log(err)
     });
   }, [groupId, reload]);
 
   const handleDelete = async (item) => {
     await db.deleteItem(item.id);
+    showSuccessToast(t("finances-feature.item-deleted"));
     setReload(!reload);
   };
 
@@ -136,7 +141,7 @@ const BudgetsList = ({ groupId, setTotal, setReload, reload, filter }) => {
                     styles.buttonBordered,
                     {
                       width: "100%",
-                      padding: 6, 
+                      padding: 6,
                       alignItems: "center",
                     },
                   ]}
@@ -148,6 +153,7 @@ const BudgetsList = ({ groupId, setTotal, setReload, reload, filter }) => {
           </View>
         )}
       />
+      {Toast}
     </View>
   );
 };

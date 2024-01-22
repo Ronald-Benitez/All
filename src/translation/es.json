@@ -28,7 +28,9 @@
         "awards": "Premios",
         "winners": "Ganadores",
         "p-already": "Participante ya agregado",
-        "a-already": "Premio ya agregado"
+        "a-already": "Premio ya agregado",
+        "clear-title": "Limpiar",
+        "clear-msg": "¿Está seguro de que desea limpiar todos los elementos?"
     },
     "expense-adder":{
         "clear-title": "Limpiar",
@@ -60,8 +62,10 @@
         "no-registers-msg":"Parece que aún no has creado un grupo. Crea uno para empezar a gestionar tus finanzas, este se usará en el registro financiero, presupuesto y ganancias.",
         "register-added": "Registro agregado",
         "register-updated": "Registro actualizado",
+        "register-deleted": "Registro eliminado",
         "item-added": "Elemento agregado",
         "item-updated": "Elemento actualizado",
+        "item-deleted": "Elemento eliminado",
         "edit-register": "Editar registro",
         "edit-item": "Editar elemento",
         "add-register": "Agregar registro",
@@ -173,6 +177,8 @@
         "inputBackgroundColor": "Color de fondo del input",
         "inputTextColor": "Color de texto del input",
         "backgroundColor": "Color de fondo",
+        "toastBgColor": "Color de fondo del toast",
+        "toastTextColor": "Color de texto del toast",
         "Days": "Días",
         "unasigned": "Sin asignar",
         "equal": "Igual",

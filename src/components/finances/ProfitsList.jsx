@@ -8,12 +8,14 @@ import useStyle from "@/src/zustand/useStyle";
 import AddProfit from "./AddProfit";
 import Confirm from "@/src/components/configs/Confirm";
 import VerticalDateBlock from "../ui/VerticalDateBlock";
+import { useAlerts } from "../ui/useAlerts";
 
 const EarningsList = ({ groupId, setTotal, reload, setReload, filter }) => {
   const [earnings, setEarnings] = useState([]);
   const styles = useStyle((state) => state.style);
   const [filteredList, setFilteredList] = useState([]);
   const { t } = useTranslation();
+  const { Toast, showSuccessToast } = useAlerts();
 
   useEffect(() => {
     if (!filter || filter.length <= 0) {
@@ -33,12 +35,14 @@ const EarningsList = ({ groupId, setTotal, reload, setReload, filter }) => {
     db.getByGroup(groupId).then((data) => {
       setEarnings(data);
       setTotal(data.reduce((acc, item) => acc + parseFloat(item.amount), 0));
-    });
+    }).catch(() => setEarnings([]));
+
   }, [groupId, reload]);
 
   const handleDelete = async (item) => {
     await db.deleteItem(item.id);
     setReload(!reload)
+    showSuccessToast(t("finances-feature.item-deleted"));
   };
 
   if (!groupId || groupId === "") return
@@ -113,6 +117,7 @@ const EarningsList = ({ groupId, setTotal, reload, setReload, filter }) => {
           )}
         />
       </>
+      {Toast}
     </View>
   );
 };

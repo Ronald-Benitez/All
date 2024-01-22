@@ -391,5 +391,23 @@ export default async function getStyles() {
       borderWidth: 1,
       borderStyle: "dashed",
     },
+
+    bgToast: {
+      flex: 1,
+      justifyContent: "flex-end",
+      alignItems: "center",
+      margin: 20,
+    },
+
+    toast: {
+      backgroundColor: configs.colors?.toastBgColor?.value || "white",
+      padding: 20,
+      borderRadius: 10,
+    },
+
+    toastText: {
+      color: configs.colors?.toastTextColor?.value || "black",
+      fontWeight: "bold",
+    },
   });
 }

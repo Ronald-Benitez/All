@@ -47,36 +47,36 @@ export default function DayCard() {
   };
 
   const handleDay = async (day, data) => {
-    if (day.expected === "") {
+    if (day?.expected === "") {
       setPetData(data.askExpected);
       return;
     }
 
-    if (day.real === "") {
+    if (day?.real === "") {
       setPetData(data.askReal);
       return;
     }
 
     if (
-      day.difference === "" ||
-      day.difference === "0" ||
-      day.difference === "0.0"
+      day?.difference === "" ||
+      day?.difference === "0" ||
+      day?.difference === "0.0"
     ) {
       setPetData(data.askDiff);
       return;
     }
 
-    if (day.difference === "1") {
+    if (day?.difference === "1") {
       setPetData(data.equalDay);
       return;
     }
 
-    if (day.difference === "2") {
+    if (day?.difference === "2") {
       setPetData(data.betterDay);
       return;
     }
 
-    if (day.difference === "3") {
+    if (day?.difference === "3") {
       setPetData(data.worseDay);
       return;
     }

@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import useStyle from "@/src/zustand/useStyle";
 import db from "@/src/db/budgetsTable";
+import { useAlerts } from "../ui/useAlerts";
 
 const AddBudget = ({ reload, setReload, groupId, data, children, style }) => {
   const styles = useStyle((state) => state.style);
@@ -13,6 +14,7 @@ const AddBudget = ({ reload, setReload, groupId, data, children, style }) => {
   const [quantity, setQuantity] = useState("");
   const [seeAdd, setSeeAdd] = useState(false);
   const { t } = useTranslation();
+  const { Toast, showSuccessToast, showErrorToast } = useAlerts();
 
   useEffect(() => {
     if (data) {
@@ -34,14 +36,16 @@ const AddBudget = ({ reload, setReload, groupId, data, children, style }) => {
           groupId
         );
         setReload(!reload);
+        showSuccessToast(t("finances-feature.item-updated"));
       } else {
         await db.insertItem(name, value * quantity, quantity, value, groupId);
         setReload(!reload);
+        showSuccessToast(t("finances-feature.item-added"));
       }
       clearInputs();
       setSeeAdd(false)
     } else {
-      Alert.alert("Error", t("errors.empty-fields"));
+      showErrorToast(t("errors.empty-fields"));
     }
   };
 
@@ -161,7 +165,7 @@ const AddBudget = ({ reload, setReload, groupId, data, children, style }) => {
           </View>
         </TouchableOpacity>
       </Modal>
-
+      {Toast}
     </>
   );
 };

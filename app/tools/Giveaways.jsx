@@ -12,7 +12,9 @@ import { useTranslation } from "react-i18next";
 
 import useStyle from "@/src/zustand/useStyle";
 import DataBlock from "@/src/components/giveaways/DataBlock";
-import ManageDataBlock from "../../src/components/giveaways/ManageDataBlock";
+import ManageDataBlock from "@/src/components/giveaways/ManageDataBlock";
+import { useAlerts } from "@/src/components/ui/useAlerts";
+import Confirm from "@/src/components/configs/Confirm";
 
 const Giveaways = () => {
   const [participants, setParticipants] = useState([]);
@@ -150,13 +152,19 @@ const Giveaways = () => {
               color="black"
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => handleClear()}>
-            <MaterialCommunityIcons
-              name="trash-can-outline"
-              size={24}
-              color="black"
-            />
-          </TouchableOpacity>
+          <Confirm
+            onConfirm={() => handleClear()}
+            title={t("giveaways-feature.clear-title")}
+            message={t("giveaways-feature.clear-msg")}
+          >
+            <View style={styles.button}>
+              <MaterialCommunityIcons
+                name="trash-can-outline"
+                size={24}
+                color="black"
+              />
+            </View>
+          </Confirm>
         </View>
       </View>
     </View>

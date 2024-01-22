@@ -8,6 +8,7 @@ import useStyle from "@/src/zustand/useStyle";
 import DatePicker from "@/src/components/configs/DatePicker.jsx";
 import ListHandler from "../../db/listTables";
 import GroupHandler from "../../db/groupTables";
+import { useAlerts } from "../ui/useAlerts";
 
 export default function AddRegisterList({
   group,
@@ -25,6 +26,7 @@ export default function AddRegisterList({
   const [date, setDate] = useState(moment().format("YYYY/MM/DD"));
   const [seeModal, setSeeModal] = useState(false);
   const { t } = useTranslation();
+  const { Toast, showSuccessToast, showErrorToast } = useAlerts();
 
   const db = new ListHandler(savingsFlag ? "savingsList" : "registerList");
   const dbGroup = new GroupHandler(savingsFlag ? "savingsGroup" : "registerGroup");
@@ -64,7 +66,7 @@ export default function AddRegisterList({
 
   const handleSave = async () => {
     if (!verifyFields()) {
-      Alert.alert("Error", t("errors.empty-fields"));
+      showErrorToast(t("errors.empty-fields"));
       return;
     }
     if (actualRegister) {
@@ -72,6 +74,7 @@ export default function AddRegisterList({
       db.getByGroup(group.id).then(() => {
         handleReloadGroup();
       });
+      showSuccessToast(t("finances-feature.item-updated"));
     } else {
       db.insertItem(name, date, value, type, group.id);
       setName("");
@@ -86,6 +89,7 @@ export default function AddRegisterList({
       dbGroup.getItem(group.id).then((data) => {
         setRegister(data);
       });
+      showSuccessToast(t("finances-feature.item-added"));
     }
     setSeeModal(false);
   };
@@ -148,6 +152,7 @@ export default function AddRegisterList({
           </View>
         </TouchableOpacity>
       </Modal>
+      {Toast}
     </>
   );
 }
