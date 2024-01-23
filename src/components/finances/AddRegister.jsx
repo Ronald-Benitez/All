@@ -90,7 +90,7 @@ export default function AddRegister({
                 {actualRegister ? t("finances-feature.edit-register") : t("finances-feature.add-register")}
               </Text>
 
-              <View style={[styles.row, { justifyContent: "space-between", width: "80%" }]}>
+              <View style={styles.row}>
                 <MonthPicker month={month} onChange={setMonth} />
                 <TextInput
                   style={[styles.input, { minWidth: 100, textAlign: "center" }]}
@@ -100,7 +100,7 @@ export default function AddRegister({
                   keyboardType="numeric"
                 />
               </View>
-              <View style={[styles.row, { justifyContent: "space-between", width: "80%" }]}>
+              <View style={styles.row}>
                 <Text style={styles.label}>{t("finances-feature.name")}</Text>
                 <TextInput
                   style={styles.input}
@@ -108,7 +108,7 @@ export default function AddRegister({
                   value={name}
                 />
               </View>
-              <View style={[styles.row, { justifyContent: "space-between", width: "80%" }]}>
+              <View style={styles.row}>
                 <Text style={styles.label}>{t("finances-feature.goal")}</Text>
                 <TextInput
                   style={styles.input}
