@@ -6,9 +6,9 @@ import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
 import { exportDB, importDB } from "@/src/db/handleTables"
-import useStyle from "@/src/zustand/useStyle";
 import { useAlerts } from "../ui/useAlerts";
 import Confirm from "@/src/components/configs/Confirm";
 
@@ -18,7 +18,7 @@ const DBHandler = () => {
     const [modalType, setModalType] = useState(''); // ['export', 'import']
     const [fileName, setFileName] = useState("ecoData");
     const [file, setFile] = useState(null);
-    const styles = useStyle(state => state.style)
+    const styles = useSelector((state) => state.styles.styles);
 
     const { t } = useTranslation()
     const { Toast, showSuccessToast, showErrorToast } = useAlerts();
