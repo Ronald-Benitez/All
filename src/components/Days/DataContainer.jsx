@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { View, Text, TextInput } from "react-native";
 import { useTranslation } from 'react-i18next'
+import { useSelector } from "react-redux";
 
 import db from "@/src/db/daysTable";
-import useStyle from "@/src/zustand/useStyle";
 
 export default function DataContainer({
   day,
@@ -13,9 +13,9 @@ export default function DataContainer({
   reload,
   setReload,
 }) {
+  const styles = useSelector((state) => state.styles.styles);
   const [expected, setExpected] = useState("");
   const [real, setReal] = useState("");
-  const styles = useStyle((state) => state.style);
   const { t } = useTranslation()
 
   const handleExpectedChange = (value) => {

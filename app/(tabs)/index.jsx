@@ -5,28 +5,22 @@ import { Octicons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { useSelector, useDispatch } from "react-redux";
 
 import Cards from "../../src/components/Index/Cards";
-import getStyles from "@/src/styles/styles";
 import DailyCard from "@/src/components/pet/DailyCard";
-import useStyle from "@/src/zustand/useStyle";
+import { initializeStyles } from "../slices/stylesSlice";
 
 export default function TabOneScreen() {
-  const [styles, setStyles] = useState({});
-  const setStyle = useStyle((state) => state.setStyle);
-  const storedStyle = useStyle((state) => state.style);
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const styles = useSelector((state) => state.styles.styles);
 
   useEffect(() => {
-    if (storedStyle !== null && storedStyle !== undefined) {
-      setStyles(storedStyle);
-    } else {
-      getStyles().then((data) => {
-        setStyles(data);
-        setStyle(data);
-      });
-    }
-  }, [storedStyle]);
+    dispatch(initializeStyles());
+  }, []);
+
+  if(!styles) return null;
 
   return (
     <View

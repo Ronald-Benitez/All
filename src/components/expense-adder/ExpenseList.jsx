@@ -2,13 +2,13 @@ import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
-import useStyle from '@/src/zustand/useStyle'
 import AddExpense from './AddExpense';
 import Confirm from '../configs/Confirm';
 
 const ExpenseList = ({ expenses, setExpenses }) => {
-    const styles = useStyle(state => state.style)
+    const styles = useSelector((state) => state.styles.styles);
     const { t } = useTranslation()
 
     const handleRemove = (index) => {

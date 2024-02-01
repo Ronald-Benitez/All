@@ -3,23 +3,20 @@ import { View, TouchableOpacity, Text, TextInput, Alert, Modal } from "react-nat
 import { Feather } from "@expo/vector-icons";
 import moment from "moment/moment";
 import { useTranslation } from "react-i18next";
+import { useSelector, useDispatch } from "react-redux";
 
-import useStyle from "@/src/zustand/useStyle";
 import DatePicker from "@/src/components/configs/DatePicker.jsx";
 import ListHandler from "../../db/listTables";
 import GroupHandler from "../../db/groupTables";
 import { useAlerts } from "../ui/useAlerts";
+import { setGroup } from "@/app/slices/groupSlice";
 
 export default function AddRegisterList({
-  group,
   actualRegister,
-  handleReload,
-  setRegister,
-  savingsFlag,
   children,
   style
 }) {
-  const styles = useStyle((state) => state.style);
+  const styles = useSelector((state) => state.styles.styles);
   const [name, setName] = useState("");
   const [value, setValue] = useState("");
   const [type, setType] = useState("expense");
@@ -27,9 +24,12 @@ export default function AddRegisterList({
   const [seeModal, setSeeModal] = useState(false);
   const { t } = useTranslation();
   const { Toast, showSuccessToast, showErrorToast } = useAlerts();
+  const groupType = useSelector((state) => state.group.type);
+  const group = useSelector((state) => state.group.group);
+  const dispatch = useDispatch();
 
-  const db = new ListHandler(savingsFlag ? "savingsList" : "registerList");
-  const dbGroup = new GroupHandler(savingsFlag ? "savingsGroup" : "registerGroup");
+  const db = new ListHandler(groupType.list || "registerList");
+  const dbGroup = new GroupHandler(groupType.group || "registerGroup");
 
   useEffect(() => {
     if (actualRegister) {
@@ -58,8 +58,9 @@ export default function AddRegisterList({
       });
       dbGroup.updateExpenses(group.id, expenses);
       dbGroup.updateIncomes(group.id, incomes);
-      dbGroup.getByYear(group.year).then((data) => {
-        handleReload(data, group.id);
+      dbGroup.getItem(group.id).then((data) => {
+        dispatch(setGroup(data));
+        showSuccessToast(t("finances-feature.item-updated"));
       });
     });
   };
@@ -69,17 +70,12 @@ export default function AddRegisterList({
       showErrorToast(t("errors.empty-fields"));
       return;
     }
+
     if (actualRegister) {
-      db.updateItem(actualRegister.id, name, date, value, type);
-      db.getByGroup(group.id).then(() => {
-        handleReloadGroup();
-      });
-      showSuccessToast(t("finances-feature.item-updated"));
+      db.updateItem(actualRegister.id, name, date, value, type)
+      handleReloadGroup();
     } else {
       db.insertItem(name, date, value, type, group.id);
-      setName("");
-      setValue("");
-      setType("expense");
 
       if (type == "expense") {
         dbGroup.updateExpenses(group.id, group.expenses + parseFloat(value));
@@ -87,8 +83,12 @@ export default function AddRegisterList({
         dbGroup.updateIncomes(group.id, group.incomes + parseFloat(value));
       }
       dbGroup.getItem(group.id).then((data) => {
-        setRegister(data);
+        dispatch(setGroup(data));
       });
+
+      setName("");
+      setValue("");
+      setType("expense");
       showSuccessToast(t("finances-feature.item-added"));
     }
     setSeeModal(false);
@@ -152,7 +152,7 @@ export default function AddRegisterList({
           </View>
         </TouchableOpacity>
       </Modal>
-      {Toast}
+      <Toast />
     </>
   );
 }

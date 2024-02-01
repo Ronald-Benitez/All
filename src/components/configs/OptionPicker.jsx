@@ -2,13 +2,12 @@ import { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Modal } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
-
-import useStyle from "@/src/zustand/useStyle";
+import { useSelector } from "react-redux";
 
 export default OptionPicker = ({ value, onChange, options, color }) => {
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
-  const styles = useStyle((state) => state.style);
+  const styles = useSelector((state) => state.styles.styles);
   const { t } = useTranslation();
 
   useEffect(() => {

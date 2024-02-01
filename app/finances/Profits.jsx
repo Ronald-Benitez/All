@@ -1,31 +1,28 @@
-import React, { useState, useEffect } from "react";
-import { View, TouchableOpacity, Modal, Text, TextInput } from "react-native";
+import React, { useState } from "react";
+import { View, TouchableOpacity } from "react-native";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import moment from "moment/moment";
+import { useSelector } from "react-redux";
 
-import OptionPicker from "@/src/components/configs/OptionPicker";
-import GroupsHandler from "@/src/db/groupTables";
 import ProfitsList from "@/src/components/finances/ProfitsList";
 import AddProfit from "@/src/components/finances/AddProfit";
-import useStyle from "@/src/zustand/useStyle";
 import Filter from "@/src/components/ui/Filter";
 import ProfitsCard from "@/src/components/finances/ProfitsCard";
 import GroupSelector from "@/src/components/finances/GroupSelector";
 
 const Profits = () => {
-  const styles = useStyle((state) => state.style);
-  const [register, setRegister] = useState(null);
+  const styles = useSelector((state) => state.styles.styles);
   const [reload, setReload] = useState(false);
   const [year, setYear] = useState(moment().format("YYYY"));
   const [totalEarn, setTotalEarn] = useState(0);
   const [filter, setFilter] = useState([]);
+  const register = useSelector((state) => state.group.group);
 
   return (
     <>
       <View style={styles.container}>
         <View style={styles.row}>
           <GroupSelector
-            setGroup={setRegister}
             savingsFlag={false}
             year={year}
             setYear={setYear}

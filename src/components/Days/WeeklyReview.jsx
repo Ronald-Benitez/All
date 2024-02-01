@@ -2,13 +2,13 @@ import { View, Text } from "react-native";
 import { useState, useEffect } from "react";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 import db from "@/src/db/daysTable";
-import useStyle from "@/src/zustand/useStyle";
 import { completeDate } from "../../helpers/dates";
 
 const WeeklyReview = ({ date, reload }) => {
-  const styles = useStyle((state) => state.style);
+  const styles = useSelector((state) => state.styles.styles);
   const [data, setData] = useState([]);
   const { t } = useTranslation();
 

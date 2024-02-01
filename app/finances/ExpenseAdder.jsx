@@ -8,14 +8,14 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Storage } from "expo-storage";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
-import useStyle from "@/src/zustand/useStyle";
 import Confirm from "@/src/components/configs/Confirm";
 import ExpenseList from "@/src/components/expense-adder/ExpenseList";
 import AddExpense from "@/src/components/expense-adder/AddExpense";
 
 const ExpenseAdder = () => {
-  const styles = useStyle((state) => state.style);
+  const styles = useSelector((state) => state.styles.styles);
   const [expenses, setExpenses] = useState([]);
   const [total, setTotal] = useState(0);
   const { t } = useTranslation();

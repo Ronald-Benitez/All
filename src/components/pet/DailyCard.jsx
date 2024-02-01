@@ -2,11 +2,10 @@ import { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import moment from "moment/moment";
 import { Link } from "expo-router";
+import { useSelector } from "react-redux";
 
 import db from "@/src/db/daysTable.js";
 import { getPet } from "@/src/helpers/files";
-import useStyle from "@/src/zustand/useStyle";
-import getStyles from "@/src/styles/styles";
 
 export default function DayCard() {
   const today = moment().format("YYYY/MM/DD");
@@ -14,19 +13,7 @@ export default function DayCard() {
   const [source, setSource] = useState(null);
   const [pet, setPet] = useState({});
 
-  const [styles, setStyles] = useState({});
-  const storedStyle = useStyle((state) => state.style);
-
-  useEffect(() => {
-    if (storedStyle !== null && storedStyle !== undefined) {
-      setStyles(storedStyle);
-    } else {
-      getStyles().then((data) => {
-        setStyles(data);
-      });
-    }
-  }, [storedStyle]);
-
+  const styles = useSelector((state) => state.styles.styles);
 
   useEffect(() => {
     handleReload();
@@ -128,6 +115,8 @@ export default function DayCard() {
     }, 3000);
   };
 
+  if (!styles) return null;
+
   return (
     <View>
       {!petData ? (
@@ -148,7 +137,7 @@ export default function DayCard() {
             <Text style={styles.petMessageText}>
               {petData.message &&
                 petData.message[
-                  Math.floor(Math.random() * petData.message.length)
+                Math.floor(Math.random() * petData.message.length)
                 ]}
             </Text>
           </Link>

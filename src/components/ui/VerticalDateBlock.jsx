@@ -2,11 +2,10 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
-
-import useStyle from '@/src/zustand/useStyle'
+import { useSelector } from 'react-redux'
 
 const VerticalDateBlock = ({ date, type }) => {
-    const styles = useStyle(state => state.style)
+    const styles = useSelector((state) => state.styles.styles);
     const { t } = useTranslation()
     const d = moment(date, "YYYY/MM/DD")
 

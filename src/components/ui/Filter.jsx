@@ -2,12 +2,11 @@ import { useState, useEffect } from 'react'
 import { View, Text, Modal, TextInput, TouchableOpacity } from 'react-native'
 import { AntDesign } from "@expo/vector-icons";
 import { useTranslation } from 'react-i18next';
-
-import useStyle from "@/src/zustand/useStyle";
+import { useSelector } from 'react-redux';
 
 const Filter = ({ setFilters }) => {
+    const styles = useSelector((state) => state.styles.styles);
     const [seeFilter, setSeeFilter] = useState(false);
-    const styles = useStyle((state) => state.style);
     const [filter, setFilter] = useState("");
     const { t } = useTranslation();
 

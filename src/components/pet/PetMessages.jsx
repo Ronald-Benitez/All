@@ -11,27 +11,13 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
-
-import useStyle from "@/src/zustand/useStyle";
-import getStyles from "@/src/styles/styles";
+import { useSelector } from "react-redux";
 
 export default function PetMessages({ key = "nokey", data, onChange }) {
   const [see, setSee] = useState(false);
   const [petData, setPetData] = useState({});
   const { t } = useTranslation();
-
-  const [styles, setStyles] = useState({});
-  const storedStyle = useStyle((state) => state.style);
-
-  useEffect(() => {
-    if (storedStyle !== null && storedStyle !== undefined) {
-      setStyles(storedStyle);
-    } else {
-      getStyles().then((data) => {
-        setStyles(data);
-      });
-    }
-  }, [storedStyle]);
+  const styles = useSelector((state) => state.styles.styles);
 
   useEffect(() => {
     setPetData(data);

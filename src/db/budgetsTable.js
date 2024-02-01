@@ -78,6 +78,33 @@ const getByGroup = (group_id) => {
   });
 };
 
+const exportBudgets = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "select * from budgets",
+        [],
+        (_, { rows: { _array } }) => {
+          resolve(_array);
+        },
+        reject
+      );
+    });
+  });
+}
+
+const importBudgets = (budgets) => {
+  db.transaction((tx) => {
+    tx.executeSql("delete from budgets");
+    budgets.forEach((budget) => {
+      tx.executeSql(
+        "insert into budgets (name, amount, quantity, value, group_id) values (?, ?, ?, ?, ?)",
+        [budget.name, budget.amount, budget.quantity, budget.value, budget.group_id]
+      );
+    });
+  });
+}
+
 export default {
   getItem,
   insertItem,

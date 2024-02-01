@@ -221,5 +221,24 @@
         "Better Day": "Día Mejor",
         "Worse Day": "Día Peor",
         "Petted": "Acariciado"
+    },
+    "db":{
+        "label":"Base de datos",
+        "export":"Exportar",
+        "import":"Importar",
+        "export-title":"Exportar base de datos",
+        "import-title":"Importar base de datos",
+        "import-msg":"¿Está seguro de que desea importar la base de datos?",
+        "keep": "Mantener datos actuales",
+        "replace": "Reemplazar datos actuales",
+        "keep-msg": "En caso de que existan datos con conflictos, se mantendrán los datos actuales",
+        "replace-msg": "Se eliminara toda la información actual y se reemplazará por la información importada",
+        "export-error":"Error al exportar la base de datos",
+        "import-error":"Error al importar la base de datos",
+        "save":"Guardar",
+        "saved":"Guardado",
+        "imported":"Importado",
+        "file-error":"Error al leer el archivo",
+        "file-uploaded":"Archivo subido"
     }
 }

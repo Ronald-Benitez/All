@@ -1,11 +1,10 @@
 import { View, TouchableOpacity, TextInput, Text } from 'react-native'
 import React from 'react'
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-import useStyle from "@/src/zustand/useStyle";
+import { useSelector } from "react-redux";
 
 const ManageDataBlock = ({ value, onChange, handleDelete, handleAdd, label }) => {
-    const styles = useStyle((state) => state.style);
+  const styles = useSelector((state) => state.styles.styles);
 
     return (
         <View style={styles.col}>

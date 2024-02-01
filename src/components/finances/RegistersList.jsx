@@ -2,34 +2,32 @@ import { useState, useEffect } from "react";
 import { View, TouchableOpacity, Text, FlatList, ScrollView } from "react-native";
 import { Feather, AntDesign } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { useSelector, useDispatch } from "react-redux";
 
-import useStyle from "@/src/zustand/useStyle";
 import Confirm from "@/src/components/configs/Confirm";
 import AddRegisterList from "./AddRegisterList";
 import ListHandler from "../../db/listTables";
 import GroupHandler from "../../db/groupTables";
 import VerticalDateBlock from "../ui/VerticalDateBlock";
 import { useAlerts } from "../ui/useAlerts";
+import { setGroup } from "@/app/slices/groupSlice";
 
 export default function RegistersListCard({
-  group,
-  savingsFlag,
-  setGroup,
-  handleReload,
   isDown,
   setIsDown,
   filter,
 }) {
-  const styles = useStyle((state) => state.style);
+  const styles = useSelector((state) => state.styles.styles);
   const [list, setList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
   const [total, setTotal] = useState(0);
   const { t } = useTranslation();
-  const db = new ListHandler(savingsFlag ? "savingsList" : "registerList");
-  const dbGroup = new GroupHandler(
-    savingsFlag ? "savingsGroup" : "registerGroup"
-  );
+  const type = useSelector((state) => state.group.type);
+  const group = useSelector((state) => state.group.group);
+  const db = new ListHandler(type.list || "registerList");
+  const dbGroup = new GroupHandler(type.group || "registerGroup");
   const { Toast, showSuccessToast } = useAlerts();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!filter || filter.length <= 0) {
@@ -81,11 +79,11 @@ export default function RegistersListCard({
       dbGroup.updateExpenses(newGroup.id, newGroup.expenses);
     }
 
-    setGroup(newGroup);
-
-    dbGroup.getByYear(newGroup.year)
-      .then((data) => handleReload(data, newGroup.id));
-      showSuccessToast(t("finances-feature.item-deleted"));
+    dbGroup.getItem(group.id)
+      .then((data) => {
+        dispatch(setGroup(data))
+        showSuccessToast(t("finances-feature.item-deleted"));
+      });
   };
 
   if (!group) return
@@ -106,7 +104,6 @@ export default function RegistersListCard({
           group={group}
           setRegister={setGroup}
           style={styles.button}
-          savingsFlag={savingsFlag}
         >
           <AntDesign name="addfile" size={20} color="black" />
         </AddRegisterList>
@@ -156,9 +153,6 @@ export default function RegistersListCard({
             <View key={item.id} style={[styles.row]}>
               <AddRegisterList
                 actualRegister={item}
-                handleReload={handleReload}
-                group={group}
-                savingsFlag={savingsFlag}
                 style={[
                   styles.registerBlock,
                   item.type === "income" ? styles.income : styles.expense,
@@ -206,7 +200,7 @@ export default function RegistersListCard({
           ))}
         </ScrollView>
       )}
-      {Toast}
+      <Toast />
     </View>
   );
 }

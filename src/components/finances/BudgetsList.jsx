@@ -2,19 +2,20 @@ import { View, Text, FlatList, TouchableOpacity, Modal } from "react-native";
 import { useEffect, useState } from "react";
 import { Feather, AntDesign } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 import db from "@/src/db/budgetsTable";
-import useStyle from "@/src/zustand/useStyle";
 import AddBudget from "./AddBudget";
 import Confirm from "@/src/components/configs/Confirm";
 import { useAlerts } from "../ui/useAlerts";
 
-const BudgetsList = ({ groupId, setTotal, setReload, reload, filter }) => {
+const BudgetsList = ({ setTotal, setReload, reload, filter }) => {
+  const styles = useSelector((state) => state.styles.styles);
   const [budgets, setBudgets] = useState([]);
-  const styles = useStyle((state) => state.style);
   const [filteredList, setFilteredList] = useState([]);
   const { t } = useTranslation();
   const { Toast, showSuccessToast } = useAlerts();
+  const groupId = useSelector((state) => state.group.group.id);
 
   useEffect(() => {
     if (!filter || filter.length <= 0) {
@@ -153,7 +154,7 @@ const BudgetsList = ({ groupId, setTotal, setReload, reload, filter }) => {
           </View>
         )}
       />
-      {Toast}
+      <Toast />
     </View>
   );
 };

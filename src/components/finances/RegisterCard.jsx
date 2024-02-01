@@ -2,46 +2,59 @@ import { useState, useEffect } from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { useSelector, useDispatch } from "react-redux";
 
-import useStyle from "@/src/zustand/useStyle";
 import Confirm from "@/src/components/configs/Confirm";
 import AddRegister from "./AddRegister";
 import GroupHandler from "../../db/groupTables";
 import ListHandler from "../../db/listTables";
 import WithoutRegister from "./WithoutRegister";
+import { setGroup } from "@/app/slices/groupSlice";
 
 export default function RegisterCard({
-  register,
   reload,
   isDown,
   setIsDown,
-  setRegister,
-  savingsFlag,
   handleReload,
   year,
 }) {
-  const styles = useStyle((state) => state.style);
+  const styles = useSelector((state) => state.styles.styles);
   const [balance, setBalance] = useState(0);
   const { t } = useTranslation();
-  const db = new GroupHandler(savingsFlag ? "savingsGroup" : "registerGroup");
-  const dbList = new ListHandler(savingsFlag ? "savingsList" : "registerList");
+  const type = useSelector((state) => state.group.type);
+  const group = useSelector((state) => state.group.group);
+  const db = new GroupHandler(type.group || "registerGroup");
+  const dbList = new ListHandler(type.list || "registerList");
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (register) setBalance(register.incomes - register.expenses);
-  }, [register]);
+    if (group) setBalance(group.incomes - group.expenses);
+  }, [group]);
 
   const handleDelete = async () => {
-    db.deleteItem(register.id);
-    dbList.deleteByGroup(register.id);
+    db.deleteItem(group.id);
+    dbList.deleteByGroup(group.id);
+    dispatch(setGroup(null));
     reload();
-    setRegister(null);
   };
 
-  if (!register || !register?.id) return (
+  const handleRecalculate = async () => {
+    const data = await dbList.getByGroup(group.id);
+    let incomes = 0;
+    let expenses = 0;
+    data.forEach((item) => {
+      if (item.type === "income") incomes += item.value;
+      else expenses += item.value;
+    });
+    db.updateExpenses(group.id, expenses);
+    db.updateIncomes(group.id, incomes);
+    reload();
+  }
+
+  if (!group || !group?.id) return (
     <>
       <WithoutRegister
         reload={reload}
-        savingsFlag={savingsFlag}
         year={year}
       />
     </>
@@ -75,13 +88,13 @@ export default function RegisterCard({
             <View style={[styles.detailsBlock, styles.income]}>
               <Text style={styles.income}>{t("finances-feature.income")}</Text>
               <Text style={[styles.sideLabel, styles.income]}>
-                $ {register.incomes.toFixed(2)}
+                $ {group.incomes.toFixed(2)}
               </Text>
             </View>
             <View style={[styles.detailsBlock, styles.goal]}>
               <Text style={styles.goal}>{t("finances-feature.goal")}</Text>
               <Text style={[styles.sideLabel, styles.goal]}>
-                $ {register.goal.toFixed(2)}
+                $ {group.goal.toFixed(2)}
               </Text>
             </View>
           </View>
@@ -90,7 +103,7 @@ export default function RegisterCard({
             <View style={[styles.detailsBlock, styles.expense]}>
               <Text style={styles.expense}>{t("finances-feature.expenses")}</Text>
               <Text style={[styles.sideLabel, styles.expense]}>
-                $ {register.expenses.toFixed(2)}
+                $ {group.expenses.toFixed(2)}
               </Text>
             </View>
             <View
@@ -100,7 +113,7 @@ export default function RegisterCard({
               ]}
             >
               <Text style={balance >= 0 ? styles.income : styles.expense}>
-              {t("finances-feature.balance")}
+                {t("finances-feature.balance")}
               </Text>
               <Text
                 style={[
@@ -108,18 +121,24 @@ export default function RegisterCard({
                   balance >= 0 ? styles.income : styles.expense,
                 ]}
               >
-                $ {(register.incomes - register.expenses).toFixed(2)}
+                $ {(group.incomes - group.expenses).toFixed(2)}
               </Text>
             </View>
           </View>
           <View style={styles.row}>
             <AddRegister
-              actualRegister={register}
+              actualRegister={group}
               reload={reload}
               handleReload={handleReload}
             >
               <Feather name="edit" size={20} color="black" />
             </AddRegister>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleRecalculate}
+            >
+              <Feather name="refresh-cw" size={20} color="black" />
+            </TouchableOpacity>
             <Confirm
               title={t("finances-feature.d-r-title")}
               message={t("finances-feature.d-r-msg")}

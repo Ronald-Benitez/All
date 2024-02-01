@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import { View, Text } from "react-native";
 import { Storage } from "expo-storage";
 import { useTranslation } from 'react-i18next'
+import { useSelector } from "react-redux";
 
-import useStyle from "@/src/zustand/useStyle";
 import OptionPicker from "@/src/components/configs/OptionPicker";
 
 export default function LanguageHandler() {
     const [language, setLanguage] = useState("en");
-    const styles = useStyle((state) => state.style);
+    const styles = useSelector((state) => state.styles.styles);
 
     const { t, i18n } = useTranslation()
 

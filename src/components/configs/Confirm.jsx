@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Modal } from "react-native";
 import { useTranslation } from "react-i18next";
-
-import useStyle from "@/src/zustand/useStyle";
+import { useSelector } from "react-redux";
 
 export default function Confirm({
   onConfirm,
@@ -10,9 +9,9 @@ export default function Confirm({
   title,
   children,
 }) {
-  const styles = useStyle((state) => state.style);
   const [modalVisible, setModalVisible] = useState(false);
   const { t } = useTranslation();
+  const styles = useSelector((state) => state.styles.styles);
 
   const handleConfirm = () => {
     setModalVisible(false);

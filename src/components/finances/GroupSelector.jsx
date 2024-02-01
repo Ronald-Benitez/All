@@ -1,67 +1,82 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, TextInput } from "react-native";
 import moment from "moment/moment";
 import { useTranslation } from "react-i18next";
+import { useSelector, useDispatch } from "react-redux";
+import { useFocusEffect } from "expo-router";
 
-import useStyle from "@/src/zustand/useStyle";
 import OptionPicker from "@/src/components/configs/OptionPicker";
 import TableHandler from "../../db/groupTables";
+import { setType, setGroup } from "@/app/slices/groupSlice";
 
-export default function GroupSelector({ setGroup, savingsFlag, setYear, year, reload }) {
-  const styles = useStyle((state) => state.style);
+export default function GroupSelector({ setYear, year, reload, savingsFlag }) {
+  const styles = useSelector((state) => state.styles.styles);
   const [actualRegister, setActualRegister] = useState("");
   const [registers, setRegisters] = useState([]);
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const db = new TableHandler(savingsFlag ? "savingsGroup" : "registerGroup");
 
-  useEffect(() => {
-    db.getByYear(year).then((data) => {
-      setRegisters(data);
-      handleSetLast(data);
-    });
-  }, [year]);
+  useFocusEffect(
+    useCallback(() => {
+      console.log("useFocusEffect",savingsFlag);
+      const type = savingsFlag ? {
+        group: "savingsGroup",
+        list: "savingsList"
+      } : {
+        group: "registerGroup",
+        list: "registerList"
+      }
+
+      dispatch(setType(type));
+    }, [])
+  );
 
   useEffect(() => {
     db.getByYear(year).then((data) => {
       setRegisters(data);
       if (actualRegister) {
-        setGroup(data.find((item) => item.id == actualRegister));
+        const selectedGroup = data.find((item) => item.id === actualRegister);
+        setGroupAndDispatch(selectedGroup);
       } else {
         handleSetLast(data);
       }
-    });
-  }, [reload]);
+    })
+
+  }, [reload, actualRegister, year]);
 
   const handleSetLast = (data) => {
     const last = data[data.length - 1];
     if (last) {
       setActualRegister(last.id);
-      setGroup(last);
+      setGroupAndDispatch(last);
     } else {
       setActualRegister("");
-      setGroup("");
+      setGroupAndDispatch("");
     }
-  }
+  };
+
+  const setGroupAndDispatch = (group) => {
+    setGroup(group);
+    dispatch(setGroup(group));
+  };
 
   useEffect(() => {
-    if (!actualRegister || actualRegister == "");
-    setGroup(registers.find((item) => item.id === actualRegister));
-  }, [actualRegister]);
+    if (actualRegister && actualRegister !== "") {
+      const selectedGroup = registers.find((item) => item.id === actualRegister);
+      setGroupAndDispatch(selectedGroup);
+    }
+  }, [actualRegister, registers]);
 
   const registersList = () => {
-    if (registers.length === 0) return [{ label: t("finances-features.no-registers"), value: "0" }];
-    return registers.map((item) => {
-      return {
-        label:
-          item.name +
-          " (" +
-          t(`months.${moment(item.month, "MM").format("MMMM")}`) +
-          " " +
-          item.year +
-          ")",
-        value: item.id,
-      };
-    });
+    if (registers.length === 0) {
+      return [{ label: t("finances-feature.no-registers"), value: "0" }];
+    }
+
+    return registers.map((item) => ({
+      label: `${item.name} (${t(`months.${moment(item.month, "MM").format("MMMM")}`)} ${item.year})`,
+      value: item.id,
+    }));
   };
 
   return (
@@ -75,9 +90,7 @@ export default function GroupSelector({ setGroup, savingsFlag, setYear, year, re
         />
         <OptionPicker
           options={registersList()}
-          value={registersList().findIndex(
-            (item) => item.value === actualRegister
-          )}
+          value={registersList().findIndex((item) => item.value === actualRegister)}
           onChange={setActualRegister}
         />
       </View>

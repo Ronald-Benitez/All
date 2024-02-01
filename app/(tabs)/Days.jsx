@@ -11,6 +11,7 @@ import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
 
 import OptionPicker from "@/src/components/configs/OptionPicker";
 import CustomCalendar from "@/src/components/configs/CustomCalendar";
@@ -18,12 +19,11 @@ import db from "@/src/db/daysTable";
 import DataContainer from "@/src/components/Days/DataContainer";
 import StadisticsContainer from "@/src/components/Days/StadisticsContainer";
 import WeeklyReview from "@/src/components/Days/WeeklyReview";
-import useStyle from "@/src/zustand/useStyle";
 import { useTranslation } from "react-i18next";
 
 
 export default function Days() {
-  const styles = useStyle((state) => state.style);
+  const styles = useSelector((state) => state.styles.styles);
   const [date, setDate] = useState(moment().format("YYYY/MM/DD"));
   const [edit, setEdit] = useState(false);
   const [difference, setDifference] = useState("0");

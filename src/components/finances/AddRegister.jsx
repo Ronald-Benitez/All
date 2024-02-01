@@ -3,29 +3,30 @@ import { View, TouchableOpacity, Text, TextInput, Alert, Modal } from "react-nat
 import { Feather } from "@expo/vector-icons";
 import moment from "moment/moment";
 import { useTranslation } from "react-i18next";
+import { useSelector, useDispatch } from "react-redux";
 
-import useStyle from "@/src/zustand/useStyle";
 import TableHandler from "../../db/groupTables";
 import MonthPicker from "../ui/MonthPicker";
 import { useAlerts } from "../ui/useAlerts";
+import { setGroup } from "@/app/slices/groupSlice";
 
 export default function AddRegister({
   reload,
   actualRegister,
-  handleReload,
-  savingsFlag,
   children,
   baseYear,
 }) {
-  const styles = useStyle((state) => state.style);
+  const styles = useSelector((state) => state.styles.styles);
   const [name, setName] = useState("");
   const [goal, setGoal] = useState("");
   const [seeModal, setSeeModal] = useState(false);
   const [month, setMonth] = useState(moment().format("MM"));
   const [year, setYear] = useState(moment().format("YYYY"));
-  const db = new TableHandler(savingsFlag ? "savingsGroup" : "registerGroup");
+  const type = useSelector((state) => state.group.type);
+  const db = new TableHandler(type.group || "registerGroup");
   const { t } = useTranslation();
   const { Toast, showSuccessToast, showErrorToast } = useAlerts();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (actualRegister) {
@@ -52,7 +53,7 @@ export default function AddRegister({
     if (actualRegister) {
       db.updateBaseData(actualRegister.id, name, goal);
       db.getByYear(actualRegister.year).then((data) => {
-        handleReload(data, actualRegister.id);
+        dispatch(setGroup(data.find((item) => item.id == actualRegister.id)));
       });
       showSuccessToast(t("finances-feature.register-updated"));
 
@@ -60,8 +61,9 @@ export default function AddRegister({
       db.insertItem(name, month, year, 0, 0, goal);
       setName("");
       setGoal("");
-      reload();
       showSuccessToast(t("finances-feature.register-added"));
+      dispatch(setGroup(null));
+      reload();
     }
     setSeeModal(false);
   };
@@ -124,7 +126,7 @@ export default function AddRegister({
           </View>
         </TouchableOpacity>
       </Modal>
-      {Toast}
+      <Toast />
     </>
   );
 }

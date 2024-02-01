@@ -9,11 +9,10 @@ import {
 import { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
-import useStyle from "@/src/zustand/useStyle";
 import DataBlock from "@/src/components/giveaways/DataBlock";
 import ManageDataBlock from "@/src/components/giveaways/ManageDataBlock";
-import { useAlerts } from "@/src/components/ui/useAlerts";
 import Confirm from "@/src/components/configs/Confirm";
 
 const Giveaways = () => {
@@ -22,7 +21,7 @@ const Giveaways = () => {
   const [participant, setParticipant] = useState("");
   const [award, setAward] = useState("");
   const [winners, setWinners] = useState([]);
-  const styles = useStyle((state) => state.style);
+  const styles = useSelector((state) => state.styles.styles);
   const { t } = useTranslation();
 
   const handleAddParticipant = () => {

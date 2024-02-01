@@ -3,14 +3,15 @@ import { View, Text } from "react-native";
 import { VictoryChart, VictoryBar } from "victory-native";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 import db from "@/src/db/daysTable";
-import useStyle from "@/src/zustand/useStyle";
 import { getDaysColors } from "@/src/helpers/files";
 import { monthAndYear } from "../../helpers/dates";
 
 export default function StadisticsContainer({ day, reload }) {
-  const styles = useStyle((state) => state.style);
+  const styles = useSelector((state) => state.styles.styles);
+
   const [dataPie, setDataPie] = useState([]);
   const [colors, setColors] = useState([]);
   const { t } = useTranslation();

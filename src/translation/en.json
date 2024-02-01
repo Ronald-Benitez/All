@@ -76,7 +76,7 @@
         "edit-profit": "Edit profit",
         "no-item-b":"Budget, finance and profits use the same group by default, enter a budgeted item to get started",
         "no-item-p":"Profits, finance and budget use the same group by default, enter a profit item to get started",
-        "no.registers":"No registers"
+        "no-registers":"No registers"
     },
     "language": {
         "label": "Language",
@@ -221,6 +221,25 @@
         "Better Day": "Better Day",
         "Worse Day": "Worse Day",
         "Petted": "Petted"
+    },
+    "db":{
+        "label":"Database",
+        "export":"Export",
+        "import":"Import",
+        "export-title":"Export database",
+        "import-title":"Import database",
+        "import-msg":"Are you sure you want to import the database?",
+        "keep": "Keep current data",
+        "replace": "Replace current data",
+        "keep-msg": "The imported data will be added to the current data, if there is a conflict the current data will be kept",
+        "replace-msg": "The imported data will replace the current data",
+        "export-error":"Error exporting the database",
+        "import-error":"Error importing the database",
+        "save":"Save",
+        "saved":"Saved",
+        "imported":"Imported",
+        "file-error":"Error reading the file",
+        "file-uploaded":"File uploaded"
     }
    
 }

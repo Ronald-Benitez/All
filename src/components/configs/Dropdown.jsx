@@ -1,11 +1,10 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Feather } from "@expo/vector-icons";
-
-import useStyle from "@/src/zustand/useStyle";
+import { useSelector } from "react-redux";
 
 export default function Dropdown({ title, children }) {
-  const styles = useStyle((state) => state.style);
+  const styles = useSelector((state) => state.styles.styles);
   const [see, setSee] = useState(false);
 
   return (

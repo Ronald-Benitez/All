@@ -3,26 +3,26 @@ import { View, TouchableOpacity, Text, TextInput, Alert, Modal } from "react-nat
 import { Feather } from "@expo/vector-icons";
 import moment from "moment/moment";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
-import useStyle from "@/src/zustand/useStyle";
 import db from "@/src/db/earningsTable";
 import DatePicker from "@/src/components/configs/DatePicker.jsx";
 import { useAlerts } from "../ui/useAlerts";
 
 export default function AddEarning({
-  groupId,
   reload,
   actualEarning,
   children,
   style
 }) {
-  const styles = useStyle((state) => state.style);
+  const styles = useSelector((state) => state.styles.styles);
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState(moment().format("YYYY/MM/DD"));
   const [seeAdd, setSeeAdd] = useState(false);
   const { t } = useTranslation();
   const { Toast, showSuccessToast, showErrorToast } = useAlerts();
+  const groupId = useSelector((state) => state.group.group.id);
 
   useEffect(() => {
     if (actualEarning) {
@@ -109,7 +109,7 @@ export default function AddEarning({
           </View>
         </TouchableOpacity>
       </Modal>
-      {Toast}
+      <Toast />
     </>
   );
 }

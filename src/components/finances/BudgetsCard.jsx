@@ -1,12 +1,14 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 
-import useStyle from '@/src/zustand/useStyle'
 import WithoutRegister from './WithoutRegister'
 
-const BudgetsCard = ({ register, totalBudget, reload, year }) => {
-    const styles = useStyle(state => state.style)
+const BudgetsCard = ({ totalBudget, reload, year }) => {
+    const styles = useSelector((state) => state.styles.styles);
+    const register = useSelector((state) => state.group.group);
+
     const { t } = useTranslation()
 
     const getColor = () => {

@@ -2,19 +2,20 @@ import { View, Text, TouchableOpacity, TextInput, Alert, Modal } from "react-nat
 import { useState, useEffect } from "react";
 import { Feather, AntDesign } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
-import useStyle from "@/src/zustand/useStyle";
 import db from "@/src/db/budgetsTable";
 import { useAlerts } from "../ui/useAlerts";
 
-const AddBudget = ({ reload, setReload, groupId, data, children, style }) => {
-  const styles = useStyle((state) => state.style);
+const AddBudget = ({ reload, setReload, data, children, style }) => {
+  const styles = useSelector((state) => state.styles.styles);
   const [name, setName] = useState("");
   const [value, setValue] = useState("");
   const [quantity, setQuantity] = useState("");
   const [seeAdd, setSeeAdd] = useState(false);
   const { t } = useTranslation();
   const { Toast, showSuccessToast, showErrorToast } = useAlerts();
+  const groupId = useSelector((state) => state.group.group.id);
 
   useEffect(() => {
     if (data) {
@@ -165,7 +166,7 @@ const AddBudget = ({ reload, setReload, groupId, data, children, style }) => {
           </View>
         </TouchableOpacity>
       </Modal>
-      {Toast}
+      <Toast />
     </>
   );
 };

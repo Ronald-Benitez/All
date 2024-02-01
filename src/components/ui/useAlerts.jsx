@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, Modal, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import useStyle from "@/src/zustand/useStyle";
+import { useSelector } from 'react-redux';
 
 export const useAlerts = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState(null);
-  const styles = useStyle((state) => state.style);
+  const styles = useSelector((state) => state.styles.styles);
 
   const showModal = (content) => {
     setModalContent(content);
@@ -57,7 +57,7 @@ export const useAlerts = () => {
     });
   };
 
-  const Toast = (
+  const Toast = () => (
     <Modal
       animationType="slide"
       transparent={true}

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment/moment";
-import useStyle from "@/src/zustand/useStyle";
+import { useSelector } from "react-redux";
+
 import db from "@/src/db/daysTable";
 import DatePicker from "@/src/components/configs/DatePicker.jsx";
 
 export default function CustomCalendar({ value, onChange }) {
-  const styles = useStyle((state) => state.style);
+  const styles = useSelector((state) => state.styles.styles);
   const [differences, setDifferences] = useState({});
 
   useEffect(() => {
-    console.log("value", value);
     db.getMonthDifference(value).then((data) => {
       if (!data) {
         setDifferences({});

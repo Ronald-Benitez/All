@@ -2,11 +2,10 @@ import { View, Text, Modal, TextInput, TouchableOpacity } from 'react-native'
 import { useState, useEffect } from 'react'
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from 'react-i18next';
-
-import useStyle from '@/src/zustand/useStyle'
+import { useSelector } from 'react-redux';
 
 const AddExpense = ({ data, children, list, setList, style, index }) => {
-    const styles = useStyle(state => state.style)
+    const styles = useSelector((state) => state.styles.styles);
     const [name, setName] = useState('')
     const [value, setValue] = useState(0)
     const [quantity, setQuantity] = useState(1)

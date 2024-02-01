@@ -4,13 +4,13 @@ import moment from "moment/moment";
 import { AntDesign } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import months from "@/constants/Months";
+import { useSelector } from "react-redux";
 
-import useStyle from "@/src/zustand/useStyle";
 import { monthAndYear, completeDate } from "../../helpers/dates";
 
 export default function CustomCalendar({ value, onChange, color }) {
   const [modalVisible, setModalVisible] = useState(false);
-  const styles = useStyle((state) => state.style);
+  const styles = useSelector((state) => state.styles.styles);
   const [daysInMonth, setDaysInMonth] = useState(0);
   const [firstDay, setFirstDay] = useState(0);
   const [seeMonths, setSeeMonths] = useState(false);

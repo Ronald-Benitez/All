@@ -52,7 +52,7 @@ const ColorPicker = ({
     const regex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
     return regex.test(color);
   };
-
+  
   useEffect(() => {
     setColor(newElement.value);
   }, [newElement]);

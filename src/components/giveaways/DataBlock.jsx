@@ -1,10 +1,9 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-
-import useStyle from "@/src/zustand/useStyle";
+import { useSelector } from 'react-redux'
 
 function DataBlock({ data, children, label }) {
-    const styles = useStyle((state) => state.style);
+  const styles = useSelector((state) => state.styles.styles);
 
     if (data.length <= 0) return null
 

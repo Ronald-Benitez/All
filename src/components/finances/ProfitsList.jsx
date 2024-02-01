@@ -2,20 +2,21 @@ import { View, Text, FlatList } from "react-native";
 import { useEffect, useState } from "react";
 import { Feather, AntDesign } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 import db from "@/src/db/earningsTable";
-import useStyle from "@/src/zustand/useStyle";
 import AddProfit from "./AddProfit";
 import Confirm from "@/src/components/configs/Confirm";
 import VerticalDateBlock from "../ui/VerticalDateBlock";
 import { useAlerts } from "../ui/useAlerts";
 
-const EarningsList = ({ groupId, setTotal, reload, setReload, filter }) => {
+const EarningsList = ({ setTotal, reload, setReload, filter }) => {
+  const styles = useSelector((state) => state.styles.styles);
   const [earnings, setEarnings] = useState([]);
-  const styles = useStyle((state) => state.style);
   const [filteredList, setFilteredList] = useState([]);
   const { t } = useTranslation();
   const { Toast, showSuccessToast } = useAlerts();
+  const groupId = useSelector((state) => state.group.group.id);
 
   useEffect(() => {
     if (!filter || filter.length <= 0) {
@@ -117,7 +118,7 @@ const EarningsList = ({ groupId, setTotal, reload, setReload, filter }) => {
           )}
         />
       </>
-      {Toast}
+      <Toast />
     </View>
   );
 };

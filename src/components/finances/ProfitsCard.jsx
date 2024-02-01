@@ -1,14 +1,15 @@
 import { View, Text } from 'react-native'
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 
-import useStyle from '@/src/zustand/useStyle'
 import WithoutRegister from './WithoutRegister'
 
-const ProfitsCard = ({ totalEarn, register, reload, year }) => {
-    const styles = useStyle(state => state.style)
+const ProfitsCard = ({ totalEarn, reload, year }) => {
+    const styles = useSelector((state) => state.styles.styles);
     const [total, setTotal] = useState(0)
     const { t } = useTranslation()
+    const register = useSelector((state) => state.group.group);
 
     useEffect(() => {
         setTotal(register?.incomes + totalEarn - register?.expenses)

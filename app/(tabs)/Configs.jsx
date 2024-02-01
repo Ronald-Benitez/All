@@ -7,6 +7,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { SimpleLineIcons } from "@expo/vector-icons";
+import { useTranslation } from 'react-i18next'
+import { useSelector, useDispatch } from "react-redux";
+
 import {
   getConfigs,
   setConfigs as fileSet,
@@ -16,35 +19,34 @@ import {
   deletePet,
   updatePet,
 } from "../../src/helpers/files";
-import getStyles from "../../src/styles/styles";
 import { convertCamelCase } from "../../src/helpers/stringsHelper";
 import Dropdown from "@/src/components/configs/Dropdown";
 import Confirm from "@/src/components/configs/Confirm";
 import PetMessages from "@/src/components/pet/PetMessages";
 import ColorPicker from "../../src/components/configs/ColorPicker";
 import LanguageHandler from "@/src/components/configs/LanguagesHandler";
-import useStyle from "@/src/zustand/useStyle";
-import { useTranslation } from 'react-i18next'
+import DBHandler from "@/src/components/configs/DBHandler"
+import { initializeStyles } from "../slices/stylesSlice";
 
 const Configs = () => {
   const [configs, setConfigs] = useState({});
   const [pet, setPet] = useState({});
   const [reload, setReload] = useState(false);
-  const componentStyles = useStyle((state) => state.style);
   const [newData, setNewData] = useState({});
   const [colorModal, setColorModal] = useState(false);
   const [PickerData, setPickerData] = useState({});
-  const setStyle = useStyle((state) => state.setStyle);
   const { t } = useTranslation()
+  const componentStyles = useSelector((state) => state.styles.styles);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    Promise.all([getStyles(), getConfigs(), getPet()]).then(
-      ([data, configsData, petData]) => {
-        setStyle(data);
+    Promise.all([getConfigs(), getPet()]).then(
+      ([configsData, petData]) => {
         setConfigs(configsData);
         setPet(petData);
       }
     );
+    dispatch(initializeStyles());
     // deleteConfigs();
   }, [reload]);
 
@@ -215,6 +217,12 @@ const Configs = () => {
           title={t("language.label")}
         >
           <LanguageHandler />
+        </Dropdown>
+        <Dropdown
+          key="db"
+          title={t("db.label")}
+        >
+          <DBHandler />
         </Dropdown>
       </View>
 

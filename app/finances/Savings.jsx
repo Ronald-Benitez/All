@@ -1,9 +1,9 @@
-import Finances from "../(tabs)/Finances";
+import FinancesBlock from "@/src/components/finances/FinancesBlock";
 
 const Savings = () => {
   return (
     <>
-      <Finances savingsFlag={true} />
+      <FinancesBlock savingsFlag={true} />
     </>
   );
 };

@@ -5,6 +5,8 @@ import { SplashScreen, Stack } from 'expo-router';
 import { useColorScheme } from 'react-native';
 import { useState, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
+import { Provider } from 'react-redux';
+import { store } from "@/app/store";
 
 import "@/src/translation/i18n"
 
@@ -71,57 +73,59 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="finances/ExpenseAdder"
-          options={{
-            headerTitle: t("index.expense-adder"),
-            headerStyle: {
-              backgroundColor: configs?.headers.expenseadder?.value || "#f3e7e7",
-            },
-          }}
-        />
-        <Stack.Screen
-          name="finances/Savings"
-          options={{
-            headerTitle: t("index.savings"),
-            headerStyle: {
-              backgroundColor: configs?.headers.savings?.value || "#f3e7e7",
-            },
-          }}
-        />
-        <Stack.Screen
-          name="finances/Profits"
-          options={{
-            headerTitle: t("index.profits"),
-            headerStyle: {
-              backgroundColor: configs?.headers.earnings?.value || "#f3e7e7",
-            },
-          }}
-        />
-        <Stack.Screen
-          name="finances/Budgets"
-          options={{
-            headerTitle: t("index.budgets"),
-            headerStyle: {
-              backgroundColor: configs?.headers.budgets?.value || "#f3e7e7",
-            },
-          }}
-        />
-        <Stack.Screen
-          name="tools/Giveaways"
-          options={{
-            headerTitle: t("index.giveaways"),
-            headerStyle: {
-              backgroundColor: configs?.headers.giveaways?.value || "#f3e7e7",
-            },
-          }}
-        />
+    <Provider store={store}>
+      <ThemeProvider value={DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="finances/ExpenseAdder"
+            options={{
+              headerTitle: t("index.expense-adder"),
+              headerStyle: {
+                backgroundColor: configs?.headers.expenseadder?.value || "#f3e7e7",
+              },
+            }}
+          />
+          <Stack.Screen
+            name="finances/Savings"
+            options={{
+              headerTitle: t("index.savings"),
+              headerStyle: {
+                backgroundColor: configs?.headers.savings?.value || "#f3e7e7",
+              },
+            }}
+          />
+          <Stack.Screen
+            name="finances/Profits"
+            options={{
+              headerTitle: t("index.profits"),
+              headerStyle: {
+                backgroundColor: configs?.headers.earnings?.value || "#f3e7e7",
+              },
+            }}
+          />
+          <Stack.Screen
+            name="finances/Budgets"
+            options={{
+              headerTitle: t("index.budgets"),
+              headerStyle: {
+                backgroundColor: configs?.headers.budgets?.value || "#f3e7e7",
+              },
+            }}
+          />
+          <Stack.Screen
+            name="tools/Giveaways"
+            options={{
+              headerTitle: t("index.giveaways"),
+              headerStyle: {
+                backgroundColor: configs?.headers.giveaways?.value || "#f3e7e7",
+              },
+            }}
+          />
 
 
-      </Stack>
-    </ThemeProvider>
+        </Stack>
+      </ThemeProvider>
+    </Provider>
   );
 }

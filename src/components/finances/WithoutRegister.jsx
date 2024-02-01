@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 
-import useStyle from "@/src/zustand/useStyle";
 import AddRegister from './AddRegister'
 
-const WithoutRegistration = ({ reload, savingsFlag, year }) => {
-    const styles = useStyle(state => state.style)
+const WithoutRegistration = ({ reload, year }) => {
+    const styles = useSelector((state) => state.styles.styles);
     const { t } = useTranslation()
 
     return (
@@ -22,7 +22,6 @@ const WithoutRegistration = ({ reload, savingsFlag, year }) => {
                 </Text>
                 <AddRegister
                     reload={reload}
-                    savingsFlag={savingsFlag}
                     style={styles.button}
                     baseYear={year}
                 >
