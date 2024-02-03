@@ -36,7 +36,6 @@ const Budgets = () => {
               reload={reload}
               setReload={setReload}
               setTotal={setTotal}
-              groupId={register?.id}
               style={styles.button}
             >
               <AntDesign name="addfile" size={20} color="black" />
@@ -64,7 +63,6 @@ const Budgets = () => {
           }}
         >
           <BudgetsList
-            groupId={register?.id}
             setTotal={setTotal}
             setReload={setReload}
             reload={reload}

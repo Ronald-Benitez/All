@@ -22,7 +22,7 @@ export default function AddEarning({
   const [seeAdd, setSeeAdd] = useState(false);
   const { t } = useTranslation();
   const { Toast, showSuccessToast, showErrorToast } = useAlerts();
-  const groupId = useSelector((state) => state.group.group.id);
+  const group = useSelector((state) => state.group.group);
 
   useEffect(() => {
     if (actualEarning) {
@@ -53,7 +53,7 @@ export default function AddEarning({
       reload();
       showSuccessToast(t("finances-feature.item-updated"));
     } else {
-      db.insertItem(date, name, amount, groupId);
+      db.insertItem(date, name, amount, group?.id);
       setName("");
       setAmount("");
       reload();

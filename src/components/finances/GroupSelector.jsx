@@ -19,7 +19,6 @@ export default function GroupSelector({ setYear, year, reload, savingsFlag }) {
 
   useFocusEffect(
     useCallback(() => {
-      console.log("useFocusEffect",savingsFlag);
       const type = savingsFlag ? {
         group: "savingsGroup",
         list: "savingsList"

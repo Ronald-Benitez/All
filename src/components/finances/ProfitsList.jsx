@@ -16,7 +16,7 @@ const EarningsList = ({ setTotal, reload, setReload, filter }) => {
   const [filteredList, setFilteredList] = useState([]);
   const { t } = useTranslation();
   const { Toast, showSuccessToast } = useAlerts();
-  const groupId = useSelector((state) => state.group.group.id);
+  const group = useSelector((state) => state.group.group);
 
   useEffect(() => {
     if (!filter || filter.length <= 0) {
@@ -33,12 +33,13 @@ const EarningsList = ({ setTotal, reload, setReload, filter }) => {
   }, [filter, earnings]);
 
   useEffect(() => {
-    db.getByGroup(groupId).then((data) => {
+    if (!group) return;
+    db.getByGroup(group.id).then((data) => {
       setEarnings(data);
       setTotal(data.reduce((acc, item) => acc + parseFloat(item.amount), 0));
     }).catch(() => setEarnings([]));
 
-  }, [groupId, reload]);
+  }, [group, reload]);
 
   const handleDelete = async (item) => {
     await db.deleteItem(item.id);
@@ -46,7 +47,7 @@ const EarningsList = ({ setTotal, reload, setReload, filter }) => {
     showSuccessToast(t("finances-feature.item-deleted"));
   };
 
-  if (!groupId || groupId === "") return
+  if (!group || group === "") return
 
   if (earnings.length <= 0) return (
     <>
@@ -60,7 +61,6 @@ const EarningsList = ({ setTotal, reload, setReload, filter }) => {
           {t("finances-feature.no-item-p")}
         </Text>
         <AddProfit
-          groupId={groupId}
           reload={() => setReload(!reload)}
           style={styles.button}
         >

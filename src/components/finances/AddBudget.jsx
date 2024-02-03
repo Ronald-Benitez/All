@@ -15,7 +15,7 @@ const AddBudget = ({ reload, setReload, data, children, style }) => {
   const [seeAdd, setSeeAdd] = useState(false);
   const { t } = useTranslation();
   const { Toast, showSuccessToast, showErrorToast } = useAlerts();
-  const groupId = useSelector((state) => state.group.group.id);
+  const group = useSelector((state) => state.group.group);
 
   useEffect(() => {
     if (data) {
@@ -34,12 +34,12 @@ const AddBudget = ({ reload, setReload, data, children, style }) => {
           value * quantity,
           quantity,
           value,
-          groupId
+          group?.id
         );
         setReload(!reload);
         showSuccessToast(t("finances-feature.item-updated"));
       } else {
-        await db.insertItem(name, value * quantity, quantity, value, groupId);
+        await db.insertItem(name, value * quantity, quantity, value, group?.id);
         setReload(!reload);
         showSuccessToast(t("finances-feature.item-added"));
       }

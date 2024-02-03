@@ -2,7 +2,7 @@
   "expo": {
     "name": "Eco",
     "slug": "All",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -25,7 +25,7 @@
         "backgroundColor": "#5a075c"
       },
       "package": "com.empanada.All",
-      "versionCode": 7
+      "versionCode": 8
     },
     "web": {
       "bundler": "metro",

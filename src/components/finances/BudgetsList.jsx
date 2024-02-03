@@ -15,7 +15,7 @@ const BudgetsList = ({ setTotal, setReload, reload, filter }) => {
   const [filteredList, setFilteredList] = useState([]);
   const { t } = useTranslation();
   const { Toast, showSuccessToast } = useAlerts();
-  const groupId = useSelector((state) => state.group.group.id);
+  const group = useSelector((state) => state.group.group);
 
   useEffect(() => {
     if (!filter || filter.length <= 0) {
@@ -32,13 +32,14 @@ const BudgetsList = ({ setTotal, setReload, reload, filter }) => {
   }, [filter, budgets]);
 
   useEffect(() => {
-    db.getByGroup(groupId).then((data) => {
+    if (!group) return;
+    db.getByGroup(group.id).then((data) => {
       setBudgets(data);
       setTotal(data.reduce((acc, item) => acc + parseFloat(item.amount), 0));
     }).catch((err) => {
       console.log(err)
     });
-  }, [groupId, reload]);
+  }, [group, reload]);
 
   const handleDelete = async (item) => {
     await db.deleteItem(item.id);
@@ -46,7 +47,7 @@ const BudgetsList = ({ setTotal, setReload, reload, filter }) => {
     setReload(!reload);
   };
 
-  if (!groupId || groupId === "") return
+  if (!group || group === "") return
 
   if (budgets.length <= 0) return (
     <>
@@ -60,7 +61,6 @@ const BudgetsList = ({ setTotal, setReload, reload, filter }) => {
           {t("finances-feature.no-item-b")}
         </Text>
         <AddBudget
-          groupId={groupId}
           setReload={setReload}
           reload={reload}
           style={styles.button}
@@ -106,7 +106,6 @@ const BudgetsList = ({ setTotal, setReload, reload, filter }) => {
         renderItem={({ item }) => (
           <View key={item.id} style={[styles.row]}>
             <AddBudget
-              groupId={groupId}
               setReload={setReload}
               reload={reload}
               data={item}

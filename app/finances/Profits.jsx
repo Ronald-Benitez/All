@@ -32,7 +32,6 @@ const Profits = () => {
         <View style={styles.row}>
           {register && (
             <AddProfit
-              groupId={register?.id}
               reload={() => setReload(!reload)}
               style={styles.button}
             >
@@ -61,7 +60,6 @@ const Profits = () => {
           }}
         >
           <ProfitsList
-            groupId={register?.id}
             setTotal={setTotalEarn}
             reload={reload}
             setReload={() => setReload(!reload)}

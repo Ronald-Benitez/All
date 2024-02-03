@@ -14,13 +14,13 @@ const tables = [
 
 const schemas = {
   registerGroup: `create table if not exists registerGroup (id integer primary key not null, name text, month text, year text, expenses real, incomes real, goal real)`,
+  savingsGroup: `create table if not exists savingsGroup (id integer primary key not null, name text, month text, year text, expenses real, incomes real, goal real)`,
   budgets:
     "create table if not exists budgets (id integer primary key not null, name text, amount real, quantity real, value real, group_id integer)",
   days: "create table if not exists days (date text, expected text, real text, difference text)",
   earnings:
     "create table if not exists earnings (id integer primary key not null, date text, name text, amount text, group_id integer)",
   registerList: `create table if not exists registerList (id integer primary key not null, name text, date text, value real, type text, group_id integer)`,
-  savingsGroup: `create table if not exists savingsGroup (id integer primary key not null, name text, month text, year text, goal real, saved real)`,
   savingsList: `create table if not exists savingsList (id integer primary key not null, name text, date text, value real, type text, group_id integer)`,
 };
 
